@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TankBot</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.1/jquery.mobile.min.css" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.1/jquery.mobile.min.js"></script>
+	<style>
+	 .button-wrap { margin: 5 0; }
+	 .fire {
+	 	height: 600px;
+	 	width: 600px;
+		margin: auto;
+		vertical-align: middle;
+		text-align: center;
+		line-height: 600px;
+		font-size: 50pt;
+	 }
+	 .start { background-image: url('images/green.png') !important; }
+	 .stop { background-image: url('images/red.png') !important; }
+	 #manualTab {
+			background: url('images/156-controlpad.png') 50% 50% no-repeat;
+			background-size: 30px 23px;
+		}
+	 #targetTab { background: url('images/13-target.png'); }
+	 #battleTab { background: url('images/134-viking.png'); }
+		.menu .ui-btn .ui-btn-inner { padding-top: 40px !important; }
+		.menu .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
+	</style>
+  </head>
+  <body>
+	<div data-role="tabs" class="menu">
+		<div data-role="navbar" class="menu" data-grid="b">
+			<ul>
+				<li><a id="manualTab" href="#manual" data-icon="custom">Manual</a></li>
+				<li><a href="#target" data-theme="a" data-ajax="false">Target</a></li>
+				<li><a href="#battle" data-theme="a" data-ajax="false">Battle</a></li>
+			</ul>
+		</div>
+		<div id="manual" class="ui-content">
+			Manual controls
+		</div>
+		<div id="target" class="ui-content">
+			<div class="start fire"><span>Fire 3 rounds</span></div>
+		</div>
+		<div id="battle" class="ui-content">
+			<div class="start fire"><span>Fire at will</span></div>
+		</div>
+	</div>
+  </body>
+</html>
