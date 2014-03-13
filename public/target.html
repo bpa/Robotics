@@ -12,22 +12,19 @@
 </head>
 <body>
 
-<div data-role="page" id="target" class="tank-controls" data-dom-cache="true" data-theme="a" data-next="battle">
+<div data-role="page" id="target" class="tank-controls" data-dom-cache="true" data-theme="a" data-prev="index" data-next="battle">
     <div data-role="header" data-position="fixed" data-fullscreen="true" data-id="hdr" data-tap-toggle="false">
-        <h1>Tankbot - Target practice</h1>
-        <a href="target.html" data-ajax="false" data-icon="target" data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Target</a>
+        <a href="index.html" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-right"><img src="/images/156-controlpad.png"></a>
+        <h1>TankBot - Target practice</h1>
+        <a href="battle.html" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-right"><img src="/images/134-viking.png"></a>
     </div>
   
 	<div data-role="content">
-		<div class="start fire"><span>Fire 3 rounds</span></div>
+		<div class="start fire">
+			<div id="go"></div>
+			<span class="inert">Fire 3 rounds</span>
+		</div>
 	</div>
-
-    <div data-role="footer" data-position="fixed" data-fullscreen="true" data-id="ftr" data-tap-toggle="false">
-		<div data-role="controlgroup" class="control ui-btn-left" data-type="horizontal" data-mini="true">
-        	<a href="#" class="prev" data-role="button" data-icon="arrow-l" data-iconpos="notext" data-theme="d">Previous</a>
-        	<a href="#" class="next" data-role="button" data-icon="arrow-r" data-iconpos="notext" data-theme="d">Next</a>
-        </div>
-    </div>
 </div>
 
 </body>
