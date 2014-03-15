@@ -10,19 +10,22 @@
 	-o-user-select: none;
 	user-select: none;
 }
+.ui-content {
+	text-align: center;
+}
 .ui-header img {
 	height: 16px;
 }
-.start { background-image: url('/images/green.png') !important; }
+.start {
+	background-image: url('/images/green.png') !important; }
 .stop { background-image: url('/images/red.png') !important; }
-.fire {
-	height: 320;
-	width: 320;
-	margin: auto;
-	vertical-align: middle;
+#fire span {
+	font-size 30px;
+	position: absolute;
+	width: 100%;
+	top: 135;
+	left: 0;
 	text-align: center;
-	line-height: 320;
-	font-size: 50pt;
 }
 .inert {
 	pointer-events:none;

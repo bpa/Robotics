@@ -13,14 +13,19 @@
 <body>
 
 <div data-role="page" id="battle" class="tank-controls" data-dom-cache="true" data-theme="a" data-prev="target" data-next="index">
-    <div data-role="header" data-position="fixed" data-fullscreen="true" data-id="hdr" data-tap-toggle="false">
-        <a href="target.html" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-right"><img src="/images/13-target.png"></a>
-        <h1>TankBot - Battle Mode</h1>
-        <a href="index.html" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-right"><img src="/images/156-controlpad.png"></a>
-    </div>
+	<div data-role="header" data-fullscreen="true" data-id="hdr" data-tap-toggle="false">
+		<a href="target.html" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-right"><img src="/images/13-target.png"></a>
+		<h1>Battle Mode</h1>
+		<a href="index.html" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-right"><img src="/images/156-controlpad.png"></a>
+	</div>
   
 	<div data-role="content">
-		<div class="start fire"><span class="inert">Fire at will</span></div>
+		<a id="fire" href="#" data-role="button" data-theme="none" data-inline="true">
+			<div>
+				<img src="/images/green.png" width="250" height="250">
+				<span>Fire at will</span>
+			</div>
+		</a>
 	</div>
 </div>
 
