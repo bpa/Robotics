@@ -17,16 +17,38 @@
 	height: 16px;
 }
 .start {
-	background-image: url('/images/green.png') !important; }
-.stop { background-image: url('/images/red.png') !important; }
+	background-image: url(/images/green.png) !important; }
+.stop { background-image: url(/images/red.png) !important; }
 #fire span {
-	font-size 30px;
+	vertical-align: middle;
+	font-size: 35px;
 	position: absolute;
 	width: 100%;
-	top: 135;
+	top: 115px;
 	left: 0;
 	text-align: center;
 }
-.inert {
-	pointer-events:none;
+#manual-fire span {
+	float: left;
+	vertical-align: middle;
+	font-size: 15px;
+	position: absolute;
+	width: 100%;
+	top: 50px;
+	left: 0;
+	text-align: center;
+}
+#left {
+	text-align: left;
+	width: 80px;
+	float: left;
+}
+#right {
+	text-align: right;
+	width: 80px;
+	float: right;
+}
+.compact .ui-btn, #manual-fire {
+	padding: 5px;
+	margin: 2px;
 }
