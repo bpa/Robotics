@@ -26,5 +26,13 @@ $( document ).on( "pageinit", "[data-role='page'].tank-controls", function() {
 	else {
 		$( ".control .prev", page ).addClass( "ui-disabled" );
 	}
+
+	$('#target #fire').button().click(function(e) {
+		$.post('/api/shootTargets');
+	});
+
+	$('#battle #fire').button().click(function(e) {
+		$.post('/api/startBattle');
+	});
 });
 

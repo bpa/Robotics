@@ -19,16 +19,19 @@
 .start {
 	background-image: url(/images/green.png) !important; }
 .stop { background-image: url(/images/red.png) !important; }
-#fire span {
+#battle #fire div, #target #fire div {
+	width: 95%;
+}
+#battle #fire span, #target #fire span {
 	vertical-align: middle;
 	font-size: 35px;
 	position: absolute;
 	width: 100%;
-	top: 115px;
+	bottom: 115px;
 	left: 0;
 	text-align: center;
 }
-#manual-fire span {
+#manual #fire span {
 	float: left;
 	vertical-align: middle;
 	font-size: 15px;
@@ -37,6 +40,16 @@
 	top: 50px;
 	left: 0;
 	text-align: center;
+}
+#pitch {
+	width: 100%;
+}
+#manual #fire {
+	position: absolute;
+	top: 175px;
+	left: 50%;
+	margin-left: -55px;
+	padding: 5px;
 }
 #left {
 	text-align: left;
@@ -48,7 +61,7 @@
 	width: 80px;
 	float: right;
 }
-.compact .ui-btn, #manual-fire {
+.compact .ui-btn {
 	padding: 5px;
 	margin: 2px;
 }
