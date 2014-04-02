@@ -1,3 +1,7 @@
+#ifndef GPIO_H
+#define GPIO_H
+
+#include <stdint.h>
 #define LATCH RPI_V2_GPIO_P1_22
 #define CLOCK RPI_V2_GPIO_P1_16
 #define SHLD1 RPI_V2_GPIO_P1_18
@@ -25,7 +29,12 @@ typedef struct {
 } StepperMotor;
 
 extern DCMotor dc_motor_1;
+extern DCMotor dc_motor_2;
+extern DCMotor dc_motor_3;
+extern DCMotor dc_motor_4;
 
 void init_gpio();
 void dc_motor_run(const DCMotor *motor, Direction direction);
 void stepper_step(const StepperMotor *motor, Direction direction);
+
+#endif
