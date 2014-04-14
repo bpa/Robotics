@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 2.8)
+project( tankbot )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_library( camera WebCam.cpp )
+#add_executable( circles HoughCircle_Demo.cpp )
+#target_link_libraries( circles ${OpenCV_LIBS} )
+
+add_executable( targets targets.cpp )
+target_link_libraries( targets camera )
+target_link_libraries( targets ${OpenCV_LIBS} )
