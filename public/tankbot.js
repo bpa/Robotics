@@ -36,3 +36,14 @@ $( document ).on( "pageinit", "[data-role='page'].tank-controls", function() {
 	});
 });
 
+function fire() {
+	$.post('/api/fire');
+}
+
+function pitch(steps) {
+	$.post('/api/pitch', {steps: steps});
+}
+
+function rotate(steps) {
+	$.post('/api/rotate', {steps: steps});
+}
