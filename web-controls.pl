@@ -41,6 +41,7 @@ my $motor_thread    = threads->create(
                     my $dir = $pitch > 0 ? -1 : 1;
                     $pitch += $dir;
                     $pitch_motor->step($dir);
+                    $trigger_motor->step($dir);
                 }
                 if ($rotate) {
                     my $dir = $rotate > 0 ? -1 : 1;
