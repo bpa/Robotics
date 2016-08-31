@@ -3,9 +3,11 @@
     <item android:id="@+id/show_calibration"
         android:title="Calibrate"/>
 
-    <item android:id="@+id/show_automatic"
+    <item
+        android:id="@+id/fully_automatic"
         android:title="Automatic"/>
 
-    <item android:id="@+id/show_manual"
-        android:title="Manual"/>
+    <item
+        android:id="@+id/random_path"
+        android:title="Random" />
 </menu>

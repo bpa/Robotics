@@ -2,11 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <EditText
+    <Button
+        android:text="Start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Automatic"
-        android:ems="10"
-        android:id="@+id/editText" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="233dp"
+        android:id="@+id/start_stop"
+        style="@android:style/Widget.Holo.Button" />
+
+    <Button
+        android:text="Reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_reset"
+        android:layout_below="@+id/start_stop"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="66dp"
+        style="@android:style/Widget.Material.Button" />
 </RelativeLayout>
