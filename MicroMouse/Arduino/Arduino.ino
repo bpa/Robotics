@@ -81,7 +81,7 @@ inline void handle_cmd() {
 }
 
 void check_for_timeout() {
-  if (connection_lost) {
+  if (!recent && connection_lost) {
     return;
   }
   
