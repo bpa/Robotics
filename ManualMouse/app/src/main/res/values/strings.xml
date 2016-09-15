@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ManualMouse</string>
+    <string-array name="motor_selection">
+        <item>M1</item>
+        <item>M2</item>
+        <item>M3</item>
+        <item>M4</item>
+    </string-array>
+</resources>

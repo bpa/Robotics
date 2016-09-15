@@ -6,11 +6,15 @@
 #define MOVE_FORWARD  0b00001000
 #define MOVE_BACKWARD 0b00010000
 #define STOP          0b00100000
+#define CONFIGURE     0b01000000
 
 #define TIMEOUT 1000
 
-AF_DCMotor left_motor(2);
-AF_DCMotor right_motor(3);
+AF_DCMotor motors[] = { AF_DCMotor(1), AF_DCMotor(2), AF_DCMotor(3), AF_DCMotor(4) };
+  
+AF_DCMotor *left_motor = &motors[0];
+AF_DCMotor *right_motor = &motors[1];
+char buf[1024];
 
 uint8_t cmd[2];
 boolean syncing = false;
@@ -20,11 +24,19 @@ unsigned long last_read_time;
 
 void handle_cmd();
 void check_for_timeout();
+void configure();
+
+void debug(const char *fmt, ...) {
+    int n;
+    va_list ap;
+    va_start(ap, fmt);
+    n = vsprintf (&buf[0], fmt, ap);
+    va_end(ap);
+    Serial.write((uint8_t*)&buf[0], n);
+}
 
 void setup() {
   Serial.begin(115200);
-  left_motor.setSpeed(0);
-  right_motor.setSpeed(0);
 }
  
 void loop() {
@@ -44,6 +56,7 @@ void loop() {
     Serial.readBytes((char*)&cmd, 2);
     recent = true;
     if (cmd[0] & SYNC_ERROR) {
+      Serial.write("sync error");
       syncing = true;
     }
     else {
@@ -57,7 +70,11 @@ void loop() {
 
 inline void handle_cmd() {
   uint8_t action;
-  if (cmd[0] & STOP) {
+  if (cmd[0] & CONFIGURE) {
+    configure();
+    return;
+  }
+  else if (cmd[0] & STOP) {
     action = RELEASE;
   }
   else if (cmd[0] & MOVE_FORWARD) {
@@ -71,12 +88,12 @@ inline void handle_cmd() {
   }
    
   if (cmd[0] & LEFT_MOTOR) {
-    left_motor.setSpeed(cmd[1]);
-    left_motor.run(action);
+    left_motor->setSpeed(cmd[1]);
+    left_motor->run(action);
   }
   if (cmd[0] & RIGHT_MOTOR) {
-    right_motor.setSpeed(cmd[1]);
-    right_motor.run(action);
+    right_motor->setSpeed(cmd[1]);
+    right_motor->run(action);
   }
 }
 
@@ -93,8 +110,24 @@ void check_for_timeout() {
   else {
     if (millis() - last_read_time > TIMEOUT) {
       connection_lost = true;
-      left_motor.run(RELEASE);
-      right_motor.run(RELEASE);
+      left_motor->run(RELEASE);
+      right_motor->run(RELEASE);
     }
+  }
+}
+
+void configure() {
+  int m = cmd[1] >> 1;
+  if (m < 1 || m > 4) {
+    return;
+  }
+  
+  if (cmd[0] & LEFT_MOTOR) {
+    left_motor->run(RELEASE);
+    left_motor = &motors[m-1];
+  }
+  else if (cmd[0] & RIGHT_MOTOR) {
+    right_motor->run(RELEASE);
+    right_motor = &motors[m-1];
   }
 }
