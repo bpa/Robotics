@@ -1,11 +1,15 @@
 #! /usr/bin/perl
 
+use strict;
+use warnings;
+
 use Math::Trig;
+use Text::Table;
 
 use constant FOOT   => 30.48;
 use constant INCH   => 2.54;
-use constant D      => 20.5;
 use constant camera => 6 * INCH;
+use constant D      => 20.5;
 
 my @targets = (
     { height => 2 * INCH,  distance => 10 * FOOT },
@@ -22,16 +26,21 @@ my @modes = (
     { pixels => 1920, fov => 53.5 },
 );
 
+my @scenes;
 for my $t (@targets) {
     for my $r (@modes) {
-        my ( $bottom_px, $top_px ) = calc_y( $t, $r );
-        print "$bottom_px, $top_px\n";
-        last;
+        push @scenes, Scene->new(calc_pixels( $t, $r ), $r);
     }
-    last;
 }
 
-sub calc_y {
+my @keys = sort keys %{$scenes[0]};
+my $table = Text::Table->new(@keys);
+for my $s (@scenes) {
+	$table->add(map { $s->{$_} } @keys);
+}
+print $table;
+
+sub calc_pixels {
     my ( $target, $mode ) = @_;
     return (
         project( $target->{height},     $target->{distance}, $mode ),
@@ -41,8 +50,26 @@ sub calc_y {
 
 sub project {
     my ( $h, $d, $mode ) = @_;
-    my $angle = rad2deg(atan2(abs($h - camera), $d));
-    my $px = $mode->{pixels} / $mode->{fov} * $angle;
+    my $angle = atan2( abs( $h - camera ), $d );
+    my $px   = $mode->{pixels} / deg2rad( $mode->{fov} ) * $angle;
     my $half = $mode->{pixels} / 2;
-    return $h < camera ? int($half - $px): int($half + $px);
+    return $h < camera ? int( $half - $px ) : int( $half + $px );
 }
+
+package Scene;
+
+use Math::Trig;
+
+use constant D => 20.5;
+
+sub new {
+    my ( $pkg, $y1, $y2, $mode ) = @_;
+    my $self = bless {
+        y1  => $y1,
+        y2  => $y2,
+        px  => $mode->{pixels},
+        fov => $mode->{fov}
+    }, $pkg;
+    return $self;
+}
+
