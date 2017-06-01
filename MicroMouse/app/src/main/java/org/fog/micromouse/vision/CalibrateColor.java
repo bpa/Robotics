@@ -1,5 +1,7 @@
 package org.fog.micromouse.vision;
 
+import android.util.Log;
+
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -20,11 +22,18 @@ public class CalibrateColor implements CameraBridgeViewBase.CvCameraViewListener
         this.maxHSV = maxHSV;
     }
 
+    public void ensureInitialized() {
+        if (hsv == null) {
+            hsv = new Mat();
+            mask = new Mat();
+            rgb = new Mat();
+            rgb2 = new Mat();
+        }
+    }
+
+    @Override
     public void onCameraViewStarted(int width, int height) {
-        hsv = new Mat(width, height, CvType.CV_8UC3);
-        mask = new Mat(width, height, CvType.CV_8U);
-        rgb = new Mat(width, height, CvType.CV_8UC4);
-        rgb2 = new Mat(width, height, CvType.CV_8UC4);
+
     }
 
     public void onCameraViewStopped() {
@@ -35,6 +44,7 @@ public class CalibrateColor implements CameraBridgeViewBase.CvCameraViewListener
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        ensureInitialized();
         Mat rgba = inputFrame.rgba();
         Imgproc.cvtColor(rgba, hsv, Imgproc.COLOR_RGB2HSV);
         Core.inRange(hsv, minHSV, maxHSV, mask);

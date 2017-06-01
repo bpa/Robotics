@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <Button
         android:text="Start"
@@ -21,4 +23,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="66dp"
         style="@android:style/Widget.Material.Button" />
+
+    <TextView
+        android:text="5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/btn_reset"
+        android:layout_marginTop="68dp"
+        android:id="@+id/distance" />
 </RelativeLayout>

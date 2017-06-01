@@ -35,16 +35,15 @@ public class CalibrationFragment extends Fragment implements RangeSeekBar.OnRang
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        hBar = initRangeBar(minHSV, maxHSV, 180, 0, R.id.h_range, view);
-        sBar = initRangeBar(minHSV, maxHSV, 255, 1, R.id.s_range, view);
-        vBar = initRangeBar(minHSV, maxHSV, 255, 2, R.id.v_range, view);
+        hBar = initRangeBar(minHSV, maxHSV, 0, R.id.h_range, view);
+        sBar = initRangeBar(minHSV, maxHSV, 1, R.id.s_range, view);
+        vBar = initRangeBar(minHSV, maxHSV, 2, R.id.v_range, view);
     }
 
-    private RangeSeekBar<Integer> initRangeBar(Scalar min, Scalar max, int maxVal, int ind, int viewId, View view) {
+    private RangeSeekBar<Integer> initRangeBar(Scalar min, Scalar max, int ind, int viewId, View view) {
         RangeSeekBar<Integer> rsb = (RangeSeekBar<Integer>) getView().findViewById(viewId);
         rsb.setSelectedMinValue((int)min.val[ind]);
         rsb.setSelectedMaxValue((int)max.val[ind]);
-        rsb.setRangeValues(0, maxVal);
         rsb.setOnRangeSeekBarChangeListener(this);
         return rsb;
     }

@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             rsb:showLabels="false"
-            rsb:absoluteMaxValue="255"
+            rsb:absoluteMaxValue="180"
             rsb:absoluteMinValue="0" />
     </LinearLayout>
 

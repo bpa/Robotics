@@ -2,7 +2,14 @@ package org.fog.micromouse;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -11,27 +18,35 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import org.fog.micromouse.body.Brain;
 import org.fog.micromouse.body.Wheels;
 import org.fog.micromouse.vision.CalibrateColor;
+import org.fog.micromouse.vision.DetectWalls;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Scalar;
 
+import java.util.Arrays;
 import java.util.Set;
 
-public class MazeActivity extends FragmentActivity {
+public class MazeActivity extends FragmentActivity implements SensorEventListener {
     private static final String TAG = "MicroMouse:Automatic";
+    private static final double GRAVITY = 9.80665;
     private boolean disableBluetoothWhenStopped = false;
     public CameraBridgeViewBase mOpenCvCameraView;
+    private SensorManager sensorManager;
+    private Sensor sensor;
     public Scalar minHSV;
     public Scalar maxHSV;
     public Brain brain;
     private Wheels wheels;
     private int mode = R.id.fully_automatic;
+    private CalibrateColor calibrateColor;
+    private DetectWalls detectWalls;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -56,19 +71,21 @@ public class MazeActivity extends FragmentActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.camera_layout);
 
-        if (b == null) {
-            minHSV = new Scalar(0, 0, 0);
-            maxHSV = new Scalar(180, 255, 255);
-        } else {
-            minHSV = new Scalar(b.getInt("minH", 0), b.getInt("minS", 0), b.getInt("minV", 0));
-            maxHSV = new Scalar(b.getInt("maxH", 180), b.getInt("maxS", 255), b.getInt("maxV", 255));
-        }
+        SharedPreferences p = getPreferences(Context.MODE_PRIVATE);
+        minHSV = new Scalar(p.getInt("minH", 0), p.getInt("minS", 0), p.getInt("minV", 0));
+        maxHSV = new Scalar(p.getInt("maxH", 180), p.getInt("maxS", 255), p.getInt("maxV", 255));
+
+        calibrateColor = new CalibrateColor(minHSV, maxHSV);
+        detectWalls = new DetectWalls(minHSV, maxHSV, (TextView) findViewById(R.id.distance));
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.camera_preview);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-        mOpenCvCameraView.setCvCameraViewListener(new CalibrateColor(minHSV, maxHSV));
+        mOpenCvCameraView.setCvCameraViewListener(detectWalls);
 
-        AutomaticFragment fragment = new AutomaticFragment();
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+
+        Fragment fragment = new AutomaticFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, fragment).commit();
     }
@@ -105,12 +122,17 @@ public class MazeActivity extends FragmentActivity {
         if (id == mode)
             return true;
 
+        savePreferences();
         if (mode == R.id.show_calibration || id == R.id.show_calibration) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            if (id == R.id.show_calibration)
+            if (id == R.id.show_calibration) {
                 transaction.replace(R.id.fragment_container, new CalibrationFragment());
-            else
+                mOpenCvCameraView.setCvCameraViewListener(calibrateColor);
+            }
+            else {
                 transaction.replace(R.id.fragment_container, new AutomaticFragment());
+                mOpenCvCameraView.setCvCameraViewListener(detectWalls);
+            }
             transaction.commit();
         }
         switch (id) {
@@ -132,11 +154,19 @@ public class MazeActivity extends FragmentActivity {
         super.onPause();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
+        sensorManager.unregisterListener(this);
+        calibrateColor.onCameraViewStopped();
+        detectWalls.onCameraViewStopped();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        enableCamera();
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void enableCamera() {
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
@@ -152,23 +182,36 @@ public class MazeActivity extends FragmentActivity {
         if (disableBluetoothWhenStopped) {
             BluetoothAdapter.getDefaultAdapter().disable();
         }
-        wheels.close();
+        if (wheels != null)
+            wheels.close();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle b) {
-        super.onSaveInstanceState(b);
+    public void savePreferences() {
+        SharedPreferences p = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor b = p.edit();
         b.putInt("minH", (int) minHSV.val[0]);
         b.putInt("minS", (int) minHSV.val[1]);
         b.putInt("minV", (int) minHSV.val[2]);
         b.putInt("maxH", (int) maxHSV.val[0]);
         b.putInt("maxS", (int) maxHSV.val[1]);
         b.putInt("maxV", (int) maxHSV.val[2]);
+        b.apply();
     }
 
     public void onDestroy() {
         super.onDestroy();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+         detectWalls.angle_x = Math.asin(event.values[0]/GRAVITY);
+         detectWalls.angle_y = Math.asin(event.values[1]/GRAVITY);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        Log.i(TAG, "AccuracyChanged:" + accuracy);
     }
 }
