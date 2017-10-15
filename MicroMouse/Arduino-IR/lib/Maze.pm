@@ -70,7 +70,7 @@ sub generate_maze() is export {
     my ($x,$y) = @seg.pick;
     @walls[$y+SIZE][$x+SIZE] = False;
 
-    @walls[2][1] = True;
+    @walls[1][2] = True;
     @walls[2][2] = True;
     add_joint(4,0,@walls);
     add_joint(0,Int(SIZE.rand)*2,@walls);

@@ -24,7 +24,7 @@ class Mouse is export {
         $!dest = scaled-rect($!texture, $!width);
         $!dest.x += $x + Int($!width/2);
         $!dest.y += $y + Int($!width/2);
-        $!r = Num(180);
+        $!r = Num(-90);
     }
 
     sub scaled-rect($texture, $size) {
