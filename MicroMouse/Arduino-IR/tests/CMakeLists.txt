@@ -7,6 +7,7 @@ find_package(Threads REQUIRED)
 
 set(TEST_SOURCES
   check_queue.c
+  check_astar.c
   main.c
 )
 

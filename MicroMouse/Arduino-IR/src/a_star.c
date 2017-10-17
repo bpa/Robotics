@@ -51,6 +51,7 @@ void look(int i, int d, int diff, int cost) {
     maze[n].path_length = maze[i].path_length + 1;
     maze[n].g = g;
     maze[n].f = maze[n].h + g;
+    maze[n].from = i;
     if (maze[n].open) {
         queue_reprioritize(n);
     }
@@ -67,7 +68,13 @@ void add_neighbors(int i) {
 }
 
 void make_path(int i, Path *path) {
-    
+    Pair *p;
+    path->n = -1;
+    while (maze[i].id != maze[i].from) {
+        p = &path->data[++path->n];
+        set_coord(i, p->x, p->y);
+        i = maze[i].from;
+    }
 }
 
 void find_path(int x1, int y1, int x2, int y2, Path *path) {
@@ -81,14 +88,15 @@ void find_path(int x1, int y1, int x2, int y2, Path *path) {
             maze[c].closed = 0;
             maze[c].h = distance(j, i, x2, y2);
             maze[c].g = 0xFF;
+            c++;
         }
     }
 
     i = ind(x1, y1);
     maze[i].path_length = 0;
     maze[i].g = 0;
-    maze[i].f = distance(x1, y1, x2, y2);
-    maze[i].from = -1;
+    maze[i].f = maze[i].h;
+    maze[i].from = i;
 
     queue_init(open);
     queue_push(open, i);
