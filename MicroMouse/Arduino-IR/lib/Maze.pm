@@ -1,6 +1,6 @@
 use Algorithm::MinMaxHeap;
+use Maze::SDF;
 
-constant SIZE = 8;
 constant EDGES = SIZE * 2 + 1;
 constant U = 1;
 constant R = 2;
@@ -88,7 +88,8 @@ sub generate_maze() is export {
             add_joint($edge.jx, $edge.jy,@walls);
         }
     }
+    write_maze(@walls);
     return @walls;
 }
 
-# vim: syn=perl6
+# vim: ft=perl6 sw=4 ts=4 et
