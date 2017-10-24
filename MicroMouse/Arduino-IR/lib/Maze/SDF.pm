@@ -3,96 +3,19 @@
 use XML::Writer;
 
 constant SIZE = 8;
+constant MM = 0.001;
 constant INCH = 0.0254;
 constant IN_2 = INCH / 2;
+constant IN_4 = INCH / 4;
 constant WALL = INCH * 2;
 constant UNIT_SIZE = 7 * INCH;
 constant BLACK = ['0 0 0 1'];
-
-class Pose {
-	has $.x=0;
-	has $.y=0;
-	has $.z=0;
-	has $.roll=0;
-	has $.pitch=0;
-	has $.yaw=0;
-
-	method Str {
-    	return "$.x $.y $.z $.roll $.pitch $.yaw";
-	}
-
-	method inner {
-    	return "0 0 {$.z/2} 0 0 0";
-	}
-}
+constant WALL_Z = WALL / 2 + IN_2;
 
 sub write_maze(@walls) is export {
+    mkdir "maze";
     write_config();
     write_model(@walls);
-}
-
-sub write_model(@walls) {
-    spurt "maze/model.sdf", XML::Writer.serialize(
-        :sdf[
-            :version('1.6'),
-            static => ['1'],
-            pose => [Pose.new()],
-            model => links(@walls),
-        ]
-    )
-}
-
-sub box ($name, $size, $pose, :$material="White") {
-    return :link[
-        :name($name),
-        pose=>[:frame(''), $pose.Str],
-        collision=>[
-            :name("{$name}_Collision"),
-            pose => [$pose.inner],
-            geometry=>[box=>[size=>$size]],
-        ],
-        visual=>[
-            :name("{$name}_Visual"),
-            pose => [$pose.inner],
-            geometry=>[box=>[size=>$size]],
-            material=>[
-                script=>[
-                    uri=>["file://media/materials/scripts/gazebo.material"],
-                    name=>["Gazebo/$material"],
-                ],
-            ],
-            meta=>[layer=>["1"]],
-        ],
-    ];
-}
-
-sub links(@maze) {
-    my $floor_w = SIZE * UNIT_SIZE + IN_2;
-    my @l = (
-        :name("{SIZE}x{SIZE} Maze"),
-        box('Floor', ["$floor_w $floor_w {IN_2}"], Pose.new(), :material('FlatBlack')),
-    );
-	for ^@maze.elems -> $y {
-		for ^@maze.elems -> $x {
-			if !@maze[$x][$y] {
-				next;
-			}
-
-			if $x %% 2 {
-				if $y %% 2 {
-					@l.append(post($x/2, $y/2));
-				}
-				else {
-					@l.append(vwall($x/2, ($y-1)/2));
-				}
-			}
-			elsif $y %% 2 {
-				@l.append(hwall(($x-1)/2, $y/2));
-			}
-		}
-	}
-
-    return @l;
 }
 
 sub write_config() {
@@ -109,22 +32,139 @@ sub write_config() {
     );
 }
 
-sub post($x, $y) {
-	my $name = "Post{$x}_{$y}";
-	return
-		box($name, ["{IN_2} {IN_2} {WALL}"],
-			Pose.new(:x(UNIT_SIZE * $x), :y(UNIT_SIZE*$y), :z(IN_2))),
-		box("{$name}_cap", ["{IN_2} {IN_2} .001"],
-			Pose.new(:x(UNIT_SIZE * $x), :y(UNIT_SIZE*$y), :z(WALL+IN_2)),
-			:material("Red"));
+sub write_model(@walls) {
+    spurt "maze/model.sdf", XML::Writer.serialize(
+        :sdf[
+            :version('1.6'),
+            model => [
+                :name("{SIZE}x{SIZE} Maze"),
+                static => ['1'],
+                link => links(@walls),
+            ]
+        ]
+    )
+}
+
+sub links(@maze) {
+    my @l = :name('Maze');
+    @l.append(base(SIZE * UNIT_SIZE + IN_2));
+	@l.append(post(SIZE/2, SIZE/2));
+
+	for ^@maze.elems -> $y {
+		for ^@maze.elems -> $x {
+			if !@maze[$x][$y] {
+				next;
+			}
+
+			if $x %% 2 {
+				if $y % 2 {
+					@l.append(vwall($x/2, ($y-1)/2));
+				}
+			}
+			elsif $y %% 2 {
+				@l.append(hwall(($x-1)/2, $y/2));
+			}
+		}
+	}
+
+    return @l;
+}
+
+sub base ($size) {
+    return (
+    collision=>[
+        :name("Base_Collision"),
+        pose=>["{$size/2} {$size/2} {IN_4} 0 0 0"],
+        geometry=>[box=>[size=>["$size $size {IN_2}"]]],
+    ],
+    visual=>[
+        :name("Base_Visual"),
+        pose=>["{$size/2} {$size/2} {IN_4} 0 0 0"],
+        geometry=>[box=>[size=>["$size $size {IN_2}"]]],
+        material=>[
+            script=>[
+                uri=>["file://media/materials/scripts/gazebo.material"],
+                name=>["Gazebo/FlatBlack"],
+            ],
+        ],
+        meta=>[layer=>["0"]],
+    ]);
+}
+
+sub post ($x, $y) {
+    my $name = "Post{$x}_{$y}";
+    return (
+    collision=>[
+        :name("{$name}_Collision"),
+        pose=>["{$x * UNIT_SIZE + IN_4} {$y * UNIT_SIZE + IN_4} {WALL_Z} 0 0 0"],
+        geometry=>[box=>[size=>["{IN_2} {IN_2} {WALL}"]]],
+    ],
+    visual=>[
+        :name("{$name}_Visual"),
+        pose=>["{$x * UNIT_SIZE + IN_4} {$y * UNIT_SIZE + IN_4} {WALL_Z} 0 0 0"],
+        geometry=>[box=>[size=>["{IN_2} {IN_2} {WALL - MM}"]]],
+        material=>[
+            script=>[
+                uri=>["file://media/materials/scripts/gazebo.material"],
+                name=>["Gazebo/White"],
+            ],
+        ],
+        meta=>[layer=>["0"]],
+    ],
+    visual=>[
+        :name("{$name}_Visual_Cap"),
+        pose=>["{$x * UNIT_SIZE + IN_4} {$y * UNIT_SIZE + IN_4} {WALL+IN_2} 0 0 0"],
+        geometry=>[box=>[size=>["{IN_2} {IN_2} {MM}"]]],
+        material=>[
+            script=>[
+                uri=>["file://media/materials/scripts/gazebo.material"],
+                name=>["Gazebo/Red"],
+            ],
+        ],
+        meta=>[layer=>["0"]],
+    ]);
+}
+
+sub wall ($dir, $x, $y, $w, $h) {
+    my $name = "{$dir}Wall{$x}_{$y}";
+    return (
+    collision=>[
+        :name("{$name}_Collision"),
+        pose=>["{$x * UNIT_SIZE + $w/2} {$y * UNIT_SIZE + $h/2} {WALL_Z} 0 0 0"],
+        geometry=>[box=>[size=>["$w $h {WALL}"]]],
+    ],
+    visual=>[
+        :name("{$name}_Visual"),
+        pose=>["{$x * UNIT_SIZE + $w/2} {$y * UNIT_SIZE + $h/2} {WALL_Z} 0 0 0"],
+        geometry=>[box=>[size=>["$w $h {WALL - MM}"]]],
+        material=>[
+            script=>[
+                uri=>["file://media/materials/scripts/gazebo.material"],
+                name=>["Gazebo/White"],
+            ],
+        ],
+        meta=>[layer=>["0"]],
+    ],
+    visual=>[
+        :name("{$name}_Visual_Cap"),
+        pose=>["{$x * UNIT_SIZE + $w/2} {$y * UNIT_SIZE + $h/2} {WALL+IN_2} 0 0 0"],
+        geometry=>[box=>[size=>["$w $h {MM}"]]],
+        material=>[
+            script=>[
+                uri=>["file://media/materials/scripts/gazebo.material"],
+                name=>["Gazebo/Red"],
+            ],
+        ],
+        meta=>[layer=>["0"]],
+    ]);
 }
 
 sub hwall($x, $y) {
-	return :link[:name("hwall{$x}_{$y}")];
+    return wall('H', $x, $y, UNIT_SIZE, IN_2);
 }
 
 sub vwall($x, $y) {
-	return :link[:name("vwall{$x}_{$y}")];
+    return wall('V', $x, $y, IN_2, UNIT_SIZE);
 }
 
 # vim: ft=perl6 sw=4 ts=4 expandtab

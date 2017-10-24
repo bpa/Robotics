@@ -10,6 +10,7 @@ use Cairo;
 use nqp;
 use Maze;
 use Maze::SDL;
+use Maze::SDF;
 use Mouse;
 
 constant W = 640;
@@ -48,7 +49,8 @@ enum GAME_KEYS (
     K_LEFT  => 80,
     K_RIGHT => 79,
     K_SPACE => 44,
-    K_ESC => 41,
+    K_ESC   => 41,
+    K_S     => 22,
     K_REFRESH => 62,
 );
 
@@ -85,10 +87,14 @@ main: loop {
 
     if %down_keys<K_ESC> {
 		last main;
-    } elsif %down_keys<K_REFRESH> {
+    }
+    elsif %down_keys<K_REFRESH> {
         @walls = generate_maze();
         $maze = MazeRenderer.new(20, 20, $width, @walls);
         $mouse = Mouse.new(:$render, :x(20), :y(20), :$width, :@walls);
+    }
+    elsif %down_keys<K_S> {
+        write_maze(@walls);
     }
 
     SDL_SetRenderDrawColor($render, 0, 0, 0, 0);

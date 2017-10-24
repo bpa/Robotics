@@ -88,7 +88,6 @@ sub generate_maze() is export {
             add_joint($edge.jx, $edge.jy,@walls);
         }
     }
-    write_maze(@walls);
     return @walls;
 }
 
