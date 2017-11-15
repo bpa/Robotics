@@ -13,13 +13,13 @@ constant BLACK = ['0 0 0 1'];
 constant WALL_Z = WALL / 2 + IN_2;
 
 sub write_maze(@walls) is export {
-    mkdir "maze";
+    mkdir "models/maze";
     write_config();
     write_model(@walls);
 }
 
 sub write_config() {
-    spurt "maze/model.config", XML::Writer.serialize(
+    spurt "models/maze/model.config", XML::Writer.serialize(
         :model[
             name => ["maze"],
             version => ['1.0'],
@@ -33,7 +33,7 @@ sub write_config() {
 }
 
 sub write_model(@walls) {
-    spurt "maze/model.sdf", XML::Writer.serialize(
+    spurt "models/maze/model.sdf", XML::Writer.serialize(
         :sdf[
             :version('1.6'),
             model => [
@@ -160,11 +160,11 @@ sub wall ($dir, $x, $y, $w, $h) {
 }
 
 sub hwall($x, $y) {
-    return wall('H', $x, $y, UNIT_SIZE, IN_2);
+    return wall('H', $x, $y, UNIT_SIZE + IN_2, IN_2);
 }
 
 sub vwall($x, $y) {
-    return wall('V', $x, $y, IN_2, UNIT_SIZE);
+    return wall('V', $x, $y, IN_2, UNIT_SIZE + IN_2);
 }
 
 # vim: ft=perl6 sw=4 ts=4 expandtab

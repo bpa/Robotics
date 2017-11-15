@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdint.h>
 #include "mouse.h"
 #include "a_star.h"
 
@@ -8,7 +6,7 @@ Path shortest_path;
 
 void (*state)();
 
-void setup() {
+void init() {
     int i;
     for (i=0; i<DIST; i++) {
         maze[i].id = i;

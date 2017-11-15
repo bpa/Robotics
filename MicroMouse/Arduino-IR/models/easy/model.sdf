@@ -1,0 +1,970 @@
+<sdf version="1.6"><model name="8x8 Maze"><static>1</static><link name="Maze"><collision name="Base_Collision"><pose>0.71755 0.71755 0.00635 0 0 0</pose><geometry><box><size>1.4351 1.4351 0.0127</size></box></geometry>
+</collision>
+<visual name="Base_Visual"><pose>0.71755 0.71755 0.00635 0 0 0</pose><geometry><box><size>1.4351 1.4351 0.0127</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/FlatBlack</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="Post4_4_Collision"><pose>0.71755 0.71755 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="Post4_4_Visual"><pose>0.71755 0.71755 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="Post4_4_Visual_Cap"><pose>0.71755 0.71755 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall0_0_Collision"><pose>0.09525 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall0_0_Visual"><pose>0.09525 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall0_0_Visual_Cap"><pose>0.09525 0.00635 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall1_0_Collision"><pose>0.27305 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall1_0_Visual"><pose>0.27305 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall1_0_Visual_Cap"><pose>0.27305 0.00635 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall2_0_Collision"><pose>0.45085 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall2_0_Visual"><pose>0.45085 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall2_0_Visual_Cap"><pose>0.45085 0.00635 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall3_0_Collision"><pose>0.62865 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall3_0_Visual"><pose>0.62865 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall3_0_Visual_Cap"><pose>0.62865 0.00635 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall4_0_Collision"><pose>0.80645 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall4_0_Visual"><pose>0.80645 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall4_0_Visual_Cap"><pose>0.80645 0.00635 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall5_0_Collision"><pose>0.98425 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall5_0_Visual"><pose>0.98425 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall5_0_Visual_Cap"><pose>0.98425 0.00635 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall6_0_Collision"><pose>1.16205 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall6_0_Visual"><pose>1.16205 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall6_0_Visual_Cap"><pose>1.16205 0.00635 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall7_0_Collision"><pose>1.33985 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall7_0_Visual"><pose>1.33985 0.00635 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall7_0_Visual_Cap"><pose>1.33985 0.00635 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall0_0_Collision"><pose>0.00635 0.09525 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall0_0_Visual"><pose>0.00635 0.09525 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall0_0_Visual_Cap"><pose>0.00635 0.09525 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall5_0_Collision"><pose>0.89535 0.09525 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall5_0_Visual"><pose>0.89535 0.09525 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall5_0_Visual_Cap"><pose>0.89535 0.09525 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall6_0_Collision"><pose>1.07315 0.09525 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall6_0_Visual"><pose>1.07315 0.09525 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall6_0_Visual_Cap"><pose>1.07315 0.09525 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall8_0_Collision"><pose>1.42875 0.09525 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall8_0_Visual"><pose>1.42875 0.09525 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall8_0_Visual_Cap"><pose>1.42875 0.09525 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall0_1_Collision"><pose>0.09525 0.18415 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall0_1_Visual"><pose>0.09525 0.18415 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall0_1_Visual_Cap"><pose>0.09525 0.18415 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall4_1_Collision"><pose>0.80645 0.18415 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall4_1_Visual"><pose>0.80645 0.18415 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall4_1_Visual_Cap"><pose>0.80645 0.18415 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall7_1_Collision"><pose>1.33985 0.18415 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall7_1_Visual"><pose>1.33985 0.18415 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall7_1_Visual_Cap"><pose>1.33985 0.18415 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall0_1_Collision"><pose>0.00635 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall0_1_Visual"><pose>0.00635 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall0_1_Visual_Cap"><pose>0.00635 0.27305 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall2_1_Collision"><pose>0.36195 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall2_1_Visual"><pose>0.36195 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall2_1_Visual_Cap"><pose>0.36195 0.27305 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall3_1_Collision"><pose>0.53975 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall3_1_Visual"><pose>0.53975 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall3_1_Visual_Cap"><pose>0.53975 0.27305 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall6_1_Collision"><pose>1.07315 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall6_1_Visual"><pose>1.07315 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall6_1_Visual_Cap"><pose>1.07315 0.27305 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall8_1_Collision"><pose>1.42875 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall8_1_Visual"><pose>1.42875 0.27305 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall8_1_Visual_Cap"><pose>1.42875 0.27305 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall0_2_Collision"><pose>0.09525 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall0_2_Visual"><pose>0.09525 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall0_2_Visual_Cap"><pose>0.09525 0.36195 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall1_2_Collision"><pose>0.27305 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall1_2_Visual"><pose>0.27305 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall1_2_Visual_Cap"><pose>0.27305 0.36195 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall3_2_Collision"><pose>0.62865 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall3_2_Visual"><pose>0.62865 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall3_2_Visual_Cap"><pose>0.62865 0.36195 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall5_2_Collision"><pose>0.98425 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall5_2_Visual"><pose>0.98425 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall5_2_Visual_Cap"><pose>0.98425 0.36195 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall6_2_Collision"><pose>1.16205 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall6_2_Visual"><pose>1.16205 0.36195 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall6_2_Visual_Cap"><pose>1.16205 0.36195 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall0_2_Collision"><pose>0.00635 0.45085 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall0_2_Visual"><pose>0.00635 0.45085 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall0_2_Visual_Cap"><pose>0.00635 0.45085 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall4_2_Collision"><pose>0.71755 0.45085 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall4_2_Visual"><pose>0.71755 0.45085 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall4_2_Visual_Cap"><pose>0.71755 0.45085 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall8_2_Collision"><pose>1.42875 0.45085 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall8_2_Visual"><pose>1.42875 0.45085 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall8_2_Visual_Cap"><pose>1.42875 0.45085 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall3_3_Collision"><pose>0.62865 0.53975 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall3_3_Visual"><pose>0.62865 0.53975 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall3_3_Visual_Cap"><pose>0.62865 0.53975 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall4_3_Collision"><pose>0.80645 0.53975 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall4_3_Visual"><pose>0.80645 0.53975 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall4_3_Visual_Cap"><pose>0.80645 0.53975 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall6_3_Collision"><pose>1.16205 0.53975 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall6_3_Visual"><pose>1.16205 0.53975 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall6_3_Visual_Cap"><pose>1.16205 0.53975 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall0_3_Collision"><pose>0.00635 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall0_3_Visual"><pose>0.00635 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall0_3_Visual_Cap"><pose>0.00635 0.62865 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall1_3_Collision"><pose>0.18415 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall1_3_Visual"><pose>0.18415 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall1_3_Visual_Cap"><pose>0.18415 0.62865 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall2_3_Collision"><pose>0.36195 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall2_3_Visual"><pose>0.36195 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall2_3_Visual_Cap"><pose>0.36195 0.62865 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall3_3_Collision"><pose>0.53975 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall3_3_Visual"><pose>0.53975 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall3_3_Visual_Cap"><pose>0.53975 0.62865 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall5_3_Collision"><pose>0.89535 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall5_3_Visual"><pose>0.89535 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall5_3_Visual_Cap"><pose>0.89535 0.62865 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall7_3_Collision"><pose>1.25095 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall7_3_Visual"><pose>1.25095 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall7_3_Visual_Cap"><pose>1.25095 0.62865 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall8_3_Collision"><pose>1.42875 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall8_3_Visual"><pose>1.42875 0.62865 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall8_3_Visual_Cap"><pose>1.42875 0.62865 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall1_4_Collision"><pose>0.27305 0.71755 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall1_4_Visual"><pose>0.27305 0.71755 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall1_4_Visual_Cap"><pose>0.27305 0.71755 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall0_4_Collision"><pose>0.00635 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall0_4_Visual"><pose>0.00635 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall0_4_Visual_Cap"><pose>0.00635 0.80645 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall1_4_Collision"><pose>0.18415 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall1_4_Visual"><pose>0.18415 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall1_4_Visual_Cap"><pose>0.18415 0.80645 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall2_4_Collision"><pose>0.36195 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall2_4_Visual"><pose>0.36195 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall2_4_Visual_Cap"><pose>0.36195 0.80645 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall3_4_Collision"><pose>0.53975 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall3_4_Visual"><pose>0.53975 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall3_4_Visual_Cap"><pose>0.53975 0.80645 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall5_4_Collision"><pose>0.89535 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall5_4_Visual"><pose>0.89535 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall5_4_Visual_Cap"><pose>0.89535 0.80645 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall6_4_Collision"><pose>1.07315 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall6_4_Visual"><pose>1.07315 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall6_4_Visual_Cap"><pose>1.07315 0.80645 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall7_4_Collision"><pose>1.25095 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall7_4_Visual"><pose>1.25095 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall7_4_Visual_Cap"><pose>1.25095 0.80645 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall8_4_Collision"><pose>1.42875 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall8_4_Visual"><pose>1.42875 0.80645 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall8_4_Visual_Cap"><pose>1.42875 0.80645 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall3_5_Collision"><pose>0.62865 0.89535 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall3_5_Visual"><pose>0.62865 0.89535 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall3_5_Visual_Cap"><pose>0.62865 0.89535 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall0_5_Collision"><pose>0.00635 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall0_5_Visual"><pose>0.00635 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall0_5_Visual_Cap"><pose>0.00635 0.98425 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall1_5_Collision"><pose>0.18415 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall1_5_Visual"><pose>0.18415 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall1_5_Visual_Cap"><pose>0.18415 0.98425 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall6_5_Collision"><pose>1.07315 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall6_5_Visual"><pose>1.07315 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall6_5_Visual_Cap"><pose>1.07315 0.98425 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall7_5_Collision"><pose>1.25095 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall7_5_Visual"><pose>1.25095 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall7_5_Visual_Cap"><pose>1.25095 0.98425 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall8_5_Collision"><pose>1.42875 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall8_5_Visual"><pose>1.42875 0.98425 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall8_5_Visual_Cap"><pose>1.42875 0.98425 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall2_6_Collision"><pose>0.45085 1.07315 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall2_6_Visual"><pose>0.45085 1.07315 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall2_6_Visual_Cap"><pose>0.45085 1.07315 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall3_6_Collision"><pose>0.62865 1.07315 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall3_6_Visual"><pose>0.62865 1.07315 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall3_6_Visual_Cap"><pose>0.62865 1.07315 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall4_6_Collision"><pose>0.80645 1.07315 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall4_6_Visual"><pose>0.80645 1.07315 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall4_6_Visual_Cap"><pose>0.80645 1.07315 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall5_6_Collision"><pose>0.98425 1.07315 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall5_6_Visual"><pose>0.98425 1.07315 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall5_6_Visual_Cap"><pose>0.98425 1.07315 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall0_6_Collision"><pose>0.00635 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall0_6_Visual"><pose>0.00635 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall0_6_Visual_Cap"><pose>0.00635 1.16205 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall1_6_Collision"><pose>0.18415 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall1_6_Visual"><pose>0.18415 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall1_6_Visual_Cap"><pose>0.18415 1.16205 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall3_6_Collision"><pose>0.53975 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall3_6_Visual"><pose>0.53975 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall3_6_Visual_Cap"><pose>0.53975 1.16205 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall4_6_Collision"><pose>0.71755 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall4_6_Visual"><pose>0.71755 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall4_6_Visual_Cap"><pose>0.71755 1.16205 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall6_6_Collision"><pose>1.07315 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall6_6_Visual"><pose>1.07315 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall6_6_Visual_Cap"><pose>1.07315 1.16205 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall7_6_Collision"><pose>1.25095 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall7_6_Visual"><pose>1.25095 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall7_6_Visual_Cap"><pose>1.25095 1.16205 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall8_6_Collision"><pose>1.42875 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall8_6_Visual"><pose>1.42875 1.16205 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall8_6_Visual_Cap"><pose>1.42875 1.16205 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall1_7_Collision"><pose>0.27305 1.25095 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall1_7_Visual"><pose>0.27305 1.25095 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall1_7_Visual_Cap"><pose>0.27305 1.25095 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall2_7_Collision"><pose>0.45085 1.25095 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall2_7_Visual"><pose>0.45085 1.25095 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall2_7_Visual_Cap"><pose>0.45085 1.25095 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall5_7_Collision"><pose>0.98425 1.25095 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall5_7_Visual"><pose>0.98425 1.25095 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall5_7_Visual_Cap"><pose>0.98425 1.25095 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall6_7_Collision"><pose>1.16205 1.25095 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall6_7_Visual"><pose>1.16205 1.25095 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall6_7_Visual_Cap"><pose>1.16205 1.25095 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall0_7_Collision"><pose>0.00635 1.33985 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall0_7_Visual"><pose>0.00635 1.33985 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall0_7_Visual_Cap"><pose>0.00635 1.33985 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall5_7_Collision"><pose>0.89535 1.33985 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall5_7_Visual"><pose>0.89535 1.33985 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall5_7_Visual_Cap"><pose>0.89535 1.33985 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="VWall8_7_Collision"><pose>1.42875 1.33985 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0508</size></box></geometry>
+</collision>
+<visual name="VWall8_7_Visual"><pose>1.42875 1.33985 0.0381 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="VWall8_7_Visual_Cap"><pose>1.42875 1.33985 0.0635 0 0 0</pose><geometry><box><size>0.0127 0.1905 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall0_8_Collision"><pose>0.09525 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall0_8_Visual"><pose>0.09525 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall0_8_Visual_Cap"><pose>0.09525 1.42875 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall1_8_Collision"><pose>0.27305 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall1_8_Visual"><pose>0.27305 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall1_8_Visual_Cap"><pose>0.27305 1.42875 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall2_8_Collision"><pose>0.45085 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall2_8_Visual"><pose>0.45085 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall2_8_Visual_Cap"><pose>0.45085 1.42875 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall3_8_Collision"><pose>0.62865 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall3_8_Visual"><pose>0.62865 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall3_8_Visual_Cap"><pose>0.62865 1.42875 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall4_8_Collision"><pose>0.80645 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall4_8_Visual"><pose>0.80645 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall4_8_Visual_Cap"><pose>0.80645 1.42875 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall5_8_Collision"><pose>0.98425 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall5_8_Visual"><pose>0.98425 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall5_8_Visual_Cap"><pose>0.98425 1.42875 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall6_8_Collision"><pose>1.16205 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall6_8_Visual"><pose>1.16205 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall6_8_Visual_Cap"><pose>1.16205 1.42875 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<collision name="HWall7_8_Collision"><pose>1.33985 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0508</size></box></geometry>
+</collision>
+<visual name="HWall7_8_Visual"><pose>1.33985 1.42875 0.0381 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.0498</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/White</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+<visual name="HWall7_8_Visual_Cap"><pose>1.33985 1.42875 0.0635 0 0 0</pose><geometry><box><size>0.1905 0.0127 0.001</size></box></geometry>
+<material><script><uri>file://media/materials/scripts/gazebo.material</uri><name>Gazebo/Red</name>
+</script>
+</material>
+<meta><layer>0</layer></meta></visual>
+</link>
+</model>
+</sdf>

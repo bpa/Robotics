@@ -37,8 +37,9 @@ typedef struct {
 
 extern Cell maze[MAZE*MAZE];
 
+void init();
 void reach_center();
 void discover();
 void done();
-
+    
 #endif
