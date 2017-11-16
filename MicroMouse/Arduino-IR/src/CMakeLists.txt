@@ -11,7 +11,8 @@ set(LIB_SOURCES
   Mouse.cpp
   state.cpp
   movement.cpp
-  wheel.cpp
+  hardware.cpp
+  mocks.cpp
 )
 
 set(HEADERS 
@@ -21,7 +22,8 @@ set(HEADERS
   Mouse.h
   queue.h
   movement.h
-  wheel.h
+  hardware.h
+  mocks.h
 )
 
 add_library(micromouse STATIC ${LIB_SOURCES} ${HEADERS})

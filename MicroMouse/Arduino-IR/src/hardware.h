@@ -6,7 +6,7 @@
   #include <Encoder.h>
 
 #else
-  #define AF_DCMotor fixMe
+  #include "mocks.h"
 #endif
 
 #define NEAR 5

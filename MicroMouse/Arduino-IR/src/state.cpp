@@ -24,7 +24,7 @@ void RANDOM() {
         }
         moves--;
         int available = 0;
-        int (*dir[4])();
+        void (*dir[4])();
         if (analogRead(FRONT_SENSOR) < 100) {
             dir[available++] = move_forward;
             Serial.print("F ");
