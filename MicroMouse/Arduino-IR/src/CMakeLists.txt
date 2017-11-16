@@ -7,15 +7,21 @@ link_directories(${GAZEBO_LIBRARY_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 set(LIB_SOURCES
-  a_star.c
-  mouse.c
+  a_star.cpp
+  Mouse.cpp
+  state.cpp
+  movement.cpp
+  wheel.cpp
 )
 
 set(HEADERS 
   ${CONFIG_HEADER}
   a_star.h
-  mouse.h
+  state.h
+  Mouse.h
   queue.h
+  movement.h
+  wheel.h
 )
 
 add_library(micromouse STATIC ${LIB_SOURCES} ${HEADERS})

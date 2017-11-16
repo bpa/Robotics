@@ -6,9 +6,9 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 set(TEST_SOURCES
-  check_queue.c
-  check_astar.c
-  main.c
+  check_queue.cpp
+  check_astar.cpp
+  main.cpp
 )
 
 add_executable(check_mouse ${TEST_SOURCES})

@@ -1,7 +1,7 @@
 #ifndef __MM_A_STAR_H__
 #define __MM_A_STAR_H__
 
-#include "mouse.h"
+#include "Mouse.h"
 #include "queue.h"
 
 typedef struct {

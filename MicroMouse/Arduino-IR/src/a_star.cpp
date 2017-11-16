@@ -1,4 +1,3 @@
-#include "mouse.h"
 #include "a_star.h"
 #include <stdlib.h>
 

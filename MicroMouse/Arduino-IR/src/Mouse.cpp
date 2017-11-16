@@ -1,12 +1,11 @@
-#include "mouse.h"
+#include "Mouse.h"
 #include "a_star.h"
+#include "state.h"
 
 Cell maze[MAZE*MAZE];
 Path shortest_path;
 
-void (*state)();
-
-void init() {
+void mouse_init() {
     int i;
     for (i=0; i<DIST; i++) {
         maze[i].id = i;
@@ -22,19 +21,4 @@ void init() {
     cell(maze, MAZE_END,MAZE_END).walls = D | R | L; //Start location
     cell(maze, 0,       MAZE_END).walls = D | L;
     find_path(MAZE_END, MAZE_END, MAZE/2, MAZE/2, &shortest_path);
-    state = reach_center;
-}
-
-void loop() {
-    state();
-}
-
-void reach_center() {
-}
-
-void discover() {
-}
-
-void done() {
-    //We reached the center and can power down
 }

@@ -4,7 +4,7 @@
 extern Open open;
 void queue_reprioritize(uint8_t value);
 void queue_push_priority(uint8_t value);
-void setup();
+void mouse_init();
 
 START_TEST(test_push) {
     queue_init(open);
@@ -68,7 +68,7 @@ START_TEST(test_queue_push_priority) {
 END_TEST
 
 START_TEST(test_queue_reprioritize) {
-	setup();
+	mouse_init();
 	maze[0].f = 3;
 	maze[2].f = 4;
 	maze[3].f = 5;
