@@ -6,8 +6,10 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 set(TEST_SOURCES
+  check_runs.cpp
   check_queue.cpp
   check_astar.cpp
+  maze.cpp
   main.cpp
 )
 

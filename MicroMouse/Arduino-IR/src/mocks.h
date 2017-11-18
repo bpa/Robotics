@@ -1,7 +1,7 @@
 #ifndef MOUSE_MOCKS
 #define MOUSE_MOCKS
 
-#ifndef ARDUINO
+#if !defined(ARDUINO)
   #include <stdint.h>
   class SerialImpl {
       public:
@@ -9,6 +9,7 @@
       void print(const char *m);
       void print(int);
       void println();
+      void println(int);
       void println(const char *m);
   };
 
@@ -29,6 +30,7 @@
 
   extern SerialImpl Serial;
   extern int analogRead(int);
+  extern void analogWrite(int, uint16_t);
   extern int randomSeed(int);
   extern int random(int);
 
@@ -38,7 +40,7 @@
   #define RELEASE 4
 
   #define byte int8_t
-
+  #define delay(x) ;
 #endif
 
 #endif

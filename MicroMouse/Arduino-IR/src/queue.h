@@ -12,4 +12,15 @@ typedef struct { \
 #define queue_push(q, v) (q.data[++q.n] = v)
 #define queue_empty(q) (q.n < 0)
 
+#ifdef ARDUINO
+#else
+#include <stdio.h>
+#define queue_print(q) do { \
+    for (int i=0; i<=q.n;i++) { \
+        printf("(%d,%d) ", q.data[i].x, q.data[i].y); \
+    } \
+    printf("\n"); \
+} while (0)
+#endif
+
 #endif

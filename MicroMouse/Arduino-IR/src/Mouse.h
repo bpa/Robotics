@@ -16,11 +16,14 @@ typedef enum {
     R = 2,
     D = 4,
     L = 8,
-    KNOWN_U = 16,
-    KNOWN_R = 32,
-    KNOWN_D = 64,
-    KNOWN_L = 128
 } Wall;
+
+typedef enum {
+    N = 0,
+    E,
+    S,
+    W,
+} Direction;
 
 typedef struct {
     uint8_t id;
@@ -36,6 +39,8 @@ typedef struct {
 } Cell;
 
 extern Cell maze[MAZE*MAZE];
+extern Direction facing;
+extern int x, y;
 
 void mouse_init();
 void reach_center();

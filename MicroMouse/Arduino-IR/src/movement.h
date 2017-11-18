@@ -1,7 +1,7 @@
 #ifndef _MOUSE_MOVEMENT_
 #define _MOUSE_MOVEMENT_
 
-#ifdef ARDUINO
+#if defined(ARDUINO)
     #include <Arduino.h>
 #endif
 

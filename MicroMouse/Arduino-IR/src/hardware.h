@@ -1,10 +1,9 @@
 #ifndef MOUSE_BODY
 #define MOUSE_BODY
 
-#ifdef ARDUINO
+#if defined(ARDUINO)
   #include <AFMotor.h>
   #include <Encoder.h>
-
 #else
   #include "mocks.h"
 #endif
@@ -21,11 +20,11 @@ public:
     void stop();
 
 private:
-    int near = 0;
-    int target = 0;
-    int speed = 0;
-    bool _forward = true;
-    bool targeting = false;
+    int near;
+    int target;
+    int speed;
+    bool _forward;
+    bool targeting;
     AF_DCMotor *motor;
     Encoder *encoder;
 };

@@ -3,7 +3,9 @@
 #include "state.h"
 
 Cell maze[MAZE*MAZE];
+Direction facing;
 Path shortest_path;
+int x, y;
 
 void mouse_init() {
     int i;
@@ -16,9 +18,11 @@ void mouse_init() {
         cell(maze, MAZE_END, i).walls = R;
         cell(maze, i, MAZE_END).walls = D;
     }
-    cell(maze, 0,       0).walls = U | L;
+    cell(maze, 0,       0).walls = U | L | R; //Start location
     cell(maze, MAZE_END,0).walls = U | R;
-    cell(maze, MAZE_END,MAZE_END).walls = D | R | L; //Start location
+    cell(maze, MAZE_END,MAZE_END).walls = D | R;
     cell(maze, 0,       MAZE_END).walls = D | L;
-    find_path(MAZE_END, MAZE_END, MAZE/2, MAZE/2, &shortest_path);
+    find_path(0, 0, MAZE/2, MAZE/2, &shortest_path);
+    facing = S;
+    x = y = 0;
 }

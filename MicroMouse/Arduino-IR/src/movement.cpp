@@ -7,6 +7,33 @@ const int UNIT = 2450;
 bool near_target = false;
 bool stopped = true;
 
+void ignore() {}
+void center() {
+    if (analogRead(FRONT_SENSOR) > 175) {
+        near_target = true;
+        return;
+    }
+
+    int l = analogRead(LEFT_SENSOR);
+    int r = analogRead(RIGHT_SENSOR);
+    if (l > 200) {
+        left_motor.setSpeed(MAX_SPEED);
+        right_motor.setSpeed(MAX_SPEED - 75);
+        return;
+    }
+
+    if (r > 200) {
+        left_motor.setSpeed(MAX_SPEED - 75);
+        right_motor.setSpeed(MAX_SPEED);
+        return;
+    }
+
+    left_motor.setSpeed(MAX_SPEED);
+    right_motor.setSpeed(MAX_SPEED);
+}
+
+void (*look_around)() = ignore;
+
 void movement() {
     if (stopped)
         return;
@@ -16,19 +43,29 @@ void movement() {
         near_target = true;
         left.reset(l);
         right.reset(r);
+        Serial.println("close");
+    }
+    else {
+        look_around();
     }
 }
 
+#ifdef ARDUINO
 void move_right() {
     near_target = false;
     stopped = false;
-    stop();
+    left.forward(1400, MAX_SPEED);
+    right.backwards(790, 50);
+    look_around = ignore;
 }
 
 void move_left() {
     near_target = false;
     stopped = false;
-    stop();
+    Serial.println("in left");
+    left.backwards(700, 50);
+    right.forward(1400, MAX_SPEED);
+    look_around = ignore;
 }
 
 void move_forward() {
@@ -36,6 +73,7 @@ void move_forward() {
     stopped = false;
     left.forward(UNIT, MAX_SPEED);
     right.forward(UNIT, MAX_SPEED);
+    look_around = center;
 }
 
 void move_backward() {
@@ -43,6 +81,7 @@ void move_backward() {
     stopped = false;
     left.backwards(UNIT, MAX_SPEED);
     right.backwards(UNIT, MAX_SPEED);
+    look_around = center;
 }
 
 void stop() {
@@ -50,4 +89,15 @@ void stop() {
     stopped = true;
     left.stop();
     right.stop();
+    look_around = ignore;
 }
+#else
+#include "Mouse.h"
+#include <stdio.h>
+Wall moving;
+void move_right()    { printf("R\n"); moving = R; }
+void move_left()     { printf("L\n"); moving = L; }
+void move_forward()  { printf("U\n"); moving = U; }
+void move_backward() { printf("D\n"); moving = D; }
+void stop() {}
+#endif
