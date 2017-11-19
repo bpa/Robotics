@@ -48,14 +48,14 @@ void hard_maze_setup() {
 }
 
 static void setup() {
-    INIT();
+    state = INIT;
     analogWrite(FRONT_SENSOR, 35);
 }
 
 START_TEST(test_no_go) {
     analogWrite(FRONT_SENSOR, 350);
     state();
-    ck_assert_state(DONE);
+    ck_assert_state(SENSE);
 }
 END_TEST
 
@@ -70,6 +70,9 @@ START_TEST(test_explore) {
     state();
     uint8_t looking = S;
     int cx=0, cy=0;
+//TODO: Add check for correctly specifying walls and neighbor's walls
+//TODO: Add check for no incorrect walls.
+//          probably should just mask each square out looking for extra walls
     ck_assert_state(EXPLORE_TO_CENTER);
     ck_assert_step(U, S, 0, 1, EXPLORE_TO_CENTER);
     ck_assert_step(L, E, 0, 1, EXPLORE_TO_CENTER);
