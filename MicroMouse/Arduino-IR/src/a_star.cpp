@@ -26,7 +26,6 @@ void look(Maze &maze, Cell *from, int d, int diff, int cost) {
         return;
     }
 
-    to->path_length = from->path_length + 1;
     to->g = g;
     to->f = to->h + g;
     to->from = from->maze_ind;
@@ -75,7 +74,6 @@ void find_path(int x1, int y1, int x2, int y2, Maze &maze, Path &path) {
 
     i = ind(x1, y1);
     cell = &maze[i];
-    cell->path_length = 0;
     cell->g = 0;
     cell->f = maze[i].h;
     cell->from = i;

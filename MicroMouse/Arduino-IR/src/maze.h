@@ -33,7 +33,6 @@ typedef struct {
     uint8_t g;
     uint8_t h;
     uint8_t from;
-    uint8_t path_length;
 } Cell;
 
 typedef Cell Maze[CELLS];
