@@ -1,112 +1,95 @@
 #include "a_star.h"
-#include <stdlib.h>
+#include "queue.h"
 
-Open open;
+#ifndef ARDUINO
+#define abs(x) (x<0?x:-x)
+#endif
 
-void queue_reprioritize(uint8_t value) {
-    int i = open.n;
-    while (i>=0 && maze[open.data[i]].id != value) {
-      i--;
-    }
-
-	if (i < 0) {
-		return;
-	}
-
-    while (i<open.n && maze[value].f < maze[open.data[i+1]].f) {
-        open.data[i] = open.data[i+1];
-        i++;
-    }
-    open.data[i] = value;
-}
-
-void queue_push_priority(uint8_t value) {
-    int i = open.n; 
-    while (i>=0 && maze[value].f > maze[open.data[i]].f) {
-        open.data[i+1] = open.data[i];
-        i--;
-    }
-
-    open.data[i+1] = value;
-    open.n++;
-}
+PriorityQueue open;
 
 uint8_t distance (int x1, int y1, int x2, int y2) {
     return abs(x1 - x2) + abs(y1 - y2);
 }
 
-void look(int i, int d, int diff, int cost) {
+void look(Maze &maze, Cell *from, int d, int diff, int cost) {
     int g;
-    int n = i + diff;
-    if (maze[i].walls & d || maze[n].closed) {
+
+    if (from->walls & d) return;
+
+    Cell *to = &maze[from->maze_ind + diff];
+    if (to->closed) return;
+
+    g = from->g + cost;
+    if (g > to->g) {
         return;
     }
 
-    g = maze[i].g + cost;
-    if (g > maze[n].g) {
-        return;
-    }
-
-    maze[n].path_length = maze[i].path_length + 1;
-    maze[n].g = g;
-    maze[n].f = maze[n].h + g;
-    maze[n].from = i;
-    if (maze[n].open) {
-        queue_reprioritize(n);
+    to->path_length = from->path_length + 1;
+    to->g = g;
+    to->f = to->h + g;
+    to->from = from->maze_ind;
+    if (to->open) {
+        queue_reprioritize(open, to);
     }
     else {
-        queue_push_priority(n);
+        queue_push_priority(open, to);
     }
 }
 
-void add_neighbors(int i) {
-    look(i, D,  8, 1);
-    look(i, R,  1, 1);
-    look(i, L, -1, 1);
-    look(i, U, -8, 1);
+void add_neighbors(Cell *cell, Maze &maze) {
+    look(maze, cell, D,  8, 1);
+    look(maze, cell, R,  1, 1);
+    look(maze, cell, L, -1, 1);
+    look(maze, cell, U, -8, 1);
 }
 
-void make_path(int i, Path *path) {
-    Pair *p;
-    path->n = -1;
-    while (maze[i].id != maze[i].from) {
-        p = &path->data[++path->n];
-        set_coord(i, p->x, p->y);
-        i = maze[i].from;
+void make_path(Cell *cell, Maze &maze, Path &path) {
+    Point *p;
+    path.size = -1;
+    while (cell->maze_ind != cell->from) {
+        p = &path.data[++path.size];
+        p->x = cell->maze_ind % MAZE;
+        p->y = cell->maze_ind / MAZE;
+        cell = &maze[cell->from];
     }
 }
 
-void find_path(int x1, int y1, int x2, int y2, Path *path) {
+void find_path(int x1, int y1, int x2, int y2, Maze &maze, Path &path) {
     int i, j, c, destination;
+    Cell *cell;
     destination = ind(x2, y2);
 
     c=0;
     for (i=0; i<MAZE; i++) {
         for (j=0; j<MAZE; j++) {
-            maze[c].open = 0;
-            maze[c].closed = 0;
-            maze[c].h = distance(j, i, x2, y2);
-            maze[c].g = 0xFF;
+            cell = &maze[c];
+            cell->open = 0;
+            cell->closed = 0;
+            cell->h = distance(j, i, x2, y2);
+            cell->g = 0xFF;
             c++;
         }
     }
 
     i = ind(x1, y1);
-    maze[i].path_length = 0;
-    maze[i].g = 0;
-    maze[i].f = maze[i].h;
-    maze[i].from = i;
+    cell = &maze[i];
+    cell->path_length = 0;
+    cell->g = 0;
+    cell->f = maze[i].h;
+    cell->from = i;
 
     queue_init(open);
-    queue_push(open, i);
+
+    queue_push(open, &maze[i]);
+
     while (!queue_empty(open)) {
-        i = queue_pop(open);
-        maze[i].closed = 1;
-        if (i == destination) {
+        cell = queue_pop(open);
+        cell->closed = 1;
+        if (cell->maze_ind == destination) {
             break;
         }
-        add_neighbors(i);
+        add_neighbors(cell, maze);
     }
 
-    return make_path(i, path);
+    make_path(cell, maze, path);
 }

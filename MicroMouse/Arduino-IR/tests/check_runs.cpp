@@ -17,20 +17,19 @@
     analogWrite(RIGHT_SENSOR, (_w & visible[looking][2]) ? 200 : 10); \
     near_target = true; \
     state(); \
-    ck_assert_msg(_d == facing, "Assertion '%s' failed: %d != %d", "direction == "#D, facing, _d); \
-    ck_assert_msg(_x == x && _y == y, "Assertion '%s' failed: (%d, %d) != (%d, %d)", "("#X","#Y") == loc", _x, _y, x, y); \
+    ck_assert_msg(_d == mouse.facing, "Assertion '%s' failed: %d != %d", "direction == "#D, mouse.facing, _d); \
+    ck_assert_msg(_x == mouse.x && _y == mouse.y, "Assertion '%s' failed: (%d, %d) != (%d, %d)", "("#X","#Y") == loc", _x, _y, mouse.x, mouse.y); \
     ck_assert_msg(state == _p, "Assertion '%s' failed: %d != %d", "state == "#S, state, _p); \
     looking = D; \
     cx = _x; \
     cy = _y; \
 } while (0)
 
-extern int x, y;
-extern Direction moving;
+extern Mouse mouse;
 extern Wall visible[][4];
 
 static Path path;
-static Cell hidden[MAZE*MAZE];
+static Maze hidden;
 
 char hard_maze[] =
 //0 1 2 3 4 5 6 7
@@ -48,8 +47,8 @@ void hard_maze_setup() {
     create_maze(hard_maze, hidden);
 }
 
-void setup() {
-    state = INIT;
+static void setup() {
+    INIT();
     analogWrite(FRONT_SENSOR, 35);
 }
 

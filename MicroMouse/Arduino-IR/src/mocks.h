@@ -1,5 +1,5 @@
-#ifndef MOUSE_MOCKS
-#define MOUSE_MOCKS
+#ifndef MM_MOCKS_H
+#define MM_MOCKS_H
 
 #if !defined(ARDUINO)
   #include <stdint.h>

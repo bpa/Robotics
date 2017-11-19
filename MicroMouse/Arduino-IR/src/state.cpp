@@ -3,9 +3,9 @@
 #include "hardware.h"
 #include "movement.h"
 #include "a_star.h"
+#include "queue.h"
 #ifndef ARDUINO
 #include "stdio.h"
-#include "queue.h"
 #endif
 
 extern Path shortest_path;
@@ -54,6 +54,7 @@ void INIT() {
     }
 
     mouse_init();
+    find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.shortest_path);
     randomSeed(analogRead(0));
     delay(1500);
     near_target = true;
@@ -94,39 +95,39 @@ void RANDOM() {
 
 void EXPLORE_TO_CENTER() {
     if (near_target) {
-        if (x == MAZE/2 && y == MAZE/2) {
+        if (mouse.x == MAZE/2 && mouse.y == MAZE/2) {
             state = VALIDATE_SHORTEST_PATH;
             return;
         }
-        uint8_t w = cell(maze, x, y).walls;
-        uint8_t observed = w & visible[facing][3];
+        uint8_t w = cell(mouse.maze, mouse.x, mouse.y).walls;
+        uint8_t observed = w & visible[mouse.facing][3];
 
-        if (analogRead(FRONT_SENSOR) > 100) observed |= visible[facing][0];
-        if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[facing][1];
-        if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[facing][2];
+        if (analogRead(FRONT_SENSOR) > 100) observed |= visible[mouse.facing][0];
+        if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[mouse.facing][1];
+        if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[mouse.facing][2];
         if ( w != observed ) {
-            cell(maze, x, y).walls = observed;
-            find_path(x, y, MAZE/2, MAZE/2, &shortest_path);
+            cell(mouse.maze, mouse.x, mouse.y).walls = observed;
+            find_path(mouse.x, mouse.y, MAZE/2, MAZE/2, mouse.maze, mouse.shortest_path);
 #ifndef ARDUINO
-            printf("search %d, %d => 4, 4\n", x, y);
-            queue_print(shortest_path);
+            printf("search %d, %d => 4, 4\n", mouse.x, mouse.y);
+            queue_print(mouse.shortest_path);
 #endif
         }
-        Pair next = shortest_path.data[shortest_path.n];
+        Point next = mouse.shortest_path.data[mouse.shortest_path.size];
         printf("next: %d, %d\n", next.x, next.y);
         Direction d;
-             if (x < next.x) d = E;
-        else if (x > next.x) d = W;
-        else if (y < next.y) d = S;
-        else if (y > next.y) d = N;
-        void (*cmd)() = move[facing][d];
+             if (mouse.x < next.x) d = E;
+        else if (mouse.x > next.x) d = W;
+        else if (mouse.y < next.y) d = S;
+        else if (mouse.y > next.y) d = N;
+        void (*cmd)() = move[mouse.facing][d];
         if (cmd != move_left && cmd != move_right) {
-            x = next.x;
-            y = next.y;
-            queue_pop(shortest_path);
+            mouse.x = next.x;
+            mouse.y = next.y;
+            queue_pop(mouse.shortest_path);
         }
         if (cmd != move_backward) {
-            facing = d;
+            mouse.facing = d;
         }
         cmd();
     }

@@ -1,107 +1,112 @@
 #include <check.h>
-#include "../src/a_star.h"
+#include "../src/queue.h"
 
-extern Open open;
-void queue_reprioritize(uint8_t value);
-void queue_push_priority(uint8_t value);
+static Maze maze;
+static PriorityQueue q;
 void mouse_init();
 
+static void setup() {
+    for (int i=1; i<CELLS; i++) {
+        maze[i].maze_ind = i;
+        maze[i].f = i;
+    }
+}
+
 START_TEST(test_push) {
-    queue_init(open);
-    ck_assert_int_eq(open.n, -1);
+    queue_init(q);
+    ck_assert_int_eq(q.size, -1);
 
-    queue_push(open, 1);
-    ck_assert_int_eq(open.n, 0);
-    ck_assert_int_eq(open.data[0], 1);
+    queue_push(q, &maze[1]);
+    ck_assert_int_eq(q.size, 0);
+    ck_assert_int_eq(q.data[0]->f, 1);
 
-    queue_push(open, 0);
-    ck_assert_int_eq(open.n, 1);
-    ck_assert_int_eq(open.data[1], 0);
+    queue_push(q, &maze[0]);
+    ck_assert_int_eq(q.size, 1);
+    ck_assert_int_eq(q.data[1]->f, 0);
 }
 END_TEST
 
 START_TEST(test_pop) {
-    queue_init(open);
-    queue_push(open, 1);
-    queue_push(open, 0);
+    queue_init(q);
+    queue_push(q, &maze[1]);
+    queue_push(q, &maze[0]);
 
-    ck_assert_int_eq(open.n, 1);
-    ck_assert_int_eq(queue_empty(open), 0);
+    ck_assert_int_eq(q.size, 1);
+    ck_assert_int_eq(queue_empty(q), 0);
 
-    ck_assert_int_eq(queue_pop(open), 0);
-    ck_assert_int_eq(open.n, 0);
-    ck_assert_int_eq(queue_empty(open), 0);
+    ck_assert_ptr_eq(queue_pop(q), &maze[0]);
+    ck_assert_int_eq(q.size, 0);
+    ck_assert_int_eq(queue_empty(q), 0);
 
-    ck_assert_int_eq(queue_pop(open), 1);
-    ck_assert_int_eq(open.n, -1);
-    ck_assert_int_eq(queue_empty(open), 1);
+    ck_assert_ptr_eq(queue_pop(q), &maze[1]);
+    ck_assert_int_eq(q.size, -1);
+    ck_assert_int_eq(queue_empty(q), 1);
 }
 END_TEST
 
 START_TEST(test_queue_push_priority) {
-	maze[0].f = 3;
-	maze[1].f = 6;
-	maze[2].f = 4;
-	maze[3].f = 5;
-	maze[4].f = 8;
-    queue_init(open);
-    queue_push(open, 1);
-    queue_push(open, 2);
+    queue_init(q);
+    queue_push(q, &maze[3]);
+    queue_push(q, &maze[1]);
 
-	queue_push_priority(4);
-    ck_assert_uint_eq(open.n, 2);
-    ck_assert_uint_eq(open.data[0], 4);
-    ck_assert_uint_eq(open.data[1], 1);
-    ck_assert_uint_eq(open.data[2], 2);
+	queue_push_priority(q, &maze[4]);
+    ck_assert_uint_eq(q.size, 2);
+    ck_assert_uint_eq(q.data[0]->f, 4);
+    ck_assert_uint_eq(q.data[1]->f, 3);
+    ck_assert_uint_eq(q.data[2]->f, 1);
 
-	queue_push_priority(3);
-    ck_assert_uint_eq(open.n, 3);
-    ck_assert_uint_eq(open.data[1], 1);
-    ck_assert_uint_eq(open.data[2], 3);
-    ck_assert_uint_eq(open.data[3], 2);
+	queue_push_priority(q, &maze[2]);
+    ck_assert_uint_eq(q.size, 3);
+    ck_assert_uint_eq(q.data[1]->f, 3);
+    ck_assert_uint_eq(q.data[2]->f, 2);
+    ck_assert_uint_eq(q.data[3]->f, 1);
 
-	queue_push_priority(0);
-    ck_assert_uint_eq(open.n, 4);
-    ck_assert_uint_eq(open.data[3], 2);
-    ck_assert_uint_eq(open.data[4], 0);
+	queue_push_priority(q, &maze[0]);
+    ck_assert_uint_eq(q.size, 4);
+    ck_assert_uint_eq(q.data[3]->f, 1);
+    ck_assert_uint_eq(q.data[4]->f, 0);
 }
 END_TEST
 
 START_TEST(test_queue_reprioritize) {
 	mouse_init();
-	maze[0].f = 3;
-	maze[2].f = 4;
-	maze[3].f = 5;
-	maze[1].f = 6;
-	maze[4].f = 8;
-    queue_init(open);
-    queue_push(open, 1);
-    queue_push(open, 4);
-    queue_push(open, 0);
-    queue_push(open, 3);
-    queue_push(open, 2);
+    queue_init(q);
+    queue_push(q, &maze[9]);
+    queue_push(q, &maze[6]);
+    queue_push(q, &maze[3]);
+    queue_push(q, &maze[1]);
 
-    ck_assert_uint_eq(open.n, 4);
-	queue_reprioritize(1);
-    ck_assert_uint_eq(open.n, 4);
-    ck_assert_uint_eq(open.data[0], 4);
-    ck_assert_uint_eq(open.data[1], 1);
-    ck_assert_uint_eq(open.data[2], 0);
-    ck_assert_uint_eq(open.data[3], 3);
-    ck_assert_uint_eq(open.data[4], 2);
+    ck_assert_uint_eq(q.size, 3);
+    maze[9].f = 5;
+	queue_reprioritize(q, &maze[9]);
+    ck_assert_uint_eq(q.size, 3);
+    ck_assert_uint_eq(q.data[0]->f, 6);
+    ck_assert_uint_eq(q.data[1]->f, 5);
+    ck_assert_uint_eq(q.data[2]->f, 3);
+    ck_assert_uint_eq(q.data[3]->f, 1);
+    ck_assert_uint_eq(q.data[1]->maze_ind, 9);
 
-	queue_reprioritize(2);
-    ck_assert_uint_eq(open.n, 4);
-    ck_assert_uint_eq(open.data[3], 3);
-    ck_assert_uint_eq(open.data[4], 2);
+    maze[3].f = 2;
+	queue_reprioritize(q, &maze[2]);
+    ck_assert_uint_eq(q.size, 3);
+    ck_assert_uint_eq(q.data[2]->f, 2);
+    ck_assert_uint_eq(q.data[3]->f, 1);
+    ck_assert_uint_eq(q.data[2]->maze_ind, 3);
 
-	queue_reprioritize(0);
-    ck_assert_uint_eq(open.n, 4);
-    ck_assert_uint_eq(open.data[0], 4);
-    ck_assert_uint_eq(open.data[1], 1);
-    ck_assert_uint_eq(open.data[2], 3);
-    ck_assert_uint_eq(open.data[3], 2);
-    ck_assert_uint_eq(open.data[4], 0);
+    maze[9].f = 0;
+	queue_reprioritize(q, &maze[9]);
+    ck_assert_uint_eq(q.size, 3);
+    ck_assert_uint_eq(q.data[0]->f, 6);
+    ck_assert_uint_eq(q.data[1]->f, 2);
+    ck_assert_uint_eq(q.data[2]->f, 1);
+    ck_assert_uint_eq(q.data[3]->f, 0);
+
+	queue_reprioritize(q, &maze[2]);
+    ck_assert_uint_eq(q.size, 3);
+    ck_assert_uint_eq(q.data[0]->f, 6);
+    ck_assert_uint_eq(q.data[1]->f, 2);
+    ck_assert_uint_eq(q.data[2]->f, 1);
+    ck_assert_uint_eq(q.data[3]->f, 0);
 }
 END_TEST
 
@@ -111,6 +116,7 @@ Suite *queue_suite(void) {
 
     s = suite_create("Queue");
     tc_core = tcase_create("Core");
+    tcase_add_checked_fixture(tc_core, setup, NULL);
 
     tcase_add_test(tc_core, test_push);
     tcase_add_test(tc_core, test_pop);

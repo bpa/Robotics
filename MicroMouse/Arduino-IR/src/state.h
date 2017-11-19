@@ -1,5 +1,5 @@
-#ifndef _MOUSE_STATE_
-#define _MOUSE_STATE_
+#ifndef MM_STATE_H
+#define MM_STATE_H
 
 extern void (*state)();
 extern void INIT();

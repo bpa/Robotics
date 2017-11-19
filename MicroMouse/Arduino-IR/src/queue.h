@@ -1,26 +1,34 @@
-#ifndef __MM_QUEUE_H__
-#define __MM_QUEUE_H__
+#ifndef MM_QUEUE_H
+#define MM_QUEUE_H
 
-#define Queue(type, name, size) \
-typedef struct { \
-    int n; \
-    type data[size]; \
-} name
+#include "maze.h"
 
-#define queue_init(q) q.n = -1
-#define queue_pop(q) q.data[q.n--]
-#define queue_push(q, v) (q.data[++q.n] = v)
-#define queue_empty(q) (q.n < 0)
+typedef struct {
+    int size;
+    Cell *data[CELLS];
+} PriorityQueue;
 
-#ifdef ARDUINO
-#else
-#include <stdio.h>
-#define queue_print(q) do { \
-    for (int i=0; i<=q.n;i++) { \
-        printf("(%d,%d) ", q.data[i].x, q.data[i].y); \
-    } \
-    printf("\n"); \
-} while (0)
-#endif
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+typedef struct {
+    int size;
+    Point data[CELLS];
+} Path;
+
+/*
+ * These are purposely #defines because I want to allow
+ * a path to use them as well.  Call it my poor man's templates
+ */
+#define queue_init(q) q.size = -1
+#define queue_pop(q) q.data[q.size--]
+#define queue_push(q, v) (q.data[++q.size] = v)
+#define queue_empty(q) (q.size < 0)
+
+void queue_print(Path &);
+void queue_push_priority(PriorityQueue &, Cell *);
+void queue_reprioritize(PriorityQueue &, Cell *);
 
 #endif

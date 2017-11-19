@@ -1,5 +1,5 @@
-#ifndef MOUSE_BODY
-#define MOUSE_BODY
+#ifndef MM_HARDWARE_H
+#define MM_HARDWARE_H
 
 #if defined(ARDUINO)
   #include <AFMotor.h>
