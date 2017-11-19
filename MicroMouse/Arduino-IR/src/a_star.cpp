@@ -1,7 +1,9 @@
 #include "a_star.h"
 #include "queue.h"
 
-#ifndef ARDUINO
+#ifdef ARDUINO
+#include <Arduino.h>
+#else
 #define abs(x) (x<0?x:-x)
 #endif
 

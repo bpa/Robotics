@@ -1,6 +1,8 @@
 #include "queue.h"
 
-#ifndef ARDUINO
+#ifdef ARDUINO
+  #include <Arduino.h>
+#else
   #include "mocks.h"
 #endif
 
