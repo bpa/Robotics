@@ -7,8 +7,18 @@
 #else
   #include "mocks.h"
 #endif
+#include <math.h>
 
 #define NEAR 5
+#define WHEEL_RADIUS 20
+#define WHEEL_SEPARATION 75 
+#define GEAR_RATIO 150
+#define COUNTS_PER_ROTATION 12
+
+#define TICKS_PER_ROTATION (GEAR_RATIO * COUNTS_PER_ROTATION)
+#define CIRCUMFERENCE (2 * WHEEL_RADIUS * M_PI)
+#define TICK_DISTANCE CIRCUMFERENCE / TICKS_PER_ROTATION
+#define TICKS_PER_MM TICKS_PER_ROTATION / CIRCUMFERENCE
 
 class Wheel {
 public:
