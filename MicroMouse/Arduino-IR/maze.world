@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+  <world name="MicroMouse">
+    <gui>
+      <camera name="user_camera">
+        <pose>0.7239 0.7239 2.5 0 1.5707 0</pose>
+      </camera>
+    </gui>
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://bot</uri>
+      <pose>0.0889 .0889 .0127 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://easy</uri>
+    </include>
+  </world>
+</sdf>
