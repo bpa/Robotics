@@ -15,6 +15,7 @@ set(LIB_SOURCES
   movement.cpp
   queue.cpp
   state.cpp
+  wheel.cpp
 )
 
 set(HEADERS 
@@ -27,6 +28,7 @@ set(HEADERS
   movement.h
   queue.h
   state.h
+  wheel.h
 )
 
 add_library(micromouse STATIC ${LIB_SOURCES} ${HEADERS})

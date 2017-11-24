@@ -95,9 +95,9 @@ void stop() {
 #include "Mouse.h"
 #include <stdio.h>
 Wall moving;
-void move_right()    { printf("R\n"); moving = R; }
-void move_left()     { printf("L\n"); moving = L; }
-void move_forward()  { printf("U\n"); moving = U; }
-void move_backward() { printf("D\n"); moving = D; }
+void move_right()    { /*printf("R\n");*/ moving = R; }
+void move_left()     { /*printf("L\n");*/ moving = L; }
+void move_forward()  { /*printf("U\n");*/ moving = U; }
+void move_backward() { /*printf("D\n");*/ moving = D; }
 void stop() {}
 #endif

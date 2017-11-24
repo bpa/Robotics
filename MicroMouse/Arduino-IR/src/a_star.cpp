@@ -2,9 +2,10 @@
 #include "queue.h"
 
 #ifdef ARDUINO
-#include <Arduino.h>
+  #include <Arduino.h>
 #else
-#define abs(x) (x<0?x:-x)
+  #include <cmath>
+  #define abs std::abs
 #endif
 
 PriorityQueue open;

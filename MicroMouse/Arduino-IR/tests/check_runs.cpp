@@ -96,7 +96,9 @@ START_TEST(test_explore) {
     ck_assert_step(L, W, 4, 5, EXPLORE_TO_CENTER);
     ck_assert_step(U, W, 3, 5, EXPLORE_TO_CENTER);
     ck_assert_step(R, N, 3, 5, EXPLORE_TO_CENTER);
-    ck_assert_step(U, N, 3, 4, VALIDATE_SHORTEST_PATH);
+    ck_assert_step(U, N, 3, 4, EXPLORE_TO_CENTER);
+    ck_assert_step(R, E, 3, 4, EXPLORE_TO_CENTER);
+    ck_assert_step(U, E, 4, 4, VALIDATE_SHORTEST_PATH);
 
 /* Another test for another day
     ck_assert_step(D, N, 3, 5, VALIDATE_SHORTEST_PATH);

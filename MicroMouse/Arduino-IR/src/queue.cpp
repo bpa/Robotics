@@ -35,7 +35,7 @@ void queue_push_priority(PriorityQueue &q, Cell *cell) {
 }
 
 void queue_print(Path &p) {
-    for (int i=p.size; i>0;i--) {
+    for (int i=p.size; i>=0; i--) {
         Serial.print("(");
         Serial.print(p.data[i].x);
         Serial.print(",");
