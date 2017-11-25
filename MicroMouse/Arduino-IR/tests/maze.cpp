@@ -1,7 +1,25 @@
 #include "maze.h"
 #include "../src/Mouse.h"
 
-void create_maze(const char *maze_text, Maze &maze) {
+char wc[][16] = {
+    " ", "┬", "┤", "┐", //0123
+    "┴", "═", "┘", "]", //4567
+    "├", "┌", "║", "∩", //8901
+    "└", "[", "∪", "□"};//2345
+
+char empty_maze[] =
+//0 1 2 3 4 5 6 7
+"_________________"
+"| |             |" //0
+"|               |" //1
+"|               |" //2
+"|               |" //3
+"|               |" //4
+"|               |" //5
+"|               |" //6
+"|_______________|";//7
+
+void create_maze(Maze &maze, const char *maze_text) {
     int x, y, w;
     maze[0].walls = w;
     for (x=0; x<MAZE; x++) {

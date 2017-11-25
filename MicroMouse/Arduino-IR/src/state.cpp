@@ -5,12 +5,6 @@
 #include "a_star.h"
 #include "queue.h"
 
-//              0    123456789012345
-char wc[][16] = {
-    " ", "┬", "┤", "┐", //0123
-    "┴", "═", "┘", "]", //4567
-    "├", "┌", "║", "∩", //8901
-    "└", "[", "∪", "□"};//2345
 extern Path shortest_path;
 void (*state)();
 int moves = 4;
@@ -108,24 +102,20 @@ void EXPLORE_TO_CENTER() {
             cell(mouse.maze, mouse.x, mouse.y).walls = observed;
             find_path(mouse.x, mouse.y, MAZE/2, MAZE/2, mouse.maze, mouse.shortest_path);
         }
-        Point next = mouse.shortest_path.data[mouse.shortest_path.size];
+        Point next = queue_pop(mouse.shortest_path);
         Direction d;
              if (mouse.x < next.x) d = E;
         else if (mouse.x > next.x) d = W;
         else if (mouse.y < next.y) d = S;
         else if (mouse.y > next.y) d = N;
         void (*cmd)() = move[mouse.facing][d];
-        if (cmd != move_left && cmd != move_right) {
-            mouse.x = next.x;
-            mouse.y = next.y;
-            queue_pop(mouse.shortest_path);
-            if (mouse.x == MAZE/2 && mouse.y == MAZE/2) {
-                state = VALIDATE_SHORTEST_PATH;
-                return;
-            }
-        }
+        mouse.x = next.x;
+        mouse.y = next.y;
         if (cmd != move_backward) {
             mouse.facing = d;
+        }
+        if (mouse.x == MAZE/2 && mouse.y == MAZE/2) {
+            state = VALIDATE_SHORTEST_PATH;
         }
         cmd();
     }

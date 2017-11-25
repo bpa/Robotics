@@ -2,18 +2,6 @@
 #include "../src/a_star.h"
 #include "maze.h"
 
-char empty_maze[] =
-//0 1 2 3 4 5 6 7
-"_________________"
-"| |             |" //0
-"|               |" //1
-"|               |" //2
-"|               |" //3
-"|               |" //4
-"|               |" //5
-"|               |" //6
-"|_______________|";//7
-
 char test_maze[] =
 //0 1 2 3 4 5 6 7
 "_________________"
@@ -30,7 +18,7 @@ static Path path;
 static Maze maze;
 
 START_TEST(test_empty) {
-    create_maze(empty_maze, maze);
+    create_maze(maze, empty_maze);
     find_path(0, 0, 4, 4, maze, path);
     ck_assert_uint_eq(7, path.size);
     ck_assert_path_coord(4, 4, path.data[0]);
@@ -39,7 +27,7 @@ START_TEST(test_empty) {
 END_TEST
 
 START_TEST(test_next_cell) {
-    create_maze(test_maze, maze);
+    create_maze(maze, test_maze);
     find_path(0, 0, 0, 1, maze, path);
     ck_assert_uint_eq(0, path.size);
     ck_assert_path_coord(0, 1, path.data[0]);
@@ -47,7 +35,7 @@ START_TEST(test_next_cell) {
 END_TEST
 
 START_TEST(test_around_a_wall) {
-    create_maze(test_maze, maze);
+    create_maze(maze, test_maze);
     find_path(0, 0, 1, 0, maze, path);
     ck_assert_uint_eq(2, path.size);
     ck_assert_path_coord(0, 1, path.data[2]);
@@ -57,7 +45,7 @@ START_TEST(test_around_a_wall) {
 END_TEST
 
 START_TEST(test_back_way) {
-    create_maze(test_maze, maze);
+    create_maze(maze, test_maze);
     find_path(5, 5, 7, 6, maze, path);
     ck_assert_uint_eq(6, path.size);
     ck_assert_path_coord(4, 5, path.data[6]);
@@ -71,7 +59,7 @@ START_TEST(test_back_way) {
 END_TEST
 
 START_TEST(test_to_center) {
-    create_maze(test_maze, maze);
+    create_maze(maze, test_maze);
     find_path(0, 0, 4, 4, maze, path);
     ck_assert_uint_eq(21, path.size);
 }
@@ -85,10 +73,10 @@ Suite *astar_suite(void) {
     tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, test_empty);
-    //tcase_add_test(tc_core, test_next_cell);
-    //tcase_add_test(tc_core, test_around_a_wall);
-    //tcase_add_test(tc_core, test_back_way);
-    //tcase_add_test(tc_core, test_to_center);
+    tcase_add_test(tc_core, test_next_cell);
+    tcase_add_test(tc_core, test_around_a_wall);
+    tcase_add_test(tc_core, test_back_way);
+    tcase_add_test(tc_core, test_to_center);
     suite_add_tcase(s, tc_core);
 
     return s;

@@ -6,6 +6,7 @@
 #include "../src/movement.h"
 
 #define ck_assert_step(W, D, X, Y, S) do { \
+    int _i; \
     Wall _f = (W); \
     Direction _d = (D); \
     intmax_t _x = (X); \
@@ -23,6 +24,13 @@
     looking = D; \
     cx = _x; \
     cy = _y; \
+    for (_i=0; _i<CELLS; _i++) { \
+        if (~hidden[_i].walls & mouse.maze[_i].walls) { \
+            _x = _i % MAZE; \
+            _y = _i / MAZE; \
+            ck_assert_msg(0, "Assertion failed: Extra wall found at (%d,%d) '%s'", _x, _y, wc[mouse.maze[_i].walls]); \
+        } \
+    } \
 } while (0)
 
 extern Mouse mouse;
@@ -31,23 +39,8 @@ extern Wall visible[][4];
 static Path path;
 static Maze hidden;
 
-char hard_maze[] =
-//0 1 2 3 4 5 6 7
-"_________________"
-"| | |__      _  |" //0
-"|__ |___| |_|_  |" //1
-"|  _______  |   |" //2
-"| |   |   | | | |" //3
-"| | |_| __| | | |" //4
-"| |____   | | | |" //5
-"| __  __|_____| |" //6
-"|___|___________|";//7
-
-void hard_maze_setup() {
-    create_maze(hard_maze, hidden);
-}
-
 static void setup() {
+    create_maze(hidden, empty_maze);
     state = INIT;
     analogWrite(FRONT_SENSOR, 35);
 }
@@ -66,39 +59,39 @@ START_TEST(test_normal) {
 END_TEST
 
 START_TEST(test_explore) {
-    hard_maze_setup();
+    create_maze(hidden,
+        //0 1 2 3 4 5 6 7
+        "_________________"
+        "| | |__      _  |" //0
+        "|__ |___| |_|_  |" //1
+        "|  _______  |   |" //2
+        "| |   |   | | | |" //3
+        "| | |_| __| | | |" //4
+        "| |____   | | | |" //5
+        "| __  __|_____| |" //6
+        "|___|___________|");//7
     state();
     uint8_t looking = S;
     int cx=0, cy=0;
-//TODO: Add check for correctly specifying walls and neighbor's walls
-//TODO: Add check for no incorrect walls.
-//          probably should just mask each square out looking for extra walls
     ck_assert_state(EXPLORE_TO_CENTER);
     ck_assert_step(U, S, 0, 1, EXPLORE_TO_CENTER);
-    ck_assert_step(L, E, 0, 1, EXPLORE_TO_CENTER);
-    ck_assert_step(U, E, 1, 1, EXPLORE_TO_CENTER);
-    ck_assert_step(R, S, 1, 1, EXPLORE_TO_CENTER);
-    ck_assert_step(U, S, 1, 2, EXPLORE_TO_CENTER);
-    ck_assert_step(L, E, 1, 2, EXPLORE_TO_CENTER);
-    ck_assert_step(U, E, 2, 2, EXPLORE_TO_CENTER);
+    ck_assert_step(L, E, 1, 1, EXPLORE_TO_CENTER);
+    ck_assert_step(R, S, 1, 2, EXPLORE_TO_CENTER);
+    ck_assert_step(L, E, 2, 2, EXPLORE_TO_CENTER);
     ck_assert_step(U, E, 3, 2, EXPLORE_TO_CENTER);
     ck_assert_step(U, E, 4, 2, EXPLORE_TO_CENTER);
     ck_assert_step(U, E, 5, 2, EXPLORE_TO_CENTER);
-    ck_assert_step(R, S, 5, 2, EXPLORE_TO_CENTER);
-    ck_assert_step(U, S, 5, 3, EXPLORE_TO_CENTER);
+    ck_assert_step(R, S, 5, 3, EXPLORE_TO_CENTER);
     ck_assert_step(U, S, 5, 4, EXPLORE_TO_CENTER);
     ck_assert_step(U, S, 5, 5, EXPLORE_TO_CENTER);
     ck_assert_step(U, S, 5, 6, EXPLORE_TO_CENTER);
-    ck_assert_step(R, W, 5, 6, EXPLORE_TO_CENTER);
-    ck_assert_step(U, W, 4, 6, EXPLORE_TO_CENTER);
-    ck_assert_step(R, N, 4, 6, EXPLORE_TO_CENTER);
-    ck_assert_step(U, N, 4, 5, EXPLORE_TO_CENTER);
-    ck_assert_step(L, W, 4, 5, EXPLORE_TO_CENTER);
-    ck_assert_step(U, W, 3, 5, EXPLORE_TO_CENTER);
-    ck_assert_step(R, N, 3, 5, EXPLORE_TO_CENTER);
-    ck_assert_step(U, N, 3, 4, EXPLORE_TO_CENTER);
-    ck_assert_step(R, E, 3, 4, EXPLORE_TO_CENTER);
-    ck_assert_step(U, E, 4, 4, VALIDATE_SHORTEST_PATH);
+    ck_assert_step(R, W, 4, 6, EXPLORE_TO_CENTER);
+    ck_assert_step(R, N, 4, 5, EXPLORE_TO_CENTER);
+    ck_assert_step(L, W, 3, 5, EXPLORE_TO_CENTER);
+    ck_assert_step(R, N, 3, 4, EXPLORE_TO_CENTER);
+    ck_assert_step(R, E, 4, 4, VALIDATE_SHORTEST_PATH);
+}
+END_TEST
 
 /* Another test for another day
     ck_assert_step(D, N, 3, 5, VALIDATE_SHORTEST_PATH);
@@ -135,8 +128,6 @@ START_TEST(test_explore) {
     ck_assert_step(D, N, 0, 1, RACE_TO_CENTER);
     ck_assert_step(R, E, 0, 1, RACE_TO_CENTER);
     */
-}
-END_TEST
 
 Suite *run_suite(void) {
     Suite *s;

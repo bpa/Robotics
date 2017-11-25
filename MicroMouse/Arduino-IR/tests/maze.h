@@ -16,6 +16,8 @@
     ck_assert_msg(state == _p, "Assertion '%s' failed: (%d) != (%d)", "state == "#S, state, _p); \
 } while (0)
 
-extern void create_maze(const char *maze_text, Maze &maze);
+extern char wc[][16];
+extern char empty_maze[];
+extern void create_maze(Maze &maze, const char *maze_text);
 
 #endif
