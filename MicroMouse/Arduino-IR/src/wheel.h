@@ -5,7 +5,7 @@
   #include <Encoder.h>
   #include <AFMotor.h>
 #else
-  #include "mocks.h"
+  #include "../tests/mocks.h"
 #endif
 
 #define NEAR 5

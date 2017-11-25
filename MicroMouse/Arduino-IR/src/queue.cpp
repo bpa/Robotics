@@ -3,7 +3,7 @@
 #ifdef ARDUINO
   #include <Arduino.h>
 #else
-  #include "mocks.h"
+  #include "../tests/mocks.h"
 #endif
 
 void queue_reprioritize(PriorityQueue &q, Cell *cell) {
