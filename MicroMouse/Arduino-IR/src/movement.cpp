@@ -93,11 +93,12 @@ void stop() {
 }
 #else
 #include "Mouse.h"
-#include <stdio.h>
 Wall moving;
-void move_right()    { /*printf("R\n");*/ moving = R; }
-void move_left()     { /*printf("L\n");*/ moving = L; }
-void move_forward()  { /*printf("U\n");*/ moving = U; }
-void move_backward() { /*printf("D\n");*/ moving = D; }
+void move_right()      { moving = R;  }
+void move_left()       { moving = L;  }
+void move_forward()    { moving = U;  }
+void move_backward()   { moving = D;  }
+void move_back_left()  { moving = DL; }
+void move_back_right() { moving = DR; }
 void stop() {}
 #endif

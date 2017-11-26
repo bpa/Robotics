@@ -16,6 +16,8 @@ extern void move_right();
 extern void move_left();
 extern void move_forward();
 extern void move_backward();
+extern void move_back_left();
+extern void move_back_right();
 extern void stop();
 
 #endif

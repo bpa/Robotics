@@ -8,20 +8,34 @@
 extern Path shortest_path;
 void (*state)();
 int moves = 4;
-//   F  L  R  D
+//   N  E  S  W
+int offset[][4] = {
+    {-MAZE, 1, MAZE, -1}, //N
+    {1, MAZE, -MAZE, -1}, //E
+    {MAZE, -1, 1, -MAZE}, //S
+    {-1, -MAZE, MAZE, 1}, //W
+};
+//   N  E  S  W
 Wall visible[][4] = {
-    {U, L, R, D}, //N
-    {R, U, D, L}, //E
-    {D, R, L, U}, //S
-    {L, D, U, R}, //W
+    {U, R, D, L}, //N
+    {R, D, L, U}, //E
+    {D, L, U, R}, //S
+    {L, U, R, D}, //W
 };
 //   N             E           S             W 
 void (*move[][4])() = {
-    {move_forward, move_left, move_backward, move_right}, //N
+    {move_forward, move_right, move_backward, move_left}, //N
     {move_left, move_forward, move_right, move_backward}, //E
     {move_backward, move_left, move_forward, move_right}, //S
     {move_right, move_backward, move_left, move_forward}, //W
 };
+
+Direction direction(Point &next) {
+         if (mouse.x < next.x) return E;
+    else if (mouse.x > next.x) return W;
+    else if (mouse.y < next.y) return S;
+    else if (mouse.y > next.y) return N;
+}
 
 void FWD() {
     if (near_target) {
@@ -93,25 +107,34 @@ void RANDOM() {
 void EXPLORE_TO_CENTER() {
     if (near_target) {
         uint8_t w = cell(mouse.maze, mouse.x, mouse.y).walls;
-        uint8_t observed = w & visible[mouse.facing][3];
+        uint8_t observed = w & visible[mouse.facing][S];
 
-        if (analogRead(FRONT_SENSOR) > 100) observed |= visible[mouse.facing][0];
-        if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[mouse.facing][1];
-        if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[mouse.facing][2];
+        if (analogRead(FRONT_SENSOR) > 100) observed |= visible[mouse.facing][N];
+        if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[mouse.facing][E];
+        if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[mouse.facing][W];
         if ( w != observed ) {
             cell(mouse.maze, mouse.x, mouse.y).walls = observed;
             find_path(mouse.x, mouse.y, MAZE/2, MAZE/2, mouse.maze, mouse.shortest_path);
         }
         Point next = queue_pop(mouse.shortest_path);
-        Direction d;
-             if (mouse.x < next.x) d = E;
-        else if (mouse.x > next.x) d = W;
-        else if (mouse.y < next.y) d = S;
-        else if (mouse.y > next.y) d = N;
+        Direction d = direction(next);
         void (*cmd)() = move[mouse.facing][d];
         mouse.x = next.x;
         mouse.y = next.y;
-        if (cmd != move_backward) {
+        if (cmd == move_backward) {
+            int behind = ind(mouse.x, mouse.y) + offset[mouse.facing][S];
+            uint8_t cell = mouse.maze[behind].walls;
+            next = queue_peek(mouse.shortest_path);
+            Direction db = direction(next);
+            if (cell & visible[mouse.facing][S]) {
+                //There is a wall behind the mouse, need to turn
+                if (cell & visible[mouse.facing][db]) {
+                }
+                else {
+                }
+            }
+        }
+        else {
             mouse.facing = d;
         }
         if (mouse.x == MAZE/2 && mouse.y == MAZE/2) {

@@ -5,39 +5,61 @@
 #include "../src/hardware.h"
 #include "../src/movement.h"
 
+const char *mv(Wall w) {
+    switch (w) {
+        case U:  return "U";
+        case R:  return "R";
+        case D:  return "D";
+        case L:  return "L";
+        case DR: return "DR";
+        case DL: return "DL";
+    }
+    return "?";
+}
+
+#define place_mouse(X, Y, D) \
+    state(); \
+    cx=X; \
+    cy=Y; \
+    looking = D; \
+    mouse.x = X; \
+    mouse.y = Y; \
+    mouse.facing = D;
+
 #define ck_assert_step(W, D, X, Y, S) do { \
-    int _i; \
+    update_mouse(X, Y); \
     Wall _f = (W); \
     Direction _d = (D); \
     intmax_t _x = (X); \
     intmax_t _y = (Y); \
     void (*_p)() = (S); \
-    uint8_t _w = cell(hidden, cx, cy).walls; \
-    analogWrite(FRONT_SENSOR, (_w & visible[looking][0]) ? 200 : 10); \
-    analogWrite(LEFT_SENSOR,  (_w & visible[looking][1]) ? 200 : 10); \
-    analogWrite(RIGHT_SENSOR, (_w & visible[looking][2]) ? 200 : 10); \
-    near_target = true; \
-    state(); \
+    ck_assert_msg(_f == moving, "Assertion '%s' failed: %s != %s", "moving == "#W, mv(moving), mv(_f)); \
     ck_assert_msg(_d == mouse.facing, "Assertion '%s' failed: %d != %d", "direction == "#D, mouse.facing, _d); \
     ck_assert_msg(_x == mouse.x && _y == mouse.y, "Assertion '%s' failed: (%d, %d) != (%d, %d)", "("#X","#Y") == loc", _x, _y, mouse.x, mouse.y); \
     ck_assert_msg(state == _p, "Assertion '%s' failed: %d != %d", "state == "#S, state, _p); \
     looking = D; \
-    cx = _x; \
-    cy = _y; \
-    for (_i=0; _i<CELLS; _i++) { \
-        if (~hidden[_i].walls & mouse.maze[_i].walls) { \
-            _x = _i % MAZE; \
-            _y = _i / MAZE; \
-            ck_assert_msg(0, "Assertion failed: Extra wall found at (%d,%d) '%s'", _x, _y, wc[mouse.maze[_i].walls]); \
-        } \
-    } \
+    ck_assert_maze_subset(hidden, mouse.maze); \
 } while (0)
 
+extern Wall moving;
 extern Mouse mouse;
 extern Wall visible[][4];
 
 static Path path;
 static Maze hidden;
+static Direction looking;
+static int cx, cy;
+
+void update_mouse(int x, int y) {
+    uint8_t _w = cell(hidden, cx, cy).walls;
+    analogWrite(FRONT_SENSOR, (_w & visible[looking][N]) ? 200 : 10);
+    analogWrite(RIGHT_SENSOR, (_w & visible[looking][E]) ? 200 : 10);
+    analogWrite(LEFT_SENSOR,  (_w & visible[looking][W]) ? 200 : 10);
+    near_target = true;
+    state();
+    cx = x;
+    cy = y;
+}
 
 static void setup() {
     create_maze(hidden, empty_maze);
@@ -62,17 +84,15 @@ START_TEST(test_explore) {
     create_maze(hidden,
         //0 1 2 3 4 5 6 7
         "_________________"
-        "| | |__      _  |" //0
-        "|__ |___| |_|_  |" //1
-        "|  _______  |   |" //2
-        "| |   |   | | | |" //3
-        "| | |_| __| | | |" //4
-        "| |____   | | | |" //5
-        "| __  __|_____| |" //6
+        "| | |__      _  |"  //0
+        "|__ |___| |_|_  |"  //1
+        "|  _______  |   |"  //2
+        "| |   |   | | | |"  //3
+        "| | |_| __| | | |"  //4
+        "| |____   | | | |"  //5
+        "| __  __|_____| |"  //6
         "|___|___________|");//7
-    state();
-    uint8_t looking = S;
-    int cx=0, cy=0;
+    place_mouse(0, 0, S);
     ck_assert_state(EXPLORE_TO_CENTER);
     ck_assert_step(U, S, 0, 1, EXPLORE_TO_CENTER);
     ck_assert_step(L, E, 1, 1, EXPLORE_TO_CENTER);
@@ -90,6 +110,45 @@ START_TEST(test_explore) {
     ck_assert_step(L, W, 3, 5, EXPLORE_TO_CENTER);
     ck_assert_step(R, N, 3, 4, EXPLORE_TO_CENTER);
     ck_assert_step(R, E, 4, 4, VALIDATE_SHORTEST_PATH);
+}
+END_TEST
+
+START_TEST(test_dead_end) {
+    setup_mazes(hidden, mouse.maze,
+        //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
+        "_________________ _________________"
+        "| |  __     |   | | |             |"  //0
+        "| | |__ | |___| | | |             |"  //1
+        "| | |___|_|   | | | |             |"  //2
+        "| |_  |   | |_| | | |             |"  //3
+        "| __|_ ___|_  | | |               |"  //4
+        "| ____|  _| |_  | |               |"  //5
+        "| ______| ____| | |               |"  //6
+        "|_______________| |_______________|");//7
+    place_mouse(0, 3, S);
+    ck_assert_step( U, S, 0, 4, EXPLORE_TO_CENTER);
+    ck_assert_step( L, E, 1, 4, EXPLORE_TO_CENTER);
+    ck_assert_step(DL, S, 0, 4, EXPLORE_TO_CENTER);
+    ck_assert_step( U, S, 0, 5, EXPLORE_TO_CENTER);
+}
+END_TEST
+
+START_TEST(test_back_past_turn) {
+    setup_mazes(hidden, mouse.maze,
+        //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
+        "_________________ _________________"
+        "| |  __     |   | | |         |   |"  //0
+        "| | |__ | |___| | | |  __ | |___| |"  //1
+        "| | |___|_|   | | | | |___|_|   | |"  //2
+        "| |_  |   | |_| | | |_      | |_| |"  //3
+        "| __|_ ___|_  | | | __|_ ___|_  | |"  //4
+        "| ____|  _| |_  | | ____|  _| |_  |"  //5
+        "| ______| ____| | | ______| ____| |"  //6
+        "|_______________| |_______________|");//7
+    place_mouse(2, 2, W);
+    ck_assert_step(DR, S, 3, 2, EXPLORE_TO_CENTER);
+    ck_assert_step( D, S, 3, 1, EXPLORE_TO_CENTER);
+    ck_assert_step( R, W, 2, 1, EXPLORE_TO_CENTER);
 }
 END_TEST
 
@@ -140,6 +199,8 @@ Suite *run_suite(void) {
     tcase_add_test(tc_core, test_no_go);
     tcase_add_test(tc_core, test_normal);
     tcase_add_test(tc_core, test_explore);
+    tcase_add_test(tc_core, test_dead_end);
+    tcase_add_test(tc_core, test_back_past_turn);
     suite_add_tcase(s, tc_core);
 
     return s;

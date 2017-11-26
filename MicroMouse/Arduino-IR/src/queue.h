@@ -23,6 +23,7 @@ typedef struct {
  * a path to use them as well.  Call it my poor man's templates
  */
 #define queue_init(q) q.size = -1
+#define queue_peek(q) q.data[q.size]
 #define queue_pop(q) q.data[q.size--]
 #define queue_push(q, v) (q.data[++q.size] = v)
 #define queue_empty(q) (q.size < 0)

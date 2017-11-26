@@ -11,10 +11,12 @@
 #define dist(a, b) (a < b ? b - a : a - b)
 
 typedef enum {
-    U = 1,
-    R = 2,
-    D = 4,
-    L = 8,
+    U  =  1,
+    R  =  2,
+    D  =  4,
+    L  =  8,
+    DR =  6,
+    DL = 12,
 } Wall;
 
 typedef enum {
