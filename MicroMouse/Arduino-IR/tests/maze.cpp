@@ -2,6 +2,34 @@
 #include "../src/Mouse.h"
 #include <stdio.h>
 
+const char *dir(Direction d) {
+    switch (d) {
+        case N:  return "N";
+        case S:  return "S";
+        case E:  return "E";
+        case W:  return "W";
+        default: return "?";
+    }
+}
+
+const char *wall(Wall w) {
+    switch (w) {
+        case U:  return "U";
+        case R:  return "R";
+        case D:  return "D";
+        case L:  return "L";
+        case DR: return "DR";
+        case DL: return "DL";
+        default: return "?";
+    }
+}
+
+           //        X    Y   XY
+char tl[][4] = {" ", "╷", "╶", "┌"};//Top left
+char tr[][4] = {" ", "╷", "╴", "┐"};//Top right
+char bl[][4] = {" ", "╵", "╶", "└"};//Bottom left
+char br[][4] = {" ", "╵", "╴", "┘"};//Bottom right
+
 char wc[][16] = {
     " ", "┬", "┤", "┐", //0123
     "┴", "═", "┘", "]", //4567
@@ -9,10 +37,20 @@ char wc[][16] = {
     "└", "[", "∪", "□"};//2345
 
 void print_maze(Maze &maze) {
-    int c=0, x, y;
+    int c=0, x, y, w;
     for (y=0; y<MAZE; y++) {
         for (x=0; x<MAZE; x++) {
-            printf("%s", wc[maze[c].walls]);
+            w = maze[c].walls;
+            printf("%s", tl[(w&L?1:0) + (w&U?2:0)]);
+            printf("%s", tr[(w&R?1:0) + (w&U?2:0)]);
+            c++;
+        }
+        printf("\n");
+        c-=MAZE;
+        for (x=0; x<MAZE; x++) {
+            w = maze[c].walls;
+            printf("%s", bl[(w&L?1:0) + (w&D?2:0)]);
+            printf("%s", br[(w&R?1:0) + (w&D?2:0)]);
             c++;
         }
         printf("\n");

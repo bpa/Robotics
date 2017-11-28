@@ -6,6 +6,8 @@
 #include "queue.h"
 
 extern Path shortest_path;
+const char *dir(Direction);
+const char *wall(Wall);
 void (*state)();
 int moves = 4;
 //   N  E  S  W
@@ -21,6 +23,13 @@ Wall visible[][4] = {
     {R, D, L, U}, //E
     {D, L, U, R}, //S
     {L, U, R, D}, //W
+};
+//   N  E  S  W
+Direction turn[][4] = {
+    {N, E, S, W}, //N
+    {E, S, W, N}, //E
+    {S, W, N, E}, //S
+    {W, N, E, S}, //W
 };
 //   N             E           S             W 
 void (*move[][4])() = {
@@ -122,22 +131,24 @@ void EXPLORE_TO_CENTER() {
         mouse.x = next.x;
         mouse.y = next.y;
         if (cmd == move_backward) {
-            int behind = ind(mouse.x, mouse.y) + offset[mouse.facing][S];
-            uint8_t cell = mouse.maze[behind].walls;
+            uint8_t cell = cell(mouse.maze, mouse.x, mouse.y).walls;
             next = queue_peek(mouse.shortest_path);
             Direction db = direction(next);
-            if (cell & visible[mouse.facing][S]) {
-                //There is a wall behind the mouse, need to turn
-                if (cell & visible[mouse.facing][db]) {
+            if (db == d || cell & visible[mouse.facing][S]) {
+                if ((cell & visible[mouse.facing][W]) == 0) {
+                    cmd = move_back_left;
+                    mouse.facing = turn[mouse.facing][E];
                 }
-                else {
+                else if ((cell & visible[mouse.facing][E]) == 0) {
+                    cmd = move_back_right;
+                    mouse.facing = turn[mouse.facing][W];
                 }
             }
         }
         else {
             mouse.facing = d;
         }
-        if (mouse.x == MAZE/2 && mouse.y == MAZE/2) {
+        if (queue_empty(mouse.shortest_path)) {
             state = VALIDATE_SHORTEST_PATH;
         }
         cmd();

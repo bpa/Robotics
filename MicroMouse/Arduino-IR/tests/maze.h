@@ -36,6 +36,8 @@
 
 extern char wc[][16];
 extern char empty_maze[];
+const char *wall(Wall w);
+const char *dir(Direction d);
 void print_maze(Maze &maze);
 void create_maze(Maze &maze, const char *maze_text);
 void create_maze(Maze &hidden, Maze &maze, const char *maze_text);

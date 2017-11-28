@@ -7,6 +7,7 @@ void mouse_init() {
     int i;
     for (i=1; i<CELLS; i++) {
         mouse.maze[i].maze_ind = i;
+        mouse.maze[i].walls = 0;
     }
     for (i=1; i<MAZE; i++) {
         cell(mouse.maze, i, 0).walls = U;

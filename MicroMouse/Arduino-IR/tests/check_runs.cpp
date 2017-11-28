@@ -5,26 +5,14 @@
 #include "../src/hardware.h"
 #include "../src/movement.h"
 
-const char *mv(Wall w) {
-    switch (w) {
-        case U:  return "U";
-        case R:  return "R";
-        case D:  return "D";
-        case L:  return "L";
-        case DR: return "DR";
-        case DL: return "DL";
-    }
-    return "?";
-}
-
-#define place_mouse(X, Y, D) \
-    state(); \
+#define place_mouse(X, Y, D, X2, Y2) \
     cx=X; \
     cy=Y; \
     looking = D; \
     mouse.x = X; \
     mouse.y = Y; \
-    mouse.facing = D;
+    mouse.facing = D; \
+    find_path(mouse.x, mouse.y, X2, Y2, mouse.maze, mouse.shortest_path);
 
 #define ck_assert_step(W, D, X, Y, S) do { \
     update_mouse(X, Y); \
@@ -33,7 +21,7 @@ const char *mv(Wall w) {
     intmax_t _x = (X); \
     intmax_t _y = (Y); \
     void (*_p)() = (S); \
-    ck_assert_msg(_f == moving, "Assertion '%s' failed: %s != %s", "moving == "#W, mv(moving), mv(_f)); \
+    ck_assert_msg(_f == moving, "Assertion '%s' failed: %s != %s", "moving == "#W, wall(moving), wall(_f)); \
     ck_assert_msg(_d == mouse.facing, "Assertion '%s' failed: %d != %d", "direction == "#D, mouse.facing, _d); \
     ck_assert_msg(_x == mouse.x && _y == mouse.y, "Assertion '%s' failed: (%d, %d) != (%d, %d)", "("#X","#Y") == loc", _x, _y, mouse.x, mouse.y); \
     ck_assert_msg(state == _p, "Assertion '%s' failed: %d != %d", "state == "#S, state, _p); \
@@ -65,17 +53,17 @@ static void setup() {
     create_maze(hidden, empty_maze);
     state = INIT;
     analogWrite(FRONT_SENSOR, 35);
+    state();
 }
 
 START_TEST(test_no_go) {
     analogWrite(FRONT_SENSOR, 350);
-    state();
+    INIT();
     ck_assert_state(SENSE);
 }
 END_TEST
 
 START_TEST(test_normal) {
-    state();
     ck_assert_state(EXPLORE_TO_CENTER);
 }
 END_TEST
@@ -92,7 +80,7 @@ START_TEST(test_explore) {
         "| |____   | | | |"  //5
         "| __  __|_____| |"  //6
         "|___|___________|");//7
-    place_mouse(0, 0, S);
+    place_mouse(0, 0, S, 4, 4);
     ck_assert_state(EXPLORE_TO_CENTER);
     ck_assert_step(U, S, 0, 1, EXPLORE_TO_CENTER);
     ck_assert_step(L, E, 1, 1, EXPLORE_TO_CENTER);
@@ -125,11 +113,30 @@ START_TEST(test_dead_end) {
         "| ____|  _| |_  | |               |"  //5
         "| ______| ____| | |               |"  //6
         "|_______________| |_______________|");//7
-    place_mouse(0, 3, S);
+    place_mouse(0, 3, S, 4, 4);
     ck_assert_step( U, S, 0, 4, EXPLORE_TO_CENTER);
     ck_assert_step( L, E, 1, 4, EXPLORE_TO_CENTER);
     ck_assert_step(DL, S, 0, 4, EXPLORE_TO_CENTER);
     ck_assert_step( U, S, 0, 5, EXPLORE_TO_CENTER);
+}
+END_TEST
+
+START_TEST(test_longer_dead_end) {
+    setup_mazes(hidden, mouse.maze,
+        //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
+        "_________________ _________________"
+        "| |  __     |   | | |             |"  //0
+        "| | |__ | |___| | | |             |"  //1
+        "| | |___|_|   | | | |             |"  //2
+        "| |_  |   | |_| | | |_            |"  //3
+        "| __|_ ___|_  | | | __|_          |"  //4
+        "| ____|  _| |_  | | ____|         |"  //5
+        "| ______| ____| | |               |"  //6
+        "|_______________| |_______________|");//7
+    place_mouse(2, 5, E, 4, 4);
+    ck_assert_step( D, E, 1, 5, EXPLORE_TO_CENTER);
+    ck_assert_step(DL, S, 0, 5, EXPLORE_TO_CENTER);
+    ck_assert_step( U, S, 0, 6, EXPLORE_TO_CENTER);
 }
 END_TEST
 
@@ -145,7 +152,7 @@ START_TEST(test_back_past_turn) {
         "| ____|  _| |_  | | ____|  _| |_  |"  //5
         "| ______| ____| | | ______| ____| |"  //6
         "|_______________| |_______________|");//7
-    place_mouse(2, 2, W);
+    place_mouse(2, 2, W, 4, 4);
     ck_assert_step(DR, S, 3, 2, EXPLORE_TO_CENTER);
     ck_assert_step( D, S, 3, 1, EXPLORE_TO_CENTER);
     ck_assert_step( R, W, 2, 1, EXPLORE_TO_CENTER);
@@ -200,6 +207,7 @@ Suite *run_suite(void) {
     tcase_add_test(tc_core, test_normal);
     tcase_add_test(tc_core, test_explore);
     tcase_add_test(tc_core, test_dead_end);
+    tcase_add_test(tc_core, test_longer_dead_end);
     tcase_add_test(tc_core, test_back_past_turn);
     suite_add_tcase(s, tc_core);
 
