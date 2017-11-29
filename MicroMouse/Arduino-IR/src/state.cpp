@@ -5,11 +5,11 @@
 #include "a_star.h"
 #include "queue.h"
 
-extern Path shortest_path;
 const char *dir(Direction);
 const char *wall(Wall);
 void (*state)();
 int moves = 4;
+
 //   N  E  S  W
 int offset[][4] = {
     {-MAZE, 1, MAZE, -1}, //N
@@ -83,7 +83,7 @@ void INIT() {
     }
 
     mouse_init();
-    find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.shortest_path);
+    find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.current_path);
     randomSeed(analogRead(0));
     delay(1500);
     near_target = true;
@@ -122,61 +122,106 @@ void RANDOM() {
     }
 }
 
-void EXPLORE_TO_CENTER() {
-    if (near_target) {
-        uint8_t w = cell(mouse.maze, mouse.x, mouse.y).walls;
-        uint8_t observed = w & visible[mouse.facing][S];
+bool found_new_walls() {
+    Cell *c = &cell(mouse.maze, mouse.x, mouse.y);
+    c->flags |= VISITED;
+    uint8_t w = c->walls;
+    uint8_t observed = w & visible[mouse.facing][S];
 
-        if (analogRead(FRONT_SENSOR) > 100) observed |= visible[mouse.facing][N];
-        if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[mouse.facing][E];
-        if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[mouse.facing][W];
-        if ( w != observed ) {
-            cell(mouse.maze, mouse.x, mouse.y).walls = observed;
-            find_path(mouse.x, mouse.y, MAZE/2, MAZE/2, mouse.maze, mouse.shortest_path);
-        }
-        Point next = queue_pop(mouse.shortest_path);
-        Direction d = direction(next);
-        void (*cmd)() = move[mouse.facing][d];
-        mouse.x = next.x;
-        mouse.y = next.y;
-        if (cmd == move_backward) {
-            w = cell(mouse.maze, mouse.x, mouse.y).walls;
-            next = queue_peek(mouse.shortest_path);
-            Direction db = direction(next);
-            // backing up again || wall behind mouse
-            if (db == d || w & visible[mouse.facing][S]) {
-                if (db == d) {
-                    //Backing up again, just need to turn around, E or W would work
-                    db = turn[mouse.facing][E];
-                }
-                if ((w & visible[db][S]) == 0) {
-                    //Opposite direction is open
-                    cmd = back_up[mouse.facing][turn[db][S]];
-                    mouse.facing = db;
-                }
-                else if ((w & visible[db][N]) == 0) {
-                    //Direction we are going is open
-                    cmd = back_up[mouse.facing][db];
-                    mouse.facing = turn[db][S];
-                }
+    if (analogRead(FRONT_SENSOR) > 100) observed |= visible[mouse.facing][N];
+    if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[mouse.facing][E];
+    if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[mouse.facing][W];
+    if (w != observed) {
+        cell(mouse.maze, mouse.x, mouse.y).walls = observed;
+        return true;
+    }
+    return false;
+}
+
+void do_current_move() {
+    Point next = queue_pop(mouse.current_path);
+    Direction d = direction(next);
+    void (*cmd)() = move[mouse.facing][d];
+    mouse.x = next.x;
+    mouse.y = next.y;
+    if (cmd == move_backward) {
+        uint8_t w = cell(mouse.maze, mouse.x, mouse.y).walls;
+        next = queue_peek(mouse.current_path);
+        Direction db = direction(next);
+        // backing up again || wall behind mouse
+        if (db == d || w & visible[mouse.facing][S]) {
+            if (db == d) {
+                //Backing up again, just need to turn around, E or W would work
+                db = turn[mouse.facing][E];
+            }
+            if ((w & visible[db][S]) == 0) {
+                //Opposite direction is open
+                cmd = back_up[mouse.facing][turn[db][S]];
+                mouse.facing = db;
+            }
+            else if ((w & visible[db][N]) == 0) {
+                //Direction we are going is open
+                cmd = back_up[mouse.facing][db];
+                mouse.facing = turn[db][S];
             }
         }
-        else {
-            mouse.facing = d;
+    }
+    else {
+        mouse.facing = d;
+    }
+    cmd();
+}
+
+void EXPLORE_TO_CENTER() {
+    if (near_target) {
+        if ( found_new_walls() ) {
+            find_path(mouse.x, mouse.y, MAZE/2, MAZE/2, mouse.maze, mouse.current_path);
         }
-        if (queue_empty(mouse.shortest_path)) {
+        do_current_move();
+        if (queue_empty(mouse.current_path)) {
             state = VALIDATE_SHORTEST_PATH;
         }
-        cmd();
     }
 }
 
 void VALIDATE_SHORTEST_PATH() {
-    state = DONE;
+    if (near_target) {
+        if ( found_new_walls() || queue_empty(mouse.current_path) ) {
+            Point next;
+            find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.shortest_path);
+            for (int i=0; i<= mouse.shortest_path.size; i++) {
+                next = mouse.shortest_path.data[i];
+                if ((cell(mouse.maze, next.x, next.y).flags & VISITED) == 0) {
+                    find_path(mouse.x, mouse.y, next.x, next.y, mouse.maze, mouse.current_path);
+                    break;
+                }
+            }
+        }
+        if (queue_empty(mouse.current_path)) {
+            state = BACK_INTO_START;
+        }
+        else {
+            do_current_move();
+        }
+    }
+}
+
+void BACK_INTO_START() {
+    if (near_target) {
+        state = RACE_TO_CENTER;
+        find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.current_path);
+    }
 }
 
 void RACE_TO_CENTER() {
-    state = DONE;
+    if (near_target) {
+        if (queue_empty(mouse.current_path)) {
+            state = DONE;
+        }
+        else {
+            do_current_move();
+        }
+    }
 }
 
 void SENSE() {

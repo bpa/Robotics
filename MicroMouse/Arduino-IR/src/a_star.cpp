@@ -8,6 +8,9 @@
   #define abs std::abs
 #endif
 
+#define cell_in_open(c) (c->flags & OPEN)
+#define cell_in_closed(c) (c->flags & CLOSED)
+
 PriorityQueue open;
 
 uint8_t distance (int x1, int y1, int x2, int y2) {
@@ -20,7 +23,7 @@ void look(Maze &maze, Cell *from, int d, int diff, int cost) {
     if (from->walls & d) return;
 
     Cell *to = &maze[from->maze_ind + diff];
-    if (to->closed) return;
+    if (cell_in_closed(to)) return;
 
     g = from->g + cost;
     if (g > to->g) {
@@ -30,7 +33,7 @@ void look(Maze &maze, Cell *from, int d, int diff, int cost) {
     to->g = g;
     to->f = to->h + g;
     to->from = from->maze_ind;
-    if (to->open) {
+    if (cell_in_open(to)) {
         queue_reprioritize(open, to);
     }
     else {
@@ -65,8 +68,7 @@ void find_path(int x1, int y1, int x2, int y2, Maze &maze, Path &path) {
     for (i=0; i<MAZE; i++) {
         for (j=0; j<MAZE; j++) {
             cell = &maze[c];
-            cell->open = 0;
-            cell->closed = 0;
+            cell->flags &= VISITED;
             cell->h = distance(j, i, x2, y2);
             cell->g = 0xFF;
             c++;
@@ -85,7 +87,7 @@ void find_path(int x1, int y1, int x2, int y2, Maze &maze, Path &path) {
 
     while (!queue_empty(open)) {
         cell = queue_pop(open);
-        cell->closed = 1;
+        cell->flags |= CLOSED;
         if (cell->maze_ind == destination) {
             break;
         }

@@ -15,9 +15,10 @@ set(LIB_SOURCES
 )
 
 set(TEST_SOURCES
-  check_runs.cpp
+  check_explore.cpp
   check_queue.cpp
   check_astar.cpp
+  check_validate_path.cpp
   maze.cpp
   main.cpp
   mocks.cpp

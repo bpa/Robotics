@@ -1,59 +1,9 @@
 #include <check.h>
 #include "maze.h"
-#include "../src/a_star.h"
-#include "../src/state.h"
-#include "../src/hardware.h"
-#include "../src/movement.h"
-
-#define place_mouse(X, Y, D, X2, Y2) \
-    cx=X; \
-    cy=Y; \
-    looking = D; \
-    mouse.x = X; \
-    mouse.y = Y; \
-    mouse.facing = D; \
-    find_path(mouse.x, mouse.y, X2, Y2, mouse.maze, mouse.shortest_path);
-
-#define ck_assert_step(W, D, X, Y, S) do { \
-    update_mouse(X, Y); \
-    Wall _f = (W); \
-    Direction _d = (D); \
-    intmax_t _x = (X); \
-    intmax_t _y = (Y); \
-    void (*_p)() = (S); \
-    ck_assert_msg(_f == moving, "Assertion '%s' failed: %s != %s", "moving == "#W, wall(moving), wall(_f)); \
-    ck_assert_msg(_d == mouse.facing, "Assertion '%s' failed: %d != %d", "direction == "#D, mouse.facing, _d); \
-    ck_assert_msg(_x == mouse.x && _y == mouse.y, "Assertion '%s' failed: (%d, %d) != (%d, %d)", "("#X","#Y") == loc", _x, _y, mouse.x, mouse.y); \
-    ck_assert_msg(state == _p, "Assertion '%s' failed: %d != %d", "state == "#S, state, _p); \
-    looking = D; \
-    ck_assert_maze_subset(hidden, mouse.maze); \
-} while (0)
-
-extern Wall moving;
-extern Mouse mouse;
-extern Wall visible[][4];
-
-static Path path;
-static Maze hidden;
-static Direction looking;
-static int cx, cy;
-
-void update_mouse(int x, int y) {
-    uint8_t _w = cell(hidden, cx, cy).walls;
-    analogWrite(FRONT_SENSOR, (_w & visible[looking][N]) ? 200 : 10);
-    analogWrite(RIGHT_SENSOR, (_w & visible[looking][E]) ? 200 : 10);
-    analogWrite(LEFT_SENSOR,  (_w & visible[looking][W]) ? 200 : 10);
-    near_target = true;
-    state();
-    cx = x;
-    cy = y;
-}
 
 static void setup() {
-    create_maze(hidden, empty_maze);
-    state = INIT;
     analogWrite(FRONT_SENSOR, 35);
-    state();
+    INIT();
 }
 
 START_TEST(test_no_go) {
@@ -69,19 +19,18 @@ START_TEST(test_normal) {
 END_TEST
 
 START_TEST(test_explore) {
-    create_maze(hidden,
-        //0 1 2 3 4 5 6 7
-        "_________________"
-        "| | |__      _  |"  //0
-        "|__ |___| |_|_  |"  //1
-        "|  _______  |   |"  //2
-        "| |   |   | | | |"  //3
-        "| | |_| __| | | |"  //4
-        "| |____   | | | |"  //5
-        "| __  __|_____| |"  //6
-        "|___|___________|");//7
+    setup_mazes(
+        //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
+        "_________________ _________________"
+        "| | |__      _  | | |             |"  //0
+        "|__ |___| |_|_  | |               |"  //1
+        "|  _______  |   | |               |"  //2
+        "| |   |   | | | | |               |"  //3
+        "| | |_| __| | | | |               |"  //4
+        "| |____   | | | | |               |"  //5
+        "| __  __|_____| | |               |"  //6
+        "|___|___________| |_______________|");//7
     place_mouse(0, 0, S, 4, 4);
-    ck_assert_state(EXPLORE_TO_CENTER);
     ck_assert_step(U, S, 0, 1, EXPLORE_TO_CENTER);
     ck_assert_step(L, E, 1, 1, EXPLORE_TO_CENTER);
     ck_assert_step(R, S, 1, 2, EXPLORE_TO_CENTER);
@@ -102,7 +51,7 @@ START_TEST(test_explore) {
 END_TEST
 
 START_TEST(test_dead_end) {
-    setup_mazes(hidden, mouse.maze,
+    setup_mazes(
         //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
         "_________________ _________________"
         "| |  __     |   | | |             |"  //0
@@ -122,7 +71,7 @@ START_TEST(test_dead_end) {
 END_TEST
 
 START_TEST(test_longer_dead_end) {
-    setup_mazes(hidden, mouse.maze,
+    setup_mazes(
         //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
         "_________________ _________________"
         "| |  __     |   | | |             |"  //0
@@ -141,7 +90,7 @@ START_TEST(test_longer_dead_end) {
 END_TEST
 
 START_TEST(test_back_opposite) {
-    setup_mazes(hidden, mouse.maze,
+    setup_mazes(
         //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
         "_________________ _________________"
         "| |  __     |   | | |         |   |"  //0
@@ -158,8 +107,78 @@ START_TEST(test_back_opposite) {
 }
 END_TEST
 
+START_TEST(test_one_twist) {
+    setup_mazes(
+        //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
+        "_________________ _________________"
+        "| |  __     |   | | |         |   |"  //0
+        "| | |__ | |___| | | |  __ | |___| |"  //1
+        "| | |___|_|   | | | | |___|_|   | |"  //2
+        "| |_  |   | |_| | | |_      | |_| |"  //3
+        "| __|_ ___|_  | | | __|_ ___|_  | |"  //4
+        "| ____|  _| |_  | | ____|  _| |_  |"  //5
+        "| ______| ____| | | ______| ____| |"  //6
+        "|_______________| |_______________|");//7
+    place_mouse(4, 5, E, 4, 4);
+    ck_assert_step(DR, N, 3, 5, EXPLORE_TO_CENTER);
+    ck_assert_step(DL, E, 3, 6, EXPLORE_TO_CENTER);
+    ck_assert_step( D, E, 2, 6, EXPLORE_TO_CENTER);
+    ck_assert_step( D, E, 1, 6, EXPLORE_TO_CENTER);
+    ck_assert_step(DL, S, 0, 6, EXPLORE_TO_CENTER);
+}
+END_TEST
+
+START_TEST(test_tee) {
+    setup_mazes(
+        //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
+        "_________________ _________________"
+        "| |  __     |   | | |             |"  //0
+        "| | |__ | |___| | | |             |"  //1
+        "| | |___|_|   | | | |             |"  //2
+        "| |_  |   | |_| | | |_            |"  //3
+        "| __|_ ___|_  | | | __|_ ___      |"  //4
+        "| ____|  _| |_  | | ____|  _|     |"  //5
+        "| ______| ____| | | ______|       |"  //6
+        "|_______________| |_______________|");//7
+    place_mouse(4, 7, E, 4, 4);
+    ck_assert_step( L, N, 4, 6, EXPLORE_TO_CENTER);
+    ck_assert_step( R, E, 5, 6, EXPLORE_TO_CENTER);
+    ck_assert_step( L, N, 5, 5, EXPLORE_TO_CENTER);
+    ck_assert_step(DL, E, 5, 6, EXPLORE_TO_CENTER);
+    ck_assert_step( U, E, 6, 6, EXPLORE_TO_CENTER);
+    ck_assert_step(DL, S, 5, 6, EXPLORE_TO_CENTER);
+    ck_assert_step( R, W, 4, 6, EXPLORE_TO_CENTER);
+    ck_assert_step( L, S, 4, 7, EXPLORE_TO_CENTER);
+    ck_assert_step( L, E, 5, 7, EXPLORE_TO_CENTER);
+}
+END_TEST
+
+START_TEST(test_back_swirl) {
+    setup_mazes(
+        //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
+        "_________________ _________________"
+        "| |  __     |   | | |             |"  //0
+        "| | |__ | |___| | | |        ___  |"  //1
+        "| | |___|_|   | | | |       |   | |"  //2
+        "| |_  |   | |_| | | |_      | |_| |"  //3
+        "| __|_ ___|_  | | | __|_ ___|_  | |"  //4
+        "| ____|  _| |_  | | ____|  _| |_  |"  //5
+        "| ______| ____| | | ______| ____| |"  //6
+        "|_______________| |_______________|");//7
+    place_mouse(6, 3, S, 4, 4);
+    ck_assert_step(DR, E, 6, 2, EXPLORE_TO_CENTER);
+    ck_assert_step(DR, N, 5, 2, EXPLORE_TO_CENTER);
+    ck_assert_step( D, N, 5, 3, EXPLORE_TO_CENTER);
+    ck_assert_step(DR, W, 5, 4, EXPLORE_TO_CENTER);
+    ck_assert_step(DL, N, 6, 4, EXPLORE_TO_CENTER);
+    ck_assert_step(DR, W, 6, 5, EXPLORE_TO_CENTER);
+    ck_assert_step(DL, N, 7, 5, EXPLORE_TO_CENTER);
+    ck_assert_step( U, N, 7, 4, EXPLORE_TO_CENTER);
+}
+END_TEST
+
 START_TEST(test_back_past_turn) {
-    setup_mazes(hidden, mouse.maze,
+    setup_mazes(
         //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
         "_________________ _________________"
         "| |  __     |   | | |         |   |"  //0
@@ -177,47 +196,11 @@ START_TEST(test_back_past_turn) {
 }
 END_TEST
 
-/* Another test for another day
-    ck_assert_step(D, N, 3, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(L, W, 3, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, W, 2, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, W, 1, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(R, N, 1, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, N, 1, 4, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, N, 1, 3, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(D, N, 1, 4, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(D, N, 1, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(R, E, 1, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, E, 2, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, E, 3, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(R, S, 3, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, S, 3, 6, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(R, W, 3, 6, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, W, 2, 6, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, W, 1, 6, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, W, 0, 6, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(R, N, 0, 6, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, N, 0, 5, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, N, 0, 4, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, N, 0, 3, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, N, 0, 2, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(R, E, 0, 2, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, E, 1, 2, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(L, N, 1, 2, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, N, 1, 1, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(L, W, 1, 1, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, W, 0, 1, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(R, N, 0, 1, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(U, N, 0, 0, RACE_TO_CENTER);
-    ck_assert_step(D, N, 0, 1, RACE_TO_CENTER);
-    ck_assert_step(R, E, 0, 1, RACE_TO_CENTER);
-    */
-
-Suite *run_suite(void) {
+Suite *explore_suite(void) {
     Suite *s;
     TCase *tc_core;
 
-    s = suite_create("Run");
+    s = suite_create("Explore");
     tc_core = tcase_create("Core");
     tcase_add_unchecked_fixture(tc_core, setup, NULL);
 
@@ -227,6 +210,9 @@ Suite *run_suite(void) {
     tcase_add_test(tc_core, test_dead_end);
     tcase_add_test(tc_core, test_longer_dead_end);
     tcase_add_test(tc_core, test_back_opposite);
+    tcase_add_test(tc_core, test_one_twist);
+    tcase_add_test(tc_core, test_tee);
+    tcase_add_test(tc_core, test_back_swirl);
     tcase_add_test(tc_core, test_back_past_turn);
     suite_add_tcase(s, tc_core);
 

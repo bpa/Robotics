@@ -1,6 +1,10 @@
 #include "maze.h"
-#include "../src/Mouse.h"
 #include <stdio.h>
+
+Direction looking;
+int cx, cy;
+Maze hidden;
+Path path;
 
 const char *dir(Direction d) {
     switch (d) {
@@ -86,7 +90,7 @@ void create_maze(Maze &maze, const char *maze_text) {
     }
 }
 
-void create_maze(Maze &hidden, Maze &maze, const char *maze_text) {
+void create_maze(const char *maze_text) {
     int c=0, x, y, w;
     for (y=0; y<MAZE; y++) {
         for (x=0; x<MAZE; x++) {
@@ -103,10 +107,21 @@ void create_maze(Maze &hidden, Maze &maze, const char *maze_text) {
             if (maze_text[y*35+x*2+53] == '|') { w |= L; }
             if (maze_text[y*35+x*2+54] == '_') { w |= D; }
             if (maze_text[y*35+x*2+55] == '|') { w |= R; }
-            maze[c].walls = w;
-            maze[c].maze_ind = c;
+            mouse.maze[c].walls = w;
+            mouse.maze[c].maze_ind = c;
             c++;
         }
     }
+}
+
+void update_mouse(int x, int y) {
+    uint8_t _w = cell(hidden, cx, cy).walls;
+    analogWrite(FRONT_SENSOR, (_w & visible[looking][N]) ? 200 : 10);
+    analogWrite(RIGHT_SENSOR, (_w & visible[looking][E]) ? 200 : 10);
+    analogWrite(LEFT_SENSOR,  (_w & visible[looking][W]) ? 200 : 10);
+    near_target = true;
+    state();
+    cx = x;
+    cy = y;
 }
 

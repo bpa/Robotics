@@ -8,6 +8,7 @@ void mouse_init() {
     for (i=1; i<CELLS; i++) {
         mouse.maze[i].maze_ind = i;
         mouse.maze[i].walls = 0;
+        mouse.maze[i].flags = 0;
     }
     for (i=1; i<MAZE; i++) {
         cell(mouse.maze, i, 0).walls = U;
@@ -21,4 +22,5 @@ void mouse_init() {
     cell(mouse.maze, 0,       MAZE_END).walls = D | L;
     mouse.facing = S;
     mouse.x = mouse.y = 0;
+    mouse.maze[i].flags = VISITED;
 }

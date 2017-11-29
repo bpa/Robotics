@@ -3,6 +3,34 @@
 
 #include "../src/state.h"
 #include "../src/Mouse.h"
+#include "../src/a_star.h"
+#include "../src/state.h"
+#include "../src/hardware.h"
+#include "../src/movement.h"
+
+#define place_mouse(X, Y, D, X2, Y2) \
+    cx=X; \
+    cy=Y; \
+    looking = D; \
+    mouse.x = X; \
+    mouse.y = Y; \
+    mouse.facing = D; \
+    find_path(mouse.x, mouse.y, X2, Y2, mouse.maze, mouse.current_path); 
+
+#define ck_assert_step(W, D, X, Y, S) do { \
+    update_mouse(X, Y); \
+    Wall _f = (W); \
+    Direction _d = (D); \
+    intmax_t _x = (X); \
+    intmax_t _y = (Y); \
+    void (*_p)() = (S); \
+    ck_assert_msg(_f == moving, "Assertion '%s' failed: %s != %s", "moving == "#W, wall(moving), wall(_f)); \
+    ck_assert_msg(_d == mouse.facing, "Assertion '%s' failed: %d != %d", "direction == "#D, mouse.facing, _d); \
+    ck_assert_msg(_x == mouse.x && _y == mouse.y, "Assertion '%s' failed: (%d, %d) != (%d, %d)", "("#X","#Y") == loc", _x, _y, mouse.x, mouse.y); \
+    ck_assert_msg(state == _p, "Assertion '%s' failed: %d != %d", "state == "#S, state, _p); \
+    looking = D; \
+    ck_assert_maze_subset(hidden, mouse.maze); \
+} while (0)
 
 #define ck_assert_maze_subset(M1, M2) do { \
     int _i = 0; \
@@ -30,16 +58,24 @@
     ck_assert_msg(state == _p, "Assertion '%s' failed: (%d) != (%d)", "state == "#S, state, _p); \
 } while (0)
 
-#define setup_mazes(M1, M2, TEXT) \
-    create_maze(M1, M2, TEXT); \
-    ck_assert_maze_subset(M1, M2);
+#define setup_mazes(TEXT) \
+    create_maze(TEXT); \
+    ck_assert_maze_subset(hidden, mouse.maze);
 
+extern Wall moving;
+extern Wall visible[][4];
+extern Mouse mouse;
+extern Maze hidden;
 extern char wc[][16];
 extern char empty_maze[];
+extern int cx, cy;
+extern Direction looking;
+
 const char *wall(Wall w);
 const char *dir(Direction d);
+void update_mouse(int x, int y);
 void print_maze(Maze &maze);
 void create_maze(Maze &maze, const char *maze_text);
-void create_maze(Maze &hidden, Maze &maze, const char *maze_text);
+void create_maze(const char *maze_text);
 
 #endif

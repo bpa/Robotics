@@ -26,15 +26,21 @@ typedef enum {
     W,
 } Direction;
 
+typedef enum {
+    OPEN = 1,
+    CLOSED = 2,
+    VISITED = 4,
+} Flag;
+
 typedef struct {
     uint8_t walls;        //Mask of directions available
     uint8_t maze_ind;
-    uint8_t open;
-    uint8_t closed;
+    uint8_t flags;
     uint8_t f;
     uint8_t g;
     uint8_t h;
     uint8_t from;
+    uint8_t empty;
 } Cell;
 
 typedef Cell Maze[CELLS];
