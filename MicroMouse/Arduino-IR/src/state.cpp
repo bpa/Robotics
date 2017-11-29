@@ -31,8 +31,17 @@ Direction turn[][4] = {
     {S, W, N, E}, //S
     {W, N, E, S}, //W
 };
-//   N             E           S             W 
+
+void (*back_up[][4])() = {
+//   N             E           S             W
+    {move_forward, move_back_right, move_backward, move_back_left}, //N
+    {move_back_left, move_forward, move_back_right, move_backward}, //E
+    {move_backward, move_back_left, move_forward, move_back_right}, //S
+    {move_back_right, move_backward, move_back_left, move_forward}, //W
+};
+
 void (*move[][4])() = {
+//   N             E           S             W
     {move_forward, move_right, move_backward, move_left}, //N
     {move_left, move_forward, move_right, move_backward}, //E
     {move_backward, move_left, move_forward, move_right}, //S
@@ -131,17 +140,24 @@ void EXPLORE_TO_CENTER() {
         mouse.x = next.x;
         mouse.y = next.y;
         if (cmd == move_backward) {
-            uint8_t cell = cell(mouse.maze, mouse.x, mouse.y).walls;
+            w = cell(mouse.maze, mouse.x, mouse.y).walls;
             next = queue_peek(mouse.shortest_path);
             Direction db = direction(next);
-            if (db == d || cell & visible[mouse.facing][S]) {
-                if ((cell & visible[mouse.facing][W]) == 0) {
-                    cmd = move_back_left;
-                    mouse.facing = turn[mouse.facing][E];
+            // backing up again || wall behind mouse
+            if (db == d || w & visible[mouse.facing][S]) {
+                if (db == d) {
+                    //Backing up again, just need to turn around, E or W would work
+                    db = turn[mouse.facing][E];
                 }
-                else if ((cell & visible[mouse.facing][E]) == 0) {
-                    cmd = move_back_right;
-                    mouse.facing = turn[mouse.facing][W];
+                if ((w & visible[db][S]) == 0) {
+                    //Opposite direction is open
+                    cmd = back_up[mouse.facing][turn[db][S]];
+                    mouse.facing = db;
+                }
+                else if ((w & visible[db][N]) == 0) {
+                    //Direction we are going is open
+                    cmd = back_up[mouse.facing][db];
+                    mouse.facing = turn[db][S];
                 }
             }
         }

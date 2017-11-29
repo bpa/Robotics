@@ -140,6 +140,24 @@ START_TEST(test_longer_dead_end) {
 }
 END_TEST
 
+START_TEST(test_back_opposite) {
+    setup_mazes(hidden, mouse.maze,
+        //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
+        "_________________ _________________"
+        "| |  __     |   | | |         |   |"  //0
+        "|   |__ | |___| | |    __ | |___| |"  //1
+        "| | |___|_|   | | |   |___|_|   | |"  //2
+        "| |_  |   | |_| | | __      | |_| |"  //3
+        "| __|_ ___|_  | | | __|_ ___|_  | |"  //4
+        "| ____|  _| |_  | | ____|  _| |_  |"  //5
+        "| ______| ____| | | ______| ____| |"  //6
+        "|_______________| |_______________|");//7
+    place_mouse(1, 4, E, 4, 4);
+    ck_assert_step(DR, N, 0, 4, EXPLORE_TO_CENTER);
+    ck_assert_step( U, N, 0, 3, EXPLORE_TO_CENTER);
+}
+END_TEST
+
 START_TEST(test_back_past_turn) {
     setup_mazes(hidden, mouse.maze,
         //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
@@ -208,6 +226,7 @@ Suite *run_suite(void) {
     tcase_add_test(tc_core, test_explore);
     tcase_add_test(tc_core, test_dead_end);
     tcase_add_test(tc_core, test_longer_dead_end);
+    tcase_add_test(tc_core, test_back_opposite);
     tcase_add_test(tc_core, test_back_past_turn);
     suite_add_tcase(s, tc_core);
 
