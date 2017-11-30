@@ -109,6 +109,10 @@ void create_maze(const char *maze_text) {
             if (maze_text[y*35+x*2+55] == '|') { w |= R; }
             mouse.maze[c].walls = w;
             mouse.maze[c].maze_ind = c;
+
+            if (hidden[c].walls == mouse.maze[c].walls) {
+                mouse.maze[c].flags = VISITED;
+            }
             c++;
         }
     }
@@ -120,6 +124,7 @@ void update_mouse(int x, int y) {
     analogWrite(RIGHT_SENSOR, (_w & visible[looking][E]) ? 200 : 10);
     analogWrite(LEFT_SENSOR,  (_w & visible[looking][W]) ? 200 : 10);
     near_target = true;
+    moving = X;
     state();
     cx = x;
     cy = y;

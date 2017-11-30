@@ -13,25 +13,20 @@ START_TEST(test_simple_return) {
         "_________________ _________________"
         "| |  ___    |   | | |         |   |"  //0
         "|   |   | |___| | |       | |___| |"  //1
-        "| | | |_| |   | | | |     | |   | |"  //2
-        "| |_  |   | |_| | | |_      | |_| |"  //3
-        "| __|_|___|_  | | | __|_____|_  | |"  //4
+        "| | | |_| |   | | | |    _| |   | |"  //2
+        "| |_  |   | |_| | | |_  |   | |_| |"  //3
+        "| __|_|___|_  | | | __|_|___|_  | |"  //4
         "| ____|  __ |_  | | ____|  __ |_  |"  //5
         "| ______| ____| | | ______| ____| |"  //6
         "|___|___________| |_______________|");//7
-    place_mouse(4, 4, S, 4, 4);
-    cell(mouse.maze, 0, 1).flags = VISITED;
-    ck_assert_step( R, W, 4, 3, VALIDATE_SHORTEST_PATH);
-    ck_assert_step( R, N, 3, 3, VALIDATE_SHORTEST_PATH);
-    ck_assert_step( R, E, 4, 3, VALIDATE_SHORTEST_PATH);
-    ck_assert_step( L, N, 4, 2, VALIDATE_SHORTEST_PATH);
-    ck_assert_step( U, N, 4, 1, VALIDATE_SHORTEST_PATH);
+    place_mouse(4, 1, N, 4, 1);
     ck_assert_step( U, N, 4, 0, VALIDATE_SHORTEST_PATH);
     ck_assert_step( L, W, 3, 0, VALIDATE_SHORTEST_PATH);
     ck_assert_step( U, W, 2, 0, VALIDATE_SHORTEST_PATH);
     ck_assert_step( U, W, 1, 0, VALIDATE_SHORTEST_PATH);
     ck_assert_step( L, S, 1, 1, VALIDATE_SHORTEST_PATH);
-    ck_assert_step( R, W, 0, 1, BACK_INTO_START);
+    ck_assert_step( X, S, 1, 1, BACK_INTO_START);
+    ck_assert_state(BACK_INTO_START);
 }
 END_TEST
 

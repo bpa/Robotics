@@ -13,9 +13,9 @@ int moves = 4;
 //   N  E  S  W
 int offset[][4] = {
     {-MAZE, 1, MAZE, -1}, //N
-    {1, MAZE, -MAZE, -1}, //E
-    {MAZE, -1, 1, -MAZE}, //S
-    {-1, -MAZE, MAZE, 1}, //W
+    {1, MAZE, -1, -MAZE}, //E
+    {MAZE, -1, -MAZE, 1}, //S
+    {-1, -MAZE, 1, MAZE}, //W
 };
 //   N  E  S  W
 Wall visible[][4] = {
@@ -123,6 +123,7 @@ void RANDOM() {
 }
 
 bool found_new_walls() {
+    int i;
     Cell *c = &cell(mouse.maze, mouse.x, mouse.y);
     c->flags |= VISITED;
     uint8_t w = c->walls;
@@ -132,7 +133,25 @@ bool found_new_walls() {
     if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[mouse.facing][E];
     if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[mouse.facing][W];
     if (w != observed) {
-        cell(mouse.maze, mouse.x, mouse.y).walls = observed;
+        c->walls = observed;
+        if (observed & visible[mouse.facing][N]) {
+            i = c->maze_ind + offset[mouse.facing][N];
+            if (i < CELLS && i >= 0) {
+                mouse.maze[i].walls |= visible[mouse.facing][S];
+            }
+        }
+        if (observed & visible[mouse.facing][E]) {
+            i = c->maze_ind + offset[mouse.facing][E];
+            if (i < CELLS && i >= 0) {
+                mouse.maze[i].walls |= visible[mouse.facing][W];
+            }
+        }
+        if (observed & visible[mouse.facing][W]) {
+            i = c->maze_ind + offset[mouse.facing][W];
+            if (i < CELLS && i >= 0) {
+                mouse.maze[i].walls |= visible[mouse.facing][E];
+            }
+        }
         return true;
     }
     return false;

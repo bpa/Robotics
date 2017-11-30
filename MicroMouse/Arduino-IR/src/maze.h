@@ -11,6 +11,7 @@
 #define dist(a, b) (a < b ? b - a : a - b)
 
 typedef enum {
+    X  =  0,
     U  =  1,
     R  =  2,
     D  =  4,
