@@ -18,6 +18,7 @@ const char *dir(Direction d) {
 
 const char *wall(Wall w) {
     switch (w) {
+        case X:  return "X";
         case U:  return "U";
         case R:  return "R";
         case D:  return "D";

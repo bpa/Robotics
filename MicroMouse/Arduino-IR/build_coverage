@@ -1,0 +1,3 @@
+gcc -g -Wall -fprofile-arcs -ftest-coverage -o cover tests/*.cpp src/libmicromouse.a -lcheck -lpthread -lm -lrt -lsubunit
+CK_FORK=no gdb ./cover
+
