@@ -11,13 +11,14 @@
 extern bool near_target;
 extern bool stopped;
 
-extern void movement();
-extern void move_right();
-extern void move_left();
-extern void move_forward();
-extern void move_backward();
-extern void move_back_left();
-extern void move_back_right();
-extern void stop();
+void movement();
+void move_right();
+void move_left();
+void move_forward();
+void move_backward();
+void move_back_left();
+void move_back_right();
+void move_to_pose(int x, int y, float r);
+void stop();
 
 #endif

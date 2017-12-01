@@ -48,6 +48,9 @@ void (*move[][4])() = {
     {move_right, move_backward, move_left, move_forward}, //W
 };
 
+//                 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
+int wallCount[] = {0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4};
+
 Direction direction(Point &next) {
          if (mouse.x < next.x) return E;
     else if (mouse.x > next.x) return W;
@@ -158,6 +161,10 @@ bool found_new_walls() {
 }
 
 void do_current_move() {
+    if (queue_empty(mouse.current_path)) {
+        return;
+    }
+
     Point next = queue_pop(mouse.current_path);
     Direction d = direction(next);
     void (*cmd)() = move[mouse.facing][d];
@@ -217,28 +224,47 @@ void VALIDATE_SHORTEST_PATH() {
             }
         }
         if (queue_empty(mouse.current_path)) {
-            state = BACK_INTO_START;
+            state = RETURN_TO_START;
+            find_path(mouse.x, mouse.y, 0, 0, mouse.maze, mouse.current_path);
+            for (int i=0; i<= mouse.current_path.size; i++) {
+                Point next = mouse.current_path.data[i];
+                uint8_t w = cell(mouse.maze, next.x, next.y).walls;
+                if (wallCount[w] < 3) {
+                    find_path(mouse.x, mouse.y, next.x, next.y, mouse.maze, mouse.current_path);
+                    break;
+                }
+            }
         }
         else {
             do_current_move();
         }
+    }
+}
+
+void RETURN_TO_START() {
+    do_current_move();
+    if (queue_empty(mouse.current_path)) {
+        state = BACK_INTO_START;
+        find_path(mouse.x, mouse.y, 0, 1, mouse.maze, mouse.current_path);
     }
 }
 
 void BACK_INTO_START() {
     if (near_target) {
-        state = RACE_TO_CENTER;
-        find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.current_path);
+        do_current_move();
+        if (queue_empty(mouse.current_path)) {
+            move_to_pose(89, 127, 0);
+            state = RACE_TO_CENTER;
+            find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.current_path);
+        }
     }
 }
 
 void RACE_TO_CENTER() {
     if (near_target) {
+        do_current_move();
         if (queue_empty(mouse.current_path)) {
             state = DONE;
-        }
-        else {
-            do_current_move();
         }
     }
 }

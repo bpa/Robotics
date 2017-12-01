@@ -11,7 +11,10 @@
 #define dist(a, b) (a < b ? b - a : a - b)
 
 typedef enum {
-    X  =  0,
+#ifndef ANDROID
+    X  =  0,  //Testing for no movement
+    H  =  15, //Testing for backup to home
+#endif
     U  =  1,
     R  =  2,
     D  =  4,

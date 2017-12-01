@@ -100,5 +100,6 @@ void move_forward()    { moving = U;  }
 void move_backward()   { moving = D;  }
 void move_back_left()  { moving = DL; }
 void move_back_right() { moving = DR; }
+void move_to_pose(int x, int y, float r) { moving = H; }
 void stop() {}
 #endif

@@ -22,8 +22,7 @@ START_TEST(test_no_check_required) {
     state = EXPLORE_TO_CENTER;
     place_mouse(4, 3, S, 4, 4);
     ck_assert_step(U, S, 4, 4, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(X, S, 4, 4, BACK_INTO_START);
-    ck_assert_state(BACK_INTO_START);
+    ck_assert_step(X, S, 4, 4, RETURN_TO_START);
 }
 END_TEST
 
@@ -45,8 +44,7 @@ START_TEST(test_simple_return) {
     ck_assert_step(U, W, 2, 0, VALIDATE_SHORTEST_PATH);
     ck_assert_step(U, W, 1, 0, VALIDATE_SHORTEST_PATH);
     ck_assert_step(L, S, 1, 1, VALIDATE_SHORTEST_PATH);
-    ck_assert_step(X, S, 1, 1, BACK_INTO_START);
-    ck_assert_state(BACK_INTO_START);
+    ck_assert_step(X, S, 1, 1, RETURN_TO_START);
 }
 END_TEST
 
@@ -83,8 +81,7 @@ START_TEST(test_backtrack) {
     ck_assert_step( L, W, 1, 3, VALIDATE_SHORTEST_PATH);
     ck_assert_step( R, N, 1, 2, VALIDATE_SHORTEST_PATH);
     ck_assert_step( U, N, 1, 1, VALIDATE_SHORTEST_PATH);
-    ck_assert_step( X, N, 1, 1, BACK_INTO_START);
-    ck_assert_state(BACK_INTO_START);
+    ck_assert_step( X, N, 1, 1, RETURN_TO_START);
 }
 END_TEST
 

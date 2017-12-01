@@ -25,6 +25,7 @@ const char *wall(Wall w) {
         case L:  return "L";
         case DR: return "DR";
         case DL: return "DL";
+        case H: return "H";
         default: return "?";
     }
 }

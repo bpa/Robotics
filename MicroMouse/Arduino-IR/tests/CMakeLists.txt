@@ -15,12 +15,13 @@ set(LIB_SOURCES
 )
 
 set(TEST_SOURCES
+  check_astar.cpp
   check_explore.cpp
   check_queue.cpp
-  check_astar.cpp
+  check_return_to_start.cpp
   check_validate_path.cpp
-  maze.cpp
   main.cpp
+  maze.cpp
   mocks.cpp
 )
 

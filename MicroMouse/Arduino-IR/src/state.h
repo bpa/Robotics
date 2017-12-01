@@ -2,13 +2,15 @@
 #define MM_STATE_H
 
 extern void (*state)();
-extern void INIT();
-extern void RANDOM();
-extern void EXPLORE_TO_CENTER();
-extern void BACK_INTO_START();
-extern void VALIDATE_SHORTEST_PATH();
-extern void RACE_TO_CENTER();
-extern void DONE();
-extern void SENSE();
+
+void INIT();
+void RANDOM();
+void EXPLORE_TO_CENTER();
+void VALIDATE_SHORTEST_PATH();
+void RETURN_TO_START();
+void BACK_INTO_START();
+void RACE_TO_CENTER();
+void DONE();
+void SENSE();
 
 #endif
