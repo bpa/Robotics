@@ -26,7 +26,6 @@ START_TEST(test_1_1_W) {
     ck_assert_step(L, S, 0, 2, BACK_INTO_START);
     ck_assert_step(D, S, 0, 1, BACK_INTO_START);
     ck_assert_step(H, S, 0, 0, RACE_TO_CENTER);
-    ck_assert_state(BACK_INTO_START);
 }
 END_TEST
 
@@ -44,12 +43,11 @@ START_TEST(test_1_1_W_b) {
         "|___|___________| |___|___________|");//7
     place_mouse(2, 1, W, 2, 1);
     ck_assert_step( X, W, 2, 1, RETURN_TO_START);
-    ck_assert_step( U, W, 1, 1, RETURN_TO_START);
+    ck_assert_step( U, W, 1, 1, BACK_INTO_START);
     ck_assert_step( L, S, 1, 2, BACK_INTO_START);
     ck_assert_step(DR, E, 1, 1, BACK_INTO_START);
     ck_assert_step(DL, S, 0, 1, BACK_INTO_START);
     ck_assert_step( H, S, 0, 0, RACE_TO_CENTER);
-    ck_assert_state(BACK_INTO_START);
 }
 END_TEST
 
@@ -73,7 +71,6 @@ START_TEST(test_1_1_S) {
     ck_assert_step(L, S, 0, 2, BACK_INTO_START);
     ck_assert_step(D, S, 0, 1, BACK_INTO_START);
     ck_assert_step(H, S, 0, 0, RACE_TO_CENTER);
-    ck_assert_state(BACK_INTO_START);
 }
 END_TEST
 
@@ -96,7 +93,6 @@ START_TEST(test_1_1_N) {
     ck_assert_step(L, S, 0, 2, BACK_INTO_START);
     ck_assert_step(D, S, 0, 1, BACK_INTO_START);
     ck_assert_step(H, S, 0, 0, RACE_TO_CENTER);
-    ck_assert_state(BACK_INTO_START);
 }
 END_TEST
 
@@ -118,12 +114,11 @@ START_TEST(test_1_1_E) {
     ck_assert_step( R, W, 0, 1, BACK_INTO_START);
     ck_assert_step( L, S, 0, 2, BACK_INTO_START);
     ck_assert_step( D, S, 0, 1, BACK_INTO_START);
-    ck_assert_step( H, W, 0, 0, RACE_TO_CENTER);
-    ck_assert_state(BACK_INTO_START);
+    ck_assert_step( H, S, 0, 0, RACE_TO_CENTER);
 }
 END_TEST
 
-START_TEST(test_0_1_N) {
+START_TEST(test_0_2_N) {
     setup_mazes(
         //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
         "_________________ _________________"
@@ -135,16 +130,16 @@ START_TEST(test_0_1_N) {
         "| ____|  __ |_  | | ____|  __ |_  |"  //5
         "| ______| ____| | | ______| ____| |"  //6
         "|___|___________| |___|___________|");//7
-    place_mouse(0, 1, N, 0, 1);
-    ck_assert_step( X, N, 0, 1, RETURN_TO_START);
-    ck_assert_step( R, E, 1, 1, RETURN_TO_START);
+    place_mouse(0, 2, N, 0, 2);
+    ck_assert_step( X, N, 0, 2, RETURN_TO_START);
+    ck_assert_step( U, N, 0, 1, BACK_INTO_START);
+    ck_assert_step( R, E, 1, 1, BACK_INTO_START);
     ck_assert_step(DL, S, 0, 1, BACK_INTO_START);
     ck_assert_step( H, S, 0, 0, RACE_TO_CENTER);
-    ck_assert_state(BACK_INTO_START);
 }
 END_TEST
 
-START_TEST(test_0_1_N_b) {
+START_TEST(test_0_5_N_b) {
     setup_mazes(
         //0 1 2 3 4 5 6 7   0 1 2 3 4 5 6 7
         "_________________ _________________"
@@ -158,14 +153,13 @@ START_TEST(test_0_1_N_b) {
         "|___|___________| |___|___________|");//7
     place_mouse(0, 5, N, 0, 5);
     ck_assert_step( X, N, 0, 5, RETURN_TO_START);
-    ck_assert_step( U, N, 0, 4, RETURN_TO_START);
+    ck_assert_step( U, N, 0, 4, BACK_INTO_START);
     ck_assert_step( R, E, 1, 4, BACK_INTO_START);
     ck_assert_step(DL, S, 0, 4, BACK_INTO_START);
     ck_assert_step( D, S, 0, 3, BACK_INTO_START);
     ck_assert_step( D, S, 0, 2, BACK_INTO_START);
     ck_assert_step( D, S, 0, 1, BACK_INTO_START);
-    ck_assert_step( H, W, 0, 0, RACE_TO_CENTER);
-    ck_assert_state(BACK_INTO_START);
+    ck_assert_step( H, S, 0, 0, RACE_TO_CENTER);
 }
 END_TEST
 
@@ -182,8 +176,8 @@ Suite *return_suite(void) {
     tcase_add_test(tc_core, test_1_1_S);
     tcase_add_test(tc_core, test_1_1_N);
     tcase_add_test(tc_core, test_1_1_E);
-    tcase_add_test(tc_core, test_0_1_N);
-    tcase_add_test(tc_core, test_0_1_N_b);
+    tcase_add_test(tc_core, test_0_2_N);
+    tcase_add_test(tc_core, test_0_5_N_b);
     suite_add_tcase(s, tc_core);
 
     return s;

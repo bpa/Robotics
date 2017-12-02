@@ -5,8 +5,6 @@
 #include "a_star.h"
 #include "queue.h"
 
-const char *dir(Direction);
-const char *wall(Wall);
 void (*state)();
 int moves = 4;
 
@@ -17,6 +15,7 @@ int offset[][4] = {
     {MAZE, -1, -MAZE, 1}, //S
     {-1, -MAZE, 1, MAZE}, //W
 };
+
 //   N  E  S  W
 Wall visible[][4] = {
     {U, R, D, L}, //N
@@ -24,12 +23,21 @@ Wall visible[][4] = {
     {D, L, U, R}, //S
     {L, U, R, D}, //W
 };
+
 //   N  E  S  W
-Direction turn[][4] = {
+Direction turn_result[][4] = {
     {N, E, S, W}, //N
     {E, S, W, N}, //E
     {S, W, N, E}, //S
     {W, N, E, S}, //W
+};
+
+Direction turn_needed[][4] = {
+//   N  E  S  W
+    {N, E, S, W}, //N
+    {W, N, E, S}, //E
+    {S, W, N, E}, //S
+    {E, S, W, N}, //W
 };
 
 void (*back_up[][4])() = {
@@ -178,17 +186,17 @@ void do_current_move() {
         if (db == d || w & visible[mouse.facing][S]) {
             if (db == d) {
                 //Backing up again, just need to turn around, E or W would work
-                db = turn[mouse.facing][E];
+                db = turn_result[mouse.facing][E];
             }
             if ((w & visible[db][S]) == 0) {
                 //Opposite direction is open
-                cmd = back_up[mouse.facing][turn[db][S]];
+                cmd = back_up[mouse.facing][turn_result[db][S]];
                 mouse.facing = db;
             }
             else if ((w & visible[db][N]) == 0) {
                 //Direction we are going is open
                 cmd = back_up[mouse.facing][db];
-                mouse.facing = turn[db][S];
+                mouse.facing = turn_result[db][S];
             }
         }
     }
@@ -229,7 +237,7 @@ void VALIDATE_SHORTEST_PATH() {
             for (int i=0; i<= mouse.current_path.size; i++) {
                 Point next = mouse.current_path.data[i];
                 uint8_t w = cell(mouse.maze, next.x, next.y).walls;
-                if (wallCount[w] < 3) {
+                if (wallCount[w] < 2) {
                     find_path(mouse.x, mouse.y, next.x, next.y, mouse.maze, mouse.current_path);
                     break;
                 }
@@ -245,24 +253,58 @@ void RETURN_TO_START() {
     do_current_move();
     if (queue_empty(mouse.current_path)) {
         state = BACK_INTO_START;
-        find_path(mouse.x, mouse.y, 0, 1, mouse.maze, mouse.current_path);
+        find_path(mouse.x, mouse.y, 0, 0, mouse.maze, mouse.current_path);
     }
 }
 
+Direction fwd[] = { W, N, E };
+
 void BACK_INTO_START() {
     if (near_target) {
-        do_current_move();
-        if (queue_empty(mouse.current_path)) {
-            move_to_pose(89, 127, 0);
-            state = RACE_TO_CENTER;
-            find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.current_path);
+        Point next = queue_peek(mouse.current_path);
+        Direction d = direction(next);
+
+        if (d == turn_result[mouse.facing][S]) {
+            mouse.x = next.x;
+            mouse.y = next.y;
+            if (mouse.current_path.size == 0) {
+                move_to_pose(89, 127, 0);
+                state = RACE_TO_CENTER;
+                find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.current_path);
+                return;
+            }
+            queue_pop(mouse.current_path);
+            next = queue_peek(mouse.current_path);
+            Direction next_dir = direction(next);
+            switch (turn_needed[mouse.facing][next_dir]) {
+                case S: move_backward();   break;
+                case E: move_back_right(); break;
+                case W: move_back_left();  break;
+            }
+            mouse.facing = turn_result[next_dir][S];
+        }
+        else {
+            Cell c = cell(mouse.maze, mouse.x, mouse.y);
+            for (int i=0; i<3; i++) {
+                Direction alt = turn_result[mouse.facing][fwd[i]];
+                if (!(d == alt || (c.walls & visible[mouse.facing][alt]))) {
+                    move[mouse.facing][alt]();
+                    mouse.facing = alt;
+                    next.x = mouse.x;
+                    next.y = mouse.y;
+                    queue_push(mouse.current_path, next);
+                    int maze_ind = c.maze_ind + offset[mouse.facing][N];
+                    mouse.x = maze_ind % MAZE;
+                    mouse.y = maze_ind / MAZE;
+                    break;
+                }
+            }
         }
     }
 }
 
 void RACE_TO_CENTER() {
     if (near_target) {
-        do_current_move();
         if (queue_empty(mouse.current_path)) {
             state = DONE;
         }

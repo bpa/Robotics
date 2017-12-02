@@ -25,7 +25,7 @@
     intmax_t _y = (Y); \
     void (*_p)() = (S); \
     ck_assert_msg(_f == moving, "Assertion '%s' failed: %s != %s", "moving == "#W, wall(moving), wall(_f)); \
-    ck_assert_msg(_d == mouse.facing, "Assertion '%s' failed: %d != %d", "direction == "#D, mouse.facing, _d); \
+    ck_assert_msg(_d == mouse.facing, "Assertion '%s' failed: %s != %s", "direction == "#D, dir(mouse.facing), dir(_d)); \
     ck_assert_msg(_x == mouse.x && _y == mouse.y, "Assertion '%s' failed: (%d, %d) != (%d, %d)", "("#X","#Y") == loc", _x, _y, mouse.x, mouse.y); \
     ck_assert_msg(state == _p, "Assertion '%s' failed: %d != %d", "state == "#S, state, _p); \
     looking = D; \
