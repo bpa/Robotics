@@ -305,6 +305,7 @@ void BACK_INTO_START() {
 
 void RACE_TO_CENTER() {
     if (near_target) {
+        do_current_move();
         if (queue_empty(mouse.current_path)) {
             state = DONE;
         }
@@ -323,6 +324,8 @@ void SENSE() {
 }
 
 void DONE() {
-    stop();
+    if (near_target) {
+        stop();
+    }
     delay(10000);
 }

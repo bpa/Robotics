@@ -18,6 +18,7 @@ set(TEST_SOURCES
   check_astar.cpp
   check_explore.cpp
   check_queue.cpp
+  check_race_to_center.cpp
   check_return_to_start.cpp
   check_validate_path.cpp
   main.cpp
