@@ -1,8 +1,10 @@
 #include "movement.h"
 #include "hardware.h"
+#include "maze.h"
+#include <cmath>
 
+#define UNIT UNIT_SQUARE
 const byte MAX_SPEED = 255;
-const int UNIT = 2450;
 
 bool near_target = false;
 bool stopped = true;
@@ -50,56 +52,41 @@ void movement() {
     }
 }
 
+float current_angle;
+float current_x;
+float current_y;
+Direction current_dir;
+
+float target_angle[] =
+//   N    NE      E        SE      S       SW         W        NW
+    {0, M_PI/4, M_PI/2, 3*M_PI/4, M_PI, -3*M_PI/4, -M_PI/2, -M_PI/4};
+
+#define SQ UNIT_SQUARE
+//   N      E     S    W
+int offset_x[] = {0, SQ, 0, -SQ};
+int offset_y[] = {-SQ, 0, SQ, 0};
+
+void move_to_pose(int x, int y, float r) {
+}
+
 #ifdef ARDUINO
-void move_right() {
-    near_target = false;
-    stopped = false;
-    left.forward(1400, MAX_SPEED);
-    right.backwards(790, 50);
-    look_around = ignore;
+void move_to_start() {
 }
 
-void move_left() {
-    near_target = false;
-    stopped = false;
-    Serial.println("in left");
-    left.backwards(700, 50);
-    right.forward(1400, MAX_SPEED);
-    look_around = ignore;
+void move(Direction d) {
+    move_to_pose(
+        current_x + offset_x[current_dir][d],
+        current_y + offset_y[current_dir][d],
+        current_angle + target_angle[current_dir][d]
+    );
 }
 
-void move_forward() {
-    near_target = false;
-    stopped = false;
-    left.forward(UNIT, MAX_SPEED);
-    right.forward(UNIT, MAX_SPEED);
-    look_around = center;
-}
-
-void move_backward() {
-    near_target = false;
-    stopped = false;
-    left.backwards(UNIT, MAX_SPEED);
-    right.backwards(UNIT, MAX_SPEED);
-    look_around = center;
-}
-
-void stop() {
-    near_target = false;
-    stopped = true;
-    left.stop();
-    right.stop();
-    look_around = ignore;
-}
 #else
 #include "Mouse.h"
 Wall moving;
-void move_right()      { moving = R;  }
-void move_left()       { moving = L;  }
-void move_forward()    { moving = U;  }
-void move_backward()   { moving = D;  }
-void move_back_left()  { moving = DL; }
-void move_back_right() { moving = DR; }
-void move_to_pose(int x, int y, float r) { moving = H; }
-void stop() {}
+char*dir(Direction);
+Wall wall_dir[] = {U, UR, R, DR, D, DL, L, UL};
+void move(Direction d) { moving = wall_dir[d]; }
+void move_to_start()   { moving = H; }
+
 #endif

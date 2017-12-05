@@ -8,80 +8,37 @@
 void (*state)();
 int moves = 4;
 
-//   N  E  S  W
-int offset[][4] = {
-    {-MAZE, 1, MAZE, -1}, //N
-    {1, MAZE, -1, -MAZE}, //E
-    {MAZE, -1, -MAZE, 1}, //S
-    {-1, -MAZE, 1, MAZE}, //W
-};
-
-//   N  E  S  W
-Wall visible[][4] = {
-    {U, R, D, L}, //N
-    {R, D, L, U}, //E
-    {D, L, U, R}, //S
-    {L, U, R, D}, //W
-};
-
-//   N  E  S  W
-Direction turn_result[][4] = {
-    {N, E, S, W}, //N
-    {E, S, W, N}, //E
-    {S, W, N, E}, //S
-    {W, N, E, S}, //W
-};
-
-Direction turn_needed[][4] = {
-//   N  E  S  W
-    {N, E, S, W}, //N
-    {W, N, E, S}, //E
-    {S, W, N, E}, //S
-    {E, S, W, N}, //W
-};
-
-void (*back_up[][4])() = {
-//   N             E           S             W
-    {move_forward, move_back_right, move_backward, move_back_left}, //N
-    {move_back_left, move_forward, move_back_right, move_backward}, //E
-    {move_backward, move_back_left, move_forward, move_back_right}, //S
-    {move_back_right, move_backward, move_back_left, move_forward}, //W
-};
-
-void (*move[][4])() = {
-//   N             E           S             W
-    {move_forward, move_right, move_backward, move_left}, //N
-    {move_left, move_forward, move_right, move_backward}, //E
-    {move_backward, move_left, move_forward, move_right}, //S
-    {move_right, move_backward, move_left, move_forward}, //W
-};
+               //   N    NE E  SE   S  SW  W  NW
+int offset[]   = {-MAZE, 0, 1, 0, MAZE, 0, -1, 0};
+Wall visible[] = {    U, X, R, X,    D, X,  L, X};
 
 //                 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
 int wallCount[] = {0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4};
 
 Direction direction(Point &next) {
-         if (mouse.x < next.x) return E;
-    else if (mouse.x > next.x) return W;
-    else if (mouse.y < next.y) return S;
-    else if (mouse.y > next.y) return N;
+    Direction realdir;
+         if (mouse.x < next.x) realdir = E;
+    else if (mouse.x > next.x) realdir = W;
+    else if (mouse.y < next.y) realdir = S;
+    else if (mouse.y > next.y) realdir = N;
+    return (Direction)((8 + realdir - mouse.facing) % 8);
 }
 
 void FWD() {
     if (near_target) {
         if ( moves == 0 ) {
             Serial.println("Done.");
-            stop();
             state = DONE;
             return;
         }
         moves--;
         if (analogRead(FRONT_SENSOR) > 100) {
             Serial.println("Left.");
-            move_left();
+            move(W);
         }
         else {
             Serial.println("Forward.");
-            move_forward();
+            move(N);
         }
     }
 }
@@ -109,27 +66,27 @@ void RANDOM() {
         }
         moves--;
         int available = 0;
-        void (*dir[4])();
+        Direction dir[4];
         if (analogRead(FRONT_SENSOR) < 100) {
-            dir[available++] = move_forward;
+            dir[available++] = N;
             Serial.print("F ");
         }
         if (analogRead(LEFT_SENSOR) < 100) {
-            dir[available++] = move_left;
+            dir[available++] = W;
             Serial.print("L ");
         }
         if (analogRead(RIGHT_SENSOR) < 100) {
-            dir[available++] = move_right;
+            dir[available++] = E;
             Serial.print("R ");
         }
         if (available == 0) {
-            dir[available++] = move_backward;
+            dir[available++] = S;
             Serial.print("B ");
         }
         int d = random(available);
         Serial.print(d);
         Serial.println();
-        dir[d]();
+        move(dir[d]);
     }
 }
 
@@ -138,29 +95,29 @@ bool found_new_walls() {
     Cell *c = &cell(mouse.maze, mouse.x, mouse.y);
     c->flags |= VISITED;
     uint8_t w = c->walls;
-    uint8_t observed = w & visible[mouse.facing][S];
+    uint8_t observed = w & visible[cardinal(mouse.facing, S)];
 
-    if (analogRead(FRONT_SENSOR) > 100) observed |= visible[mouse.facing][N];
-    if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[mouse.facing][E];
-    if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[mouse.facing][W];
+    if (analogRead(FRONT_SENSOR) > 100) observed |= visible[cardinal(mouse.facing, N)];
+    if (analogRead(RIGHT_SENSOR) > 100) observed |= visible[cardinal(mouse.facing, E)];
+    if (analogRead(LEFT_SENSOR)  > 100) observed |= visible[cardinal(mouse.facing, W)];
     if (w != observed) {
         c->walls = observed;
-        if (observed & visible[mouse.facing][N]) {
-            i = c->maze_ind + offset[mouse.facing][N];
+        if (observed & visible[cardinal(mouse.facing, N)]) {
+            i = c->maze_ind + offset[cardinal(mouse.facing, N)];
             if (i < CELLS && i >= 0) {
-                mouse.maze[i].walls |= visible[mouse.facing][S];
+                mouse.maze[i].walls |= visible[cardinal(mouse.facing,S)];
             }
         }
-        if (observed & visible[mouse.facing][E]) {
-            i = c->maze_ind + offset[mouse.facing][E];
+        if (observed & visible[cardinal(mouse.facing,E)]) {
+            i = c->maze_ind + offset[cardinal(mouse.facing,E)];
             if (i < CELLS && i >= 0) {
-                mouse.maze[i].walls |= visible[mouse.facing][W];
+                mouse.maze[i].walls |= visible[cardinal(mouse.facing,W)];
             }
         }
-        if (observed & visible[mouse.facing][W]) {
-            i = c->maze_ind + offset[mouse.facing][W];
+        if (observed & visible[cardinal(mouse.facing,W)]) {
+            i = c->maze_ind + offset[cardinal(mouse.facing,W)];
             if (i < CELLS && i >= 0) {
-                mouse.maze[i].walls |= visible[mouse.facing][E];
+                mouse.maze[i].walls |= visible[cardinal(mouse.facing,E)];
             }
         }
         return true;
@@ -175,35 +132,34 @@ void do_current_move() {
 
     Point next = queue_pop(mouse.current_path);
     Direction d = direction(next);
-    void (*cmd)() = move[mouse.facing][d];
     mouse.x = next.x;
     mouse.y = next.y;
-    if (cmd == move_backward) {
+    if (d == S) {
         uint8_t w = cell(mouse.maze, mouse.x, mouse.y).walls;
         next = queue_peek(mouse.current_path);
-        Direction db = direction(next);
+        Direction next_dir = direction(next);
         // backing up again || wall behind mouse
-        if (db == d || w & visible[mouse.facing][S]) {
-            if (db == d) {
-                //Backing up again, just need to turn around, E or W would work
-                db = turn_result[mouse.facing][E];
+        if (next_dir == S || w & visible[cardinal(mouse.facing,S)]) {
+            if (next_dir == S) {
+                //Backing up again, just need to turn around, E or W will both work
+                next_dir = E;
             }
-            if ((w & visible[db][S]) == 0) {
-                //Opposite direction is open
-                cmd = back_up[mouse.facing][turn_result[db][S]];
-                mouse.facing = db;
+            Direction opposite = cardinal(next_dir, S);
+            if ((w & visible[cardinal(mouse.facing, opposite)]) == 0) {
+                //E(2)/2 or W(6)/2 + E(2) = SE(3) or SW(5)
+                d = (Direction)(E + opposite / 2);
+                mouse.facing = cardinal(mouse.facing, next_dir);
             }
-            else if ((w & visible[db][N]) == 0) {
-                //Direction we are going is open
-                cmd = back_up[mouse.facing][db];
-                mouse.facing = turn_result[db][S];
+            else if ((w & visible[cardinal(mouse.facing, next_dir)]) == 0) {
+                d = (Direction)(E + next_dir / 2);
+                mouse.facing = cardinal(mouse.facing, opposite);
             }
         }
     }
     else {
-        mouse.facing = d;
+        mouse.facing = cardinal(mouse.facing, d);
     }
-    cmd();
+    move(d);
 }
 
 void EXPLORE_TO_CENTER() {
@@ -264,11 +220,11 @@ void BACK_INTO_START() {
         Point next = queue_peek(mouse.current_path);
         Direction d = direction(next);
 
-        if (d == turn_result[mouse.facing][S]) {
+        if (d == S) {
             mouse.x = next.x;
             mouse.y = next.y;
             if (mouse.current_path.size == 0) {
-                move_to_pose(89, 127, 0);
+                move_to_start();
                 state = RACE_TO_CENTER;
                 find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.current_path);
                 return;
@@ -276,24 +232,24 @@ void BACK_INTO_START() {
             queue_pop(mouse.current_path);
             next = queue_peek(mouse.current_path);
             Direction next_dir = direction(next);
-            switch (turn_needed[mouse.facing][next_dir]) {
-                case S: move_backward();   break;
-                case E: move_back_right(); break;
-                case W: move_back_left();  break;
+            switch (next_dir) {
+                case S: move(S);  break;
+                case E: move(SE); break;
+                case W: move(SW); break;
             }
-            mouse.facing = turn_result[next_dir][S];
+            mouse.facing = (Direction)((mouse.facing + next_dir + S) % 8);
         }
         else {
             Cell c = cell(mouse.maze, mouse.x, mouse.y);
             for (int i=0; i<3; i++) {
-                Direction alt = turn_result[mouse.facing][fwd[i]];
-                if (!(d == alt || (c.walls & visible[mouse.facing][alt]))) {
-                    move[mouse.facing][alt]();
+                Direction alt = cardinal(mouse.facing, fwd[i]);
+                if (!(d == fwd[i] || (c.walls & visible[alt]))) {
+                    move(fwd[i]);
                     mouse.facing = alt;
                     next.x = mouse.x;
                     next.y = mouse.y;
                     queue_push(mouse.current_path, next);
-                    int maze_ind = c.maze_ind + offset[mouse.facing][N];
+                    int maze_ind = c.maze_ind + offset[mouse.facing];
                     mouse.x = maze_ind % MAZE;
                     mouse.y = maze_ind / MAZE;
                     break;
@@ -324,8 +280,5 @@ void SENSE() {
 }
 
 void DONE() {
-    if (near_target) {
-        stop();
-    }
     delay(10000);
 }

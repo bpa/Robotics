@@ -122,9 +122,9 @@ void create_maze(const char *maze_text) {
 
 void update_mouse(int x, int y) {
     uint8_t _w = cell(hidden, cx, cy).walls;
-    analogWrite(FRONT_SENSOR, (_w & visible[looking][N]) ? 200 : 10);
-    analogWrite(RIGHT_SENSOR, (_w & visible[looking][E]) ? 200 : 10);
-    analogWrite(LEFT_SENSOR,  (_w & visible[looking][W]) ? 200 : 10);
+    analogWrite(FRONT_SENSOR, (_w & visible[cardinal(looking, N)]) ? 200 : 10);
+    analogWrite(RIGHT_SENSOR, (_w & visible[cardinal(looking, E)]) ? 200 : 10);
+    analogWrite(LEFT_SENSOR,  (_w & visible[cardinal(looking, W)]) ? 200 : 10);
     near_target = true;
     moving = X;
     state();

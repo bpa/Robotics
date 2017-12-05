@@ -1,5 +1,7 @@
 #include "Mouse.h"
 #include "a_star.h"
+#include "movement.h"
+#include <cmath>
 
 Mouse mouse;
 
@@ -23,4 +25,8 @@ void mouse_init() {
     mouse.facing = S;
     mouse.x = mouse.y = 0;
     mouse.maze[i].flags = VISITED;
+    current_x = UNIT_SQUARE/2;
+    current_y = UNIT_SQUARE/2;
+    current_angle = M_PI;
+    current_dir = S;
 }

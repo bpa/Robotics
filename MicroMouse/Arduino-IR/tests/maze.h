@@ -63,7 +63,7 @@
     ck_assert_maze_subset(hidden, mouse.maze);
 
 extern Wall moving;
-extern Wall visible[][4];
+extern Wall visible[];
 extern Mouse mouse;
 extern Maze hidden;
 extern char wc[][16];

@@ -2,6 +2,9 @@
 #define MM_MAZE_H
 
 #include <stdint.h>
+
+#define UNIT_SQUARE 178
+
 #define MAZE 8
 #define MAZE_END (MAZE-1)
 #define CELLS (MAZE*MAZE)
@@ -9,25 +12,33 @@
 #define ind(x, y) (y * MAZE + x)
 #define cell(v, x, y) v[ ind(x,y) ]
 #define dist(a, b) (a < b ? b - a : a - b)
+#define cardinal(a, b) (Direction)((a + b) % 8)
+#define cardinal3(a, b, c) (Direction)((a + b + c) % 8)
 
 typedef enum {
 #ifndef ANDROID
     X  =  0,  //Testing for no movement
-    H  =  15, //Testing for backup to home
+    UR =  3,
+    DR =  6,
+    UL =  9,
+    DL = 12,
+    H  = 15, //Testing for backup to home
 #endif
     U  =  1,
     R  =  2,
     D  =  4,
     L  =  8,
-    DR =  6,
-    DL = 12,
 } Wall;
 
 typedef enum {
     N = 0,
-    E,
+    NE,
+     E,
+    SE,
     S,
-    W,
+    SW,
+     W,
+    NW,
 } Direction;
 
 typedef enum {

@@ -1,3 +1,8 @@
+### Notes
+
+All units unless otherwise stated are mm for distance and radians for angles
+
+Gazebo is a nice to have.  I've stopped building the plugin for now and might pick it up later.  It was taking to much time.  The simulations didn't feel accurate at all despite otherwise looking good.  Forces weren't where the were supposed to be.
 
 ### Gazebo + ROS
 
