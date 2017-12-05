@@ -233,9 +233,9 @@ void BACK_INTO_START() {
             next = queue_peek(mouse.current_path);
             Direction next_dir = direction(next);
             switch (next_dir) {
-                case S: move(S);  break;
-                case E: move(SE); break;
-                case W: move(SW); break;
+                case S: move( S);  break;
+                case E: move(_SE); break; //Thank Arduino for defining SE
+                case W: move( SW); break;
             }
             mouse.facing = (Direction)((mouse.facing + next_dir + S) % 8);
         }

@@ -1,7 +1,7 @@
 #include "movement.h"
 #include "hardware.h"
 #include "maze.h"
-#include <cmath>
+#include <math.h>
 
 #define UNIT UNIT_SQUARE
 const byte MAX_SPEED = 255;
@@ -75,9 +75,9 @@ void move_to_start() {
 
 void move(Direction d) {
     move_to_pose(
-        current_x + offset_x[current_dir][d],
-        current_y + offset_y[current_dir][d],
-        current_angle + target_angle[current_dir][d]
+        0, //current_x + offset_x[current_dir][d],
+        0, //current_y + offset_y[current_dir][d],
+        0  //current_angle + target_angle[current_dir][d]
     );
 }
 

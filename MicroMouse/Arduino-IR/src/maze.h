@@ -34,7 +34,7 @@ typedef enum {
     N = 0,
     NE,
      E,
-    SE,
+   _SE, //Arduino avr defines SE as Sleep Enabled
     S,
     SW,
      W,

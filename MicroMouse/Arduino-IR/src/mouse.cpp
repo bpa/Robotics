@@ -1,7 +1,7 @@
 #include "Mouse.h"
 #include "a_star.h"
 #include "movement.h"
-#include <cmath>
+#include <math.h>
 
 Mouse mouse;
 
