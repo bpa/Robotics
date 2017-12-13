@@ -7,6 +7,7 @@
 #define WHEEL_SEPARATION 75 
 #define GEAR_RATIO 150
 #define COUNTS_PER_ROTATION 12
+#define PEEK_DISTANCE 40
 
 #define LEFT_MOTOR  3
 #define RIGHT_MOTOR 4

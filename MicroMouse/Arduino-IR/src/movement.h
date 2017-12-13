@@ -9,17 +9,32 @@
 #define TICK_DISTANCE CIRCUMFERENCE / TICKS_PER_ROTATION
 #define TICKS_PER_MM TICKS_PER_ROTATION / CIRCUMFERENCE
 
+typedef struct {
+    float x;
+    float y;
+    float r;
+} Pose;
+
+typedef struct {
+    int size;
+    Pose data[2];
+} PoseStack;
+
 extern Direction current_dir;
-extern float current_angle;
-extern float current_x;
-extern float current_y;
 extern bool near_target;
 extern bool stopped;
+extern const Wall visible[];
+extern Pose current_pose;
 
 void movement();
+#ifdef ARDUINO
+  //Need a test seam
+  #define move(d) _move(d)
+#else
 void move(Direction);
+#endif 
+void _move(Direction);
 void move_to_start();
-
 void move_to_pose(int x, int y, float r);
 
 #endif

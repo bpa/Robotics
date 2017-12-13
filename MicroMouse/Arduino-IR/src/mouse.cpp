@@ -25,8 +25,8 @@ void mouse_init() {
     mouse.facing = S;
     mouse.x = mouse.y = 0;
     mouse.maze[i].flags = VISITED;
-    current_x = UNIT_SQUARE/2;
-    current_y = UNIT_SQUARE/2;
-    current_angle = M_PI;
+    current_pose.x = UNIT_SQUARE/2;
+    current_pose.y = UNIT_SQUARE/2;
+    current_pose.r = M_PI;
     current_dir = S;
 }

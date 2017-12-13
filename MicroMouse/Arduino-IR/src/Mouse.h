@@ -6,8 +6,7 @@
 
 typedef struct {
     Maze maze;
-    Path shortest_path;
-    Path current_path;
+    Path path;
     Direction facing;
     int x;
     int y;

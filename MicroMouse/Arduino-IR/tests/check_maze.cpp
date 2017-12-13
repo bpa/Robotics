@@ -1,8 +1,6 @@
 #include <check.h>
 #include "maze.h"
 
-extern Wall visible[];
-
 START_TEST(test_cardinal) {
     ck_assert_int_eq(cardinal(N,N), N);
     ck_assert_int_eq(cardinal(N,S), S);

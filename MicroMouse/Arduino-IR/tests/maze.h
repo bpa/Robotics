@@ -15,7 +15,7 @@
     mouse.x = X; \
     mouse.y = Y; \
     mouse.facing = D; \
-    find_path(mouse.x, mouse.y, X2, Y2, mouse.maze, mouse.current_path); 
+    find_path(mouse.x, mouse.y, X2, Y2, mouse.maze, mouse.path); 
 
 #define ck_assert_step(W, D, X, Y, S) do { \
     update_mouse(X, Y); \
@@ -63,7 +63,6 @@
     ck_assert_maze_subset(hidden, mouse.maze);
 
 extern Wall moving;
-extern Wall visible[];
 extern Mouse mouse;
 extern Maze hidden;
 extern char wc[][16];

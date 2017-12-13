@@ -20,7 +20,7 @@ START_TEST(test_run) {
         "| ______| ____| | | ______| ____| |"  //6
         "|___|___________| |___|___________|");//7
     place_mouse(0, 1, S, 0, 1);
-    find_path(mouse.x, mouse.y, 0, 0, mouse.maze, mouse.current_path);
+    find_path(mouse.x, mouse.y, 0, 0, mouse.maze, mouse.path);
     ck_assert_step(H, S, 0, 0, RACE_TO_CENTER);
     ck_assert_step(U, S, 0, 1, RACE_TO_CENTER);
     ck_assert_step(L, E, 1, 1, RACE_TO_CENTER);

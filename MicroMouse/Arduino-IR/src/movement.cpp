@@ -3,11 +3,34 @@
 #include "maze.h"
 #include <math.h>
 
-#define UNIT UNIT_SQUARE
+#ifdef ARDUINO
+  #include <Arduino.h>
+#else
+  #include <cmath>
+  #define abs std::abs
+#endif
+
+#define SQ UNIT_SQUARE
 const byte MAX_SPEED = 255;
+const Pose offset[] = {
+    {  0, -SQ,       0  }, //N
+    { SQ,   0,  3*M_PI/4}, //NE (Really just E)
+    { SQ,   0,  3*M_PI/4}, //E
+    { SQ,   0,    M_PI  }, //SE
+    {  0, -SQ, -3*M_PI/4}, //S
+    { SQ,   0,   -M_PI/2}, //SW
+    { SQ,   0,   -M_PI/4}, //W
+    { SQ,   0,   -M_PI/4}, //NW (W)
+};
+
+Direction current_dir;
+Pose current_pose;
+Pose target_pose;
+PoseStack points;
 
 bool near_target = false;
 bool stopped = true;
+Pose targets[2];
 
 void ignore() {}
 void center() {
@@ -52,33 +75,30 @@ void movement() {
     }
 }
 
-float current_angle;
-float current_x;
-float current_y;
-Direction current_dir;
-
-float target_angle[] =
-//   N    NE      E        SE      S       SW         W        NW
-    {0, M_PI/4, M_PI/2, 3*M_PI/4, M_PI, -3*M_PI/4, -M_PI/2, -M_PI/4};
-
-#define SQ UNIT_SQUARE
-//   N      E     S    W
-int offset_x[] = {0, SQ, 0, -SQ};
-int offset_y[] = {-SQ, 0, SQ, 0};
-
 void move_to_pose(int x, int y, float r) {
+    if (abs(r - current_pose.r) < .01) {
+        left_motor.setSpeed(MAX_SPEED);
+        left_motor.run(FORWARD);
+        right_motor.setSpeed(MAX_SPEED);
+        right_motor.run(FORWARD);
+    }
+    target_pose.x = x;
+    target_pose.y = y;
+    target_pose.r = r;
+}
+
+void _move(Direction d) {
+    move_to_pose(
+        target_pose.x + offset[d].x,
+        target_pose.y + offset[d].y,
+        offset[d].r
+    );
 }
 
 #ifdef ARDUINO
+    
 void move_to_start() {
-}
-
-void move(Direction d) {
-    move_to_pose(
-        0, //current_x + offset_x[current_dir][d],
-        0, //current_y + offset_y[current_dir][d],
-        0  //current_angle + target_angle[current_dir][d]
-    );
+    move_to_pose(UNIT_SQUARE/2, UNIT_SQUARE/2, target_angle[S]);
 }
 
 #else
@@ -88,5 +108,4 @@ char*dir(Direction);
 Wall wall_dir[] = {U, UR, R, DR, D, DL, L, UL};
 void move(Direction d) { moving = wall_dir[d]; }
 void move_to_start()   { moving = H; }
-
 #endif
