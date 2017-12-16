@@ -1,7 +1,5 @@
 #include "movement.h"
 #include "hardware.h"
-#include "maze.h"
-#include <math.h>
 
 #ifdef ARDUINO
   #include <Arduino.h>

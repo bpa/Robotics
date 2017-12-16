@@ -17,7 +17,7 @@ typedef struct {
 
 typedef struct {
     int size;
-    Pose data[2];
+    Pose data[3];
 } PoseStack;
 
 extern Direction current_dir;

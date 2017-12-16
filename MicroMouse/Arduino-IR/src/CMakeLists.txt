@@ -6,7 +6,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 set(LIB_SOURCES
   a_star.cpp
   hardware.cpp
-  mouse.cpp
   movement.cpp
   queue.cpp
   state.cpp

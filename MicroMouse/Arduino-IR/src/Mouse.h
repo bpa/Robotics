@@ -12,7 +12,6 @@ typedef struct {
     int y;
 } Mouse;
 
-void mouse_init();
 extern Mouse mouse;
     
 #endif

@@ -7,7 +7,6 @@ link_directories(${CHECK_LIBRARY_DIRS})
 set(LIB_SOURCES
   ../src/a_star.cpp
   ../src/hardware.cpp
-  ../src/mouse.cpp
   ../src/movement.cpp
   ../src/queue.cpp
   ../src/state.cpp

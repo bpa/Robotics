@@ -4,7 +4,9 @@
 #include "movement.h"
 #include "a_star.h"
 #include "queue.h"
+#include <math.h>
 
+Mouse mouse;
 void (*state)();
 int moves = 4;
 
@@ -23,6 +25,32 @@ Direction direction(Point &next) {
     else if (mouse.y < next.y) realdir = S;
     else if (mouse.y > next.y) realdir = N;
     return (Direction)((8 + realdir - mouse.facing) % 8);
+}
+
+void mouse_init() {
+    int i;
+    for (i=1; i<CELLS; i++) {
+        mouse.maze[i].maze_ind = i;
+        mouse.maze[i].walls = 0;
+        mouse.maze[i].flags = 0;
+    }
+    for (i=1; i<MAZE; i++) {
+        cell(mouse.maze, i, 0).walls = U;
+        cell(mouse.maze, 0, i).walls = L;
+        cell(mouse.maze, MAZE_END, i).walls = R;
+        cell(mouse.maze, i, MAZE_END).walls = D;
+    }
+    cell(mouse.maze, 0,       0).walls = U | L | R; //Start location
+    cell(mouse.maze, MAZE_END,0).walls = U | R;
+    cell(mouse.maze, MAZE_END,MAZE_END).walls = D | R;
+    cell(mouse.maze, 0,       MAZE_END).walls = D | L;
+    mouse.facing = S;
+    mouse.x = mouse.y = 0;
+    mouse.maze[i].flags = VISITED;
+    current_pose.x = UNIT_SQUARE/2;
+    current_pose.y = UNIT_SQUARE/2;
+    current_pose.r = M_PI;
+    current_dir = S;
 }
 
 void FWD() {
