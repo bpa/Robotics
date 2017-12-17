@@ -46,11 +46,7 @@ void mouse_init() {
     cell(mouse.maze, 0,       MAZE_END).walls = D | L;
     mouse.facing = S;
     mouse.x = mouse.y = 0;
-    mouse.maze[i].flags = VISITED;
-    current_pose.x = UNIT_SQUARE/2;
-    current_pose.y = UNIT_SQUARE/2;
-    current_pose.r = M_PI;
-    current_dir = S;
+    mouse.maze[0].flags = VISITED;
 }
 
 void FWD() {
@@ -80,6 +76,7 @@ void INIT() {
     }
 
     mouse_init();
+    movement_init();
     find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.path);
     randomSeed(analogRead(0));
     delay(1500);

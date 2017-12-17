@@ -17,7 +17,7 @@ typedef struct {
 
 typedef struct {
     int size;
-    Pose data[3];
+    Pose data[2];
 } PoseStack;
 
 extern Direction current_dir;
@@ -26,6 +26,7 @@ extern bool stopped;
 extern const Wall visible[];
 extern Pose current_pose;
 
+void movement_init();
 void movement();
 #ifdef ARDUINO
   //Need a test seam

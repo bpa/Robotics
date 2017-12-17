@@ -16,8 +16,8 @@
 #define cardinal3(a, b, c) (Direction)((a + b + c) % 8)
 
 typedef enum {
-#ifndef ARDUINO
     X  =  0,  //Testing for no movement
+#ifndef ARDUINO
     UR =  3,
     DR =  6,
     UL =  9,

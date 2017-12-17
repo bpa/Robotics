@@ -21,14 +21,23 @@ const Pose offset[] = {
     { SQ,   0,   -M_PI/4}, //NW (W)
 };
 
-Direction current_dir;
-Pose current_pose;
-Pose target_pose;
+Direction logical_r;
+int logical_x, logical_y;
+Pose pose;
 PoseStack points;
 
 bool near_target = false;
 bool stopped = true;
-Pose targets[2];
+
+void movement_init() {
+    logical_x = 0;
+    logical_y = 0;
+    pose.x = UNIT_SQUARE/2;
+    pose.y = UNIT_SQUARE/2;
+    pose.r = M_PI;
+    logical_r = S;
+    points.size = -1;
+}
 
 void ignore() {}
 void center() {
@@ -74,21 +83,21 @@ void movement() {
 }
 
 void move_to_pose(int x, int y, float r) {
-    if (abs(r - current_pose.r) < .01) {
+    if (abs(r - pose.r) < .01) {
         left_motor.setSpeed(MAX_SPEED);
         left_motor.run(FORWARD);
         right_motor.setSpeed(MAX_SPEED);
         right_motor.run(FORWARD);
     }
-    target_pose.x = x;
-    target_pose.y = y;
-    target_pose.r = r;
+    points.data[0].x = x;
+    points.data[0].y = y;
+    points.data[0].r = r;
 }
 
 void _move(Direction d) {
     move_to_pose(
-        target_pose.x + offset[d].x,
-        target_pose.y + offset[d].y,
+        points.data[0].x + offset[d].x,
+        points.data[0].y + offset[d].y,
         offset[d].r
     );
 }
@@ -96,7 +105,7 @@ void _move(Direction d) {
 #ifdef ARDUINO
     
 void move_to_start() {
-    move_to_pose(UNIT_SQUARE/2, UNIT_SQUARE/2, target_angle[S]);
+    move_to_pose(UNIT_SQUARE/2, UNIT_SQUARE/2, M_PI);
 }
 
 #else
