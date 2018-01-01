@@ -10,7 +10,7 @@ Mouse mouse;
 void (*state)();
 int moves = 4;
 
-               //   N    NE E  SE   S  SW  W  NW
+                     //   N    NE E  SE   S  SW  W  NW
 const int offset[]   = {-MAZE, 0, 1, 0, MAZE, 0, -1, 0};
 const Wall visible[] = {    U, X, R, X,    D, X,  L, X};
 

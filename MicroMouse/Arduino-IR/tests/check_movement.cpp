@@ -21,11 +21,11 @@ START_TEST(test_N) {
     _move(N);
     ck_assert_uint_eq(1, points.size);
     ck_assert_float_eq_tol(3*UNIT_SQUARE + UNIT_SQUARE/2, points.data[1].x, 0.001);
-    ck_assert_float_eq_tol(2*UNIT_SQUARE + PEEK_DISTANCE, points.data[1].y, 0.001);
+    ck_assert_float_eq_tol(3*UNIT_SQUARE + PEEK_DISTANCE, points.data[1].y, 0.001);
     ck_assert_float_eq_tol(0, points.data[1].r, 0.001);
 
     ck_assert_float_eq_tol(3*UNIT_SQUARE + UNIT_SQUARE/2, points.data[0].x, 0.001);
-    ck_assert_float_eq_tol(2*UNIT_SQUARE - PEEK_DISTANCE, points.data[0].y, 0.001);
+    ck_assert_float_eq_tol(3*UNIT_SQUARE - PEEK_DISTANCE, points.data[0].y, 0.001);
     ck_assert_float_eq_tol(0, points.data[0].r, 0.001);
 }
 END_TEST

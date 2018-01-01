@@ -1,5 +1,6 @@
-#include "movement.h"
 #include "hardware.h"
+#include "queue.h"
+#include "movement.h"
 
 #ifdef ARDUINO
   #include <Arduino.h>
@@ -11,14 +12,25 @@
 #define SQ UNIT_SQUARE
 const byte MAX_SPEED = 255;
 const Pose offset[] = {
-    {  0, -SQ,       0  }, //N
-    { SQ,   0,  3*M_PI/4}, //NE (Really just E)
-    { SQ,   0,  3*M_PI/4}, //E
-    { SQ,   0,    M_PI  }, //SE
-    {  0, -SQ, -3*M_PI/4}, //S
-    { SQ,   0,   -M_PI/2}, //SW
-    { SQ,   0,   -M_PI/4}, //W
-    { SQ,   0,   -M_PI/4}, //NW (W)
+    { SQ/2, SQ-PEEK_DISTANCE,     0  }, //N
+    { 0,0,0 }, //NE (invalid)
+    { PEEK_DISTANCE,    SQ/2,  M_PI/2}, //E
+    { 0,0,0 }, //SE (invalid)
+    { SQ/2,    PEEK_DISTANCE,  M_PI  }, //S
+    { 0,0,0 }, //SW (invalid)
+    { SQ-PEEK_DISTANCE, SQ/2, -M_PI/2}, //W
+    { 0,0,0 }, //NW (invalid)
+};
+const int xy_diff[][2] = {
+    //X,  Y
+    { 0, -1}, //N
+    { 0, -1}, //NE
+    { 1,  0}, //E
+    { 0,  1}, //SE
+    { 0,  1}, //S
+    { 0,  1}, //SW
+    {-1,  0}, //W
+    { 0, -1}, //NW
 };
 
 Direction logical_r;
@@ -82,24 +94,18 @@ void movement() {
     }
 }
 
-void move_to_pose(int x, int y, float r) {
-    if (abs(r - pose.r) < .01) {
-        left_motor.setSpeed(MAX_SPEED);
-        left_motor.run(FORWARD);
-        right_motor.setSpeed(MAX_SPEED);
-        right_motor.run(FORWARD);
-    }
-    points.data[0].x = x;
-    points.data[0].y = y;
-    points.data[0].r = r;
-}
-
 void _move(Direction d) {
-    move_to_pose(
-        points.data[0].x + offset[d].x,
-        points.data[0].y + offset[d].y,
-        offset[d].r
-    );
+    queue_init(points);
+    Direction act = cardinal(d, logical_r);
+    Pose fwd = offset[act];
+    Pose rev = offset[cardinal(act, S)];
+    Pose one = {logical_x * SQ + rev.x, logical_y * SQ + rev.y, fwd.r};
+    logical_x += xy_diff[act][0];
+    logical_y += xy_diff[act][1];
+    Pose two = {logical_x * SQ + fwd.x, logical_y * SQ + fwd.y, fwd.r};
+    queue_push(points, two);
+    queue_push(points, one);
+    logical_r = act;
 }
 
 #ifdef ARDUINO
