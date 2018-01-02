@@ -44,7 +44,7 @@ START_TEST(test_E) {
 END_TEST
 
 START_TEST(test_SE) {
-    _move(E);
+    _move(_SE);
     ck_assert_uint_eq(1, points.size);
     ck_assert_float_eq_tol(3*UNIT_SQUARE + UNIT_SQUARE/2, points.data[1].x, 0.001);
     ck_assert_float_eq_tol(4*UNIT_SQUARE + PEEK_DISTANCE, points.data[1].y, 0.001);
@@ -57,7 +57,7 @@ START_TEST(test_SE) {
 END_TEST
 
 START_TEST(test_S) {
-    _move(E);
+    _move(S);
     ck_assert_uint_eq(1, points.size);
     ck_assert_float_eq_tol(3*UNIT_SQUARE + UNIT_SQUARE/2, points.data[1].x, 0.001);
     ck_assert_float_eq_tol(4*UNIT_SQUARE + PEEK_DISTANCE, points.data[1].y, 0.001);
@@ -70,7 +70,7 @@ START_TEST(test_S) {
 END_TEST
 
 START_TEST(test_SW) {
-    _move(E);
+    _move(SW);
     ck_assert_uint_eq(1, points.size);
     ck_assert_float_eq_tol(3*UNIT_SQUARE + UNIT_SQUARE/2, points.data[1].x, 0.001);
     ck_assert_float_eq_tol(4*UNIT_SQUARE + PEEK_DISTANCE, points.data[1].y, 0.001);
@@ -83,15 +83,15 @@ START_TEST(test_SW) {
 END_TEST
 
 START_TEST(test_W) {
-    _move(E);
+    _move(W);
     ck_assert_uint_eq(1, points.size);
     ck_assert_float_eq_tol(3*UNIT_SQUARE + PEEK_DISTANCE, points.data[1].x, 0.001);
     ck_assert_float_eq_tol(3*UNIT_SQUARE + UNIT_SQUARE/2, points.data[1].y, 0.001);
     ck_assert_float_eq_tol(-M_PI/2, points.data[1].r, 0.001);
 
-    ck_assert_float_eq_tol(3*UNIT_SQUARE - PEEK_DISTANCE, points.data[1].x, 0.001);
-    ck_assert_float_eq_tol(3*UNIT_SQUARE + UNIT_SQUARE/2, points.data[1].y, 0.001);
-    ck_assert_float_eq_tol(-M_PI/2, points.data[1].r, 0.001);
+    ck_assert_float_eq_tol(3*UNIT_SQUARE - PEEK_DISTANCE, points.data[0].x, 0.001);
+    ck_assert_float_eq_tol(3*UNIT_SQUARE + UNIT_SQUARE/2, points.data[0].y, 0.001);
+    ck_assert_float_eq_tol(-M_PI/2, points.data[0].r, 0.001);
 }
 END_TEST
 

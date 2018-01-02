@@ -94,8 +94,7 @@ void movement() {
     }
 }
 
-void _move(Direction d) {
-    queue_init(points);
+void move_forward(Direction d) {
     Direction act = cardinal(d, logical_r);
     Pose fwd = offset[act];
     Pose rev = offset[cardinal(act, S)];
@@ -106,6 +105,40 @@ void _move(Direction d) {
     queue_push(points, two);
     queue_push(points, one);
     logical_r = act;
+}
+
+void move_backwards(Direction d) {
+    Direction act = cardinal(d, logical_r);
+    Direction south = cardinal(S, logical_r);
+    logical_x += xy_diff[south][0];
+    logical_y += xy_diff[south][1];
+    Pose rev = offset[south];
+    Pose turn = offset[act];
+    Pose one = {logical_x * SQ +  rev.x, logical_y * SQ +  rev.y, pose.r};
+    Pose two = {logical_x * SQ + turn.x, logical_y * SQ + turn.y, turn.r};
+    queue_push(points, two);
+    queue_push(points, one);
+    logical_r = act;
+}
+
+void _move(Direction d) {
+    queue_init(points);
+    switch(d) {
+        case N:
+        case E:
+        case W:
+            move_forward(d);
+            break;
+        case S:
+            move_backwards(N);
+            break;
+        case _SE:
+            move_backwards(W);
+            break;
+        case SW:
+            move_backwards(E);
+            break;
+    }
 }
 
 #ifdef ARDUINO

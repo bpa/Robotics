@@ -9,9 +9,13 @@ Path path;
 const char *dir(Direction d) {
     switch (d) {
         case N:  return "N";
-        case S:  return "S";
+        case NE: return "NE";
         case E:  return "E";
+        case _SE:return "SE";
+        case S:  return "S";
+        case SW: return "SW";
         case W:  return "W";
+        case NW: return "NW";
         default: return "?";
     }
 }
