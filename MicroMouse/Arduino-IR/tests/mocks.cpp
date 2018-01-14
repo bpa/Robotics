@@ -20,13 +20,17 @@ void AF_DCMotor::run(int) { }
 
 void AF_DCMotor::setSpeed(int) { }
 
-Encoder::Encoder(int, int) { }
-
-long Encoder::read() {
-    return 10;
+Encoder::Encoder(int, int) {
+    value = 0;
 }
 
-void Encoder::write(long v) { }
+long Encoder::read() {
+    return value;
+}
+
+void Encoder::write(long v) {
+    value = v;
+}
 
 int analogRead(int i) {
     return analogPins[i];

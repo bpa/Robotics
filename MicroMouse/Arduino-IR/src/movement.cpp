@@ -37,9 +37,7 @@ Direction logical_r;
 int logical_x, logical_y;
 Pose pose;
 PoseStack points;
-
-bool near_target = false;
-bool stopped = true;
+long odo_r, odo_l;
 
 void movement_init() {
     logical_x = 0;
@@ -48,50 +46,36 @@ void movement_init() {
     pose.y = UNIT_SQUARE/2;
     pose.r = M_PI;
     logical_r = S;
-    points.size = -1;
+    points.size = 0;
+    points.data[0].x = pose.x;
+    points.data[0].y = pose.y;
+    points.data[0].r = pose.r;
+    odo_l = leftOdometer.read();
+    odo_r = rightOdometer.read();
 }
 
 void ignore() {}
-void center() {
-    if (analogRead(FRONT_SENSOR) > 175) {
-        near_target = true;
-        return;
-    }
-
-    int l = analogRead(LEFT_SENSOR);
-    int r = analogRead(RIGHT_SENSOR);
-    if (l > 200) {
-        left_motor.setSpeed(MAX_SPEED);
-        right_motor.setSpeed(MAX_SPEED - 75);
-        return;
-    }
-
-    if (r > 200) {
-        left_motor.setSpeed(MAX_SPEED - 75);
-        right_motor.setSpeed(MAX_SPEED);
-        return;
-    }
-
-    left_motor.setSpeed(MAX_SPEED);
-    right_motor.setSpeed(MAX_SPEED);
-}
-
 void (*look_around)() = ignore;
 
-void movement() {
-    if (stopped)
-        return;
+void read_odometry() {
+    double dR, dL, m, theta, angle;
     long l = leftOdometer.read();
     long r = rightOdometer.read();
-    if (left.near_target(l) || right.near_target(r)) {
-        near_target = true;
-        left.reset(l);
-        right.reset(r);
-        Serial.println("close");
+    if (l == r) {
+        m = l * TICK_DISTANCE;
+        angle = pose.r;
+        theta = 0;
     }
     else {
-        look_around();
+
     }
+    pose.x += m * sin(angle);
+    pose.y += m * cos(angle);
+    pose.r += theta;
+}
+
+void update_position() {
+    read_odometry();
 }
 
 void move_forward(Direction d) {
@@ -147,6 +131,10 @@ void move_to_start() {
     move_to_pose(UNIT_SQUARE/2, UNIT_SQUARE/2, M_PI);
 }
 
+bool near_target() {
+    return (abs(pose.x - points.data[0].x) + abs(pose.y - points.data[0].y)) < 10;
+}
+
 #else
 #include "Mouse.h"
 Wall moving;
@@ -154,4 +142,5 @@ char*dir(Direction);
 Wall wall_dir[] = {U, UR, R, DR, D, DL, L, UL};
 void move(Direction d) { moving = wall_dir[d]; }
 void move_to_start()   { moving = H; }
+bool near_target() { return true; }
 #endif

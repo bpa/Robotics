@@ -3,11 +3,20 @@
 
 #include "wheel.h"
 
-#define WHEEL_RADIUS 20
-#define WHEEL_SEPARATION 75 
-#define GEAR_RATIO 150
-#define COUNTS_PER_ROTATION 12
-#define PEEK_DISTANCE 40
+#ifdef ARDUINO
+  #define WHEEL_RADIUS 20
+  #define WHEEL_SEPARATION 75
+  #define GEAR_RATIO 150
+  #define COUNTS_PER_ROTATION 12
+  #define PEEK_DISTANCE 40
+#else
+  //Need some test numbers that don't change
+  #define WHEEL_RADIUS 25
+  #define WHEEL_SEPARATION 100
+  #define GEAR_RATIO 100
+  #define COUNTS_PER_ROTATION 10
+  #define PEEK_DISTANCE 50
+#endif
 
 #define LEFT_MOTOR  3
 #define RIGHT_MOTOR 4

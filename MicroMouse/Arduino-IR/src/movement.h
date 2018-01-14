@@ -21,11 +21,11 @@ typedef struct {
 } PoseStack;
 
 extern Direction current_dir;
-extern bool near_target;
 extern bool stopped;
 extern const Wall visible[];
-extern Pose current_pose;
+extern Pose pose;
 
+bool near_target();
 void movement_init();
 void movement();
 #ifdef ARDUINO

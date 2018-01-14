@@ -4,10 +4,12 @@
 
 void setup() {
   Serial.begin(9600);
-  state = INIT;
+  INIT();
 }
 
 void loop() {
-  movement();
-  state();
+  update_position();
+  if (near_target()) {
+    state();
+  }
 }

@@ -23,6 +23,7 @@
   class Encoder {
       public:
       Encoder(int, int);
+      long value;
       long read();
       void write(long);
   };

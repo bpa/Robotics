@@ -16,6 +16,7 @@ set(LIB_SOURCES
 set(TEST_SOURCES
   check_astar.cpp
   check_explore.cpp
+  check_localization.cpp
   check_maze.cpp
   check_movement.cpp
   check_queue.cpp

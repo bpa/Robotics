@@ -50,21 +50,19 @@ void mouse_init() {
 }
 
 void FWD() {
-    if (near_target) {
-        if ( moves == 0 ) {
-            Serial.println("Done.");
-            state = DONE;
-            return;
-        }
-        moves--;
-        if (analogRead(FRONT_SENSOR) > 100) {
-            Serial.println("Left.");
-            move(W);
-        }
-        else {
-            Serial.println("Forward.");
-            move(N);
-        }
+    if ( moves == 0 ) {
+        Serial.println("Done.");
+        state = DONE;
+        return;
+    }
+    moves--;
+    if (analogRead(FRONT_SENSOR) > 100) {
+        Serial.println("Left.");
+        move(W);
+    }
+    else {
+        Serial.println("Forward.");
+        move(N);
     }
 }
 
@@ -80,7 +78,6 @@ void INIT() {
     find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.path);
     randomSeed(analogRead(0));
     delay(1500);
-    near_target = true;
     state = EXPLORE_TO_CENTER;
 }
 
@@ -189,110 +186,100 @@ void do_current_move() {
 }
 
 void EXPLORE_TO_CENTER() {
-    if (near_target) {
-        if ( found_new_walls() ) {
-            find_path(mouse.x, mouse.y, MAZE/2, MAZE/2, mouse.maze, mouse.path);
-        }
-        do_current_move();
-        if (queue_empty(mouse.path)) {
-            state = VALIDATE_SHORTEST_PATH;
-        }
+    if ( found_new_walls() ) {
+        find_path(mouse.x, mouse.y, MAZE/2, MAZE/2, mouse.maze, mouse.path);
+    }
+    do_current_move();
+    if (queue_empty(mouse.path)) {
+        state = VALIDATE_SHORTEST_PATH;
     }
 }
 
 void VALIDATE_SHORTEST_PATH() {
-    if (near_target) {
-        if ( found_new_walls() || queue_empty(mouse.path) ) {
-            Point next;
-            find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.path);
-            for (int i=0; i<= mouse.path.size; i++) {
-                next = mouse.path.data[i];
-                if ((cell(mouse.maze, next.x, next.y).flags & VISITED) == 0) {
-                    find_path(mouse.x, mouse.y, next.x, next.y, mouse.maze, mouse.path);
-                    goto not_validated;
-                }
-            }
-            mouse.path.size = -1;
-        }
-        if (queue_empty(mouse.path)) {
-            state = RETURN_TO_START;
-            find_path(mouse.x, mouse.y, 0, 0, mouse.maze, mouse.path);
-            for (int i=0; i<= mouse.path.size; i++) {
-                Point next = mouse.path.data[i];
-                uint8_t w = cell(mouse.maze, next.x, next.y).walls;
-                if (wallCount[w] < 2) {
-                    find_path(mouse.x, mouse.y, next.x, next.y, mouse.maze, mouse.path);
-                    break;
-                }
+    if ( found_new_walls() || queue_empty(mouse.path) ) {
+        Point next;
+        find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.path);
+        for (int i=0; i<= mouse.path.size; i++) {
+            next = mouse.path.data[i];
+            if ((cell(mouse.maze, next.x, next.y).flags & VISITED) == 0) {
+                find_path(mouse.x, mouse.y, next.x, next.y, mouse.maze, mouse.path);
+                goto not_validated;
             }
         }
-        else {
+        mouse.path.size = -1;
+    }
+    if (queue_empty(mouse.path)) {
+        state = RETURN_TO_START;
+        find_path(mouse.x, mouse.y, 0, 0, mouse.maze, mouse.path);
+        for (int i=0; i<= mouse.path.size; i++) {
+            Point next = mouse.path.data[i];
+            uint8_t w = cell(mouse.maze, next.x, next.y).walls;
+            if (wallCount[w] < 2) {
+                find_path(mouse.x, mouse.y, next.x, next.y, mouse.maze, mouse.path);
+                break;
+            }
+        }
+    }
+    else {
 not_validated:
-            do_current_move();
-        }
+        do_current_move();
     }
 }
 
 void RETURN_TO_START() {
-    if (near_target) {
-        do_current_move();
-        if (queue_empty(mouse.path)) {
-            state = BACK_INTO_START;
-            find_path(mouse.x, mouse.y, 0, 0, mouse.maze, mouse.path);
-        }
+    do_current_move();
+    if (queue_empty(mouse.path)) {
+        state = BACK_INTO_START;
+        find_path(mouse.x, mouse.y, 0, 0, mouse.maze, mouse.path);
     }
 }
 
 void BACK_INTO_START() {
-    if (near_target) {
-        Point next = queue_peek(mouse.path);
-        Direction d = direction(next);
+    Point next = queue_peek(mouse.path);
+    Direction d = direction(next);
 
-        if (d == S) {
-            mouse.x = next.x;
-            mouse.y = next.y;
-            if (mouse.path.size == 0) {
-                move_to_start();
-                state = RACE_TO_CENTER;
-                find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.path);
-                return;
-            }
-            queue_pop(mouse.path);
-            next = queue_peek(mouse.path);
-            Direction next_dir = direction(next);
-            switch (next_dir) {
-                case S: move( S);  break;
-                case E: move(_SE); break; //Thank Arduino for defining SE
-                case W: move( SW); break;
-            }
-            mouse.facing = (Direction)((mouse.facing + next_dir + S) % 8);
+    if (d == S) {
+        mouse.x = next.x;
+        mouse.y = next.y;
+        if (mouse.path.size == 0) {
+            move_to_start();
+            state = RACE_TO_CENTER;
+            find_path(0, 0, MAZE/2, MAZE/2, mouse.maze, mouse.path);
+            return;
         }
-        else {
-            Cell c = cell(mouse.maze, mouse.x, mouse.y);
-            for (int i=0; i<3; i++) {
-                Direction alt = cardinal(mouse.facing, fwd[i]);
-                if (!(d == fwd[i] || (c.walls & visible[alt]))) {
-                    move(fwd[i]);
-                    mouse.facing = alt;
-                    next.x = mouse.x;
-                    next.y = mouse.y;
-                    queue_push(mouse.path, next);
-                    int maze_ind = c.maze_ind + offset[mouse.facing];
-                    mouse.x = maze_ind % MAZE;
-                    mouse.y = maze_ind / MAZE;
-                    break;
-                }
+        queue_pop(mouse.path);
+        next = queue_peek(mouse.path);
+        Direction next_dir = direction(next);
+        switch (next_dir) {
+            case S: move( S);  break;
+            case E: move(_SE); break; //Thank Arduino for defining SE
+            case W: move( SW); break;
+        }
+        mouse.facing = (Direction)((mouse.facing + next_dir + S) % 8);
+    }
+    else {
+        Cell c = cell(mouse.maze, mouse.x, mouse.y);
+        for (int i=0; i<3; i++) {
+            Direction alt = cardinal(mouse.facing, fwd[i]);
+            if (!(d == fwd[i] || (c.walls & visible[alt]))) {
+                move(fwd[i]);
+                mouse.facing = alt;
+                next.x = mouse.x;
+                next.y = mouse.y;
+                queue_push(mouse.path, next);
+                int maze_ind = c.maze_ind + offset[mouse.facing];
+                mouse.x = maze_ind % MAZE;
+                mouse.y = maze_ind / MAZE;
+                break;
             }
         }
     }
 }
 
 void RACE_TO_CENTER() {
-    if (near_target) {
-        do_current_move();
-        if (queue_empty(mouse.path)) {
-            state = DONE;
-        }
+    do_current_move();
+    if (queue_empty(mouse.path)) {
+        state = DONE;
     }
 }
 

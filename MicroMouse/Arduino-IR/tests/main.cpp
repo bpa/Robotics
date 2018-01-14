@@ -4,6 +4,7 @@
 extern Suite *astar_suite(void);
 extern Suite *explore_suite(void);
 extern Suite *maze_suite(void);
+extern Suite *localization_suite(void);
 extern Suite *movement_suite(void);
 extern Suite *queue_suite(void);
 extern Suite *race_suite(void);
@@ -18,6 +19,7 @@ int main() {
     srunner_add_suite(sr, astar_suite());
     srunner_add_suite(sr, explore_suite());
     srunner_add_suite(sr, maze_suite());
+    srunner_add_suite(sr, localization_suite());
     srunner_add_suite(sr, movement_suite());
     srunner_add_suite(sr, race_suite());
     srunner_add_suite(sr, return_suite());
