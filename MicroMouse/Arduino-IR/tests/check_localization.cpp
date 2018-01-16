@@ -5,6 +5,27 @@
 
 void read_odometry();
 
+typedef struct {
+    float initial_r;
+    long left;
+    long right;
+    Pose exp;
+    char name[16];
+} MoveTest;
+
+#define ck_assert_float(X, Y, T, M) \
+do { \
+float _ck_x = (X); \
+float _ck_y = (Y); \
+float _ck_t = (T); \
+ck_assert_msg(fabsl(_ck_y - _ck_x) < _ck_t, \
+"Assertion %s '%s' failed: %s == %.*g, %s == %.*g, %s == %.*g", \
+M, #Y" - "#X" < "#T, \
+#X, (int)CK_FLOATING_DIG, _ck_x, \
+#Y, (int)CK_FLOATING_DIG, _ck_y, \
+#T, (int)CK_FLOATING_DIG, _ck_t); \
+} while (0)
+
 static void setup() {
     movement_init();
     analogWrite(FRONT_SENSOR, 35);
@@ -23,47 +44,27 @@ START_TEST(test_harnass_overrides) {
 }
 END_TEST
 
-START_TEST(test_north) {
-    leftOdometer.write(1000);
-    rightOdometer.write(1000);
-    pose.r = 0;
-    read_odometry();
-    ck_assert_float_eq_tol(pose.x, 0, 0.00001);
-    ck_assert_float_eq_tol(pose.y, -2 * M_PI * WHEEL_RADIUS, 0.00001);
-    ck_assert_float_eq_tol(pose.r, 0, 0.00001);
-}
-END_TEST
+static const int move_test_count = 6;
+static const MoveTest move_test[move_test_count] = {
+    {    0,   1000, 1000, 0, -CIRCUMFERENCE,     0,   "North"},
+    { M_PI,   1000, 1000, 0,  CIRCUMFERENCE,  M_PI,   "South"},
+    { M_PI/2, 1000, 1000,  CIRCUMFERENCE, 0,  M_PI/2, "East" },
+    {-M_PI/2, 1000, 1000, -CIRCUMFERENCE, 0, -M_PI/2, "West" },
+    {    0,     60,  120, -50, -86.60254,    -M_PI/6, "NW"   },
+    {    0,    120,   60,  50, -86.60254,     M_PI/6, "NE"   }
+};
 
-START_TEST(test_east) {
-    leftOdometer.write(1000);
-    rightOdometer.write(1000);
-    pose.r = M_PI/2;
+START_TEST(test_move_table) {
+    MoveTest mt = move_test[_i];
+    Pose exp = mt.exp;
+    leftOdometer.write(mt.left);
+    rightOdometer.write(mt.right);
+    pose.x = pose.y = 0;
+    pose.r = mt.initial_r;
     read_odometry();
-    ck_assert_float_eq_tol(pose.x, 2 * M_PI * WHEEL_RADIUS, 0.00001);
-    ck_assert_float_eq_tol(pose.y, 0, 0.00001);
-    ck_assert_float_eq_tol(pose.r, M_PI/2, 0.00001);
-}
-END_TEST
-
-START_TEST(test_south) {
-    leftOdometer.write(1000);
-    rightOdometer.write(1000);
-    pose.r = M_PI;
-    read_odometry();
-    ck_assert_float_eq_tol(pose.x, 0, 0.00001);
-    ck_assert_float_eq_tol(pose.y, 2 * M_PI * WHEEL_RADIUS, 0.00001);
-    ck_assert_float_eq_tol(pose.r, M_PI, 0.00001);
-}
-END_TEST
-
-START_TEST(test_west) {
-    leftOdometer.write(1000);
-    rightOdometer.write(1000);
-    pose.r = -M_PI/2;
-    read_odometry();
-    ck_assert_float_eq_tol(pose.x, -2 * M_PI * WHEEL_RADIUS, 0.00001);
-    ck_assert_float_eq_tol(pose.y, 0, 0.00001);
-    ck_assert_float_eq_tol(pose.r, -M_PI/2, 0.00001);
+    ck_assert_float(exp.x, pose.x, .0001, mt.name);
+    ck_assert_float(exp.y, pose.y, .0001, mt.name);
+    ck_assert_float(exp.r, pose.r, .0001, mt.name);
 }
 END_TEST
 
@@ -76,10 +77,7 @@ Suite *localization_suite(void) {
     tcase_add_unchecked_fixture(tc_core, setup, NULL);
 
     tcase_add_test(tc_core, test_harnass_overrides);
-    tcase_add_test(tc_core, test_north);
-    tcase_add_test(tc_core, test_east);
-    tcase_add_test(tc_core, test_south);
-    tcase_add_test(tc_core, test_west);
+    tcase_add_loop_test(tc_core, test_move_table, 0, move_test_count);
     suite_add_tcase(s, tc_core);
 
     return s;

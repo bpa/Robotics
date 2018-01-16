@@ -70,7 +70,7 @@ void read_odometry() {
 
     }
     pose.x += m * sin(angle);
-    pose.y += m * cos(angle);
+    pose.y -= m * cos(angle);
     pose.r += theta;
 }
 
