@@ -5,19 +5,11 @@
 
 void read_odometry();
 
-typedef struct {
-    float initial_r;
-    long left;
-    long right;
-    Pose exp;
-    char name[16];
-} MoveTest;
-
 #define ck_assert_float(X, Y, T, M) \
 do { \
-float _ck_x = (X); \
-float _ck_y = (Y); \
-float _ck_t = (T); \
+double _ck_x = (X); \
+double _ck_y = (Y); \
+double _ck_t = (T); \
 ck_assert_msg(fabsl(_ck_y - _ck_x) < _ck_t, \
 "Assertion %s '%s' failed: %s == %.*g, %s == %.*g, %s == %.*g", \
 M, #Y" - "#X" < "#T, \
@@ -25,6 +17,9 @@ M, #Y" - "#X" < "#T, \
 #Y, (int)CK_FLOATING_DIG, _ck_y, \
 #T, (int)CK_FLOATING_DIG, _ck_t); \
 } while (0)
+
+#define V(a, r) ((a) * (r + WHEEL_SEPARATION / 2)), \
+                ((a) * (r - WHEEL_SEPARATION / 2))
 
 static void setup() {
     movement_init();
@@ -44,27 +39,65 @@ START_TEST(test_harnass_overrides) {
 }
 END_TEST
 
-static const int move_test_count = 6;
+typedef struct {
+    float initial_r;
+    Pose exp;
+    char name[16];
+} MoveTest;
+
+#define PI   M_PI
+#define CIR  CIRCUMFERENCE
+static const int move_test_count = 20;
 static const MoveTest move_test[move_test_count] = {
-    {    0,   1000, 1000, 0, -CIRCUMFERENCE,     0,   "North"},
-    { M_PI,   1000, 1000, 0,  CIRCUMFERENCE,  M_PI,   "South"},
-    { M_PI/2, 1000, 1000,  CIRCUMFERENCE, 0,  M_PI/2, "East" },
-    {-M_PI/2, 1000, 1000, -CIRCUMFERENCE, 0, -M_PI/2, "West" },
-    {    0,     60,  120, -50, -86.60254,    -M_PI/6, "NW"   },
-    {    0,    120,   60,  50, -86.60254,     M_PI/6, "NE"   }
+//      θ₁          ΔX    ΔY     θ₂     Test Name
+    {    0,          0, -CIR,     0,   "North"        },
+    {    0,          0,  CIR,     0,   "Bk North"     },
+    {   PI,          0,  CIR,    PI,   "South"        },
+    {   PI,          0, -CIR,    PI,   "Bk South"     },
+    {   PI/2,      CIR,    0,    PI/2, "East"         },
+    {   PI/2,     -CIR,    0,    PI/2, "Bk East"      },
+    {  -PI/2,     -CIR,    0,   -PI/2, "West"         },
+    {  -PI/2,      CIR,    0,   -PI/2, "Bk West"      },
+    {    0,     13.398,  -50,    PI/6, "NE"           },
+    {    0,     13.398,   50,   -PI/6, "Bk NE"        },
+    {    0,    -13.398,  -50,   -PI/6, "NW"           },
+    {    0,    -13.398,   50,    PI/6, "Bk NW"        },
+    { 3*PI/4,    1.303,    1,  5*PI/6, "SE"           },
+    {    0,    -13.398,  -50,   -PI/6, "SW"           },
+    {    0,    -13.398,  -50,   -PI/6, "Right only"   },
+    {    0,    -13.398,  -50,   -PI/6, "Left only"    },
+    {    0,    -13.398,  -50,   -PI/6, "Rotate Right" },
+    {    0,    -13.398,  -50,   -PI/6, "Rotate Left"  },
 };
 
+#include <stdio.h>
 START_TEST(test_move_table) {
     MoveTest mt = move_test[_i];
     Pose exp = mt.exp;
-    leftOdometer.write(mt.left);
-    rightOdometer.write(mt.right);
     pose.x = pose.y = 0;
     pose.r = mt.initial_r;
+    if (exp.x == 0) {
+        double r = mt.initial_r ? exp.y : -exp.y;
+        leftOdometer.write(r / TICK_DISTANCE);
+        rightOdometer.write(r / TICK_DISTANCE);
+    }
+    else if (exp.y == 0) {
+        double r = mt.initial_r > 0 ? exp.x : -exp.x;
+        leftOdometer.write(r / TICK_DISTANCE);
+        rightOdometer.write(r / TICK_DISTANCE);
+    }
+    else {
+        double theta = exp.r - mt.initial_r;
+        double angle = (M_PI - theta) / 2;
+        double m = sqrt(mt.exp.x * mt.exp.x + mt.exp.y * mt.exp.y);
+        double r = m * sin(angle) / sin(theta);
+        leftOdometer.write((r + 50) * theta / TICK_DISTANCE);
+        rightOdometer.write((r - 50) * theta / TICK_DISTANCE);
+    }
     read_odometry();
-    ck_assert_float(exp.x, pose.x, .0001, mt.name);
-    ck_assert_float(exp.y, pose.y, .0001, mt.name);
-    ck_assert_float(exp.r, pose.r, .0001, mt.name);
+    ck_assert_float(exp.x, pose.x, .5, mt.name);
+    ck_assert_float(exp.y, pose.y, .5, mt.name);
+    ck_assert_float(exp.r, pose.r, .005, mt.name);
 }
 END_TEST
 

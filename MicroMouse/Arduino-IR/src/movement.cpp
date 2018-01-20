@@ -57,21 +57,28 @@ void movement_init() {
 void ignore() {}
 void (*look_around)() = ignore;
 
+//#include <stdio.h>
 void read_odometry() {
-    double dR, dL, m, theta, angle;
+    double m, angle;
     long l = leftOdometer.read();
     long r = rightOdometer.read();
     if (l == r) {
         m = l * TICK_DISTANCE;
         angle = pose.r;
-        theta = 0;
     }
     else {
-
+        double dL = l * TICK_DISTANCE;
+        double dR = r * TICK_DISTANCE;
+        double radius = WHEEL_SEPARATION * (dL + dR) / (dL - dR) / 2;
+        double theta = (dL - dR) / WHEEL_SEPARATION;
+        double dA = theta / 2;
+        m = radius * sin(theta) / sin((M_PI - theta)/2);
+        angle = pose.r + dA;
+        pose.r += theta;
+        //printf("dL: %3.1f dR: %3.1f r: %.2f \u03b8: %.2f m: %.6f \u03c6: %.5f \u03b1: %.3f\n", dL, dR, radius, theta, m, angle, dA);
     }
     pose.x += m * sin(angle);
     pose.y -= m * cos(angle);
-    pose.r += theta;
 }
 
 void update_position() {
