@@ -57,7 +57,8 @@ void movement_init() {
 void ignore() {}
 void (*look_around)() = ignore;
 
-//#include <stdio.h>
+#include <stdio.h>
+#define rad2deg(r) (r * 180 / M_PI)
 void read_odometry() {
     double m, angle;
     long l = leftOdometer.read();
@@ -69,13 +70,20 @@ void read_odometry() {
     else {
         double dL = l * TICK_DISTANCE;
         double dR = r * TICK_DISTANCE;
+        double a2 = (dL - dR) / 2 / WHEEL_SEPARATION + pose.r;
         double radius = WHEEL_SEPARATION * (dL + dR) / (dL - dR) / 2;
         double theta = (dL - dR) / WHEEL_SEPARATION;
-        double dA = theta / 2;
-        m = radius * sin(theta) / sin((M_PI - theta)/2);
-        angle = pose.r + dA;
+        double theta_abs = abs(theta);
+        m = radius * sin(theta_abs) / sin((M_PI - theta_abs)/2);
+        angle = pose.r + theta / 2;
+    pose.x += m * sin(angle);
+    pose.y -= m * cos(angle);
         pose.r += theta;
-        //printf("dL: %3.1f dR: %3.1f r: %.2f \u03b8: %.2f m: %.6f \u03c6: %.5f \u03b1: %.3f\n", dL, dR, radius, theta, m, angle, dA);
+        printf("X: %.1f Y: %.1f ω: %.0f° ", pose.x, pose.y, rad2deg(pose.r));
+        printf("r: %.3f m: %.3f ", radius, m);
+        printf("θ: %.0f° α: %.0f° ", rad2deg(theta), rad2deg(angle));
+        printf("dL: %3.1f dR: %3.1f\n", dL, dR);
+        return;
     }
     pose.x += m * sin(angle);
     pose.y -= m * cos(angle);

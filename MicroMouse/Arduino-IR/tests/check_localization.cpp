@@ -20,6 +20,7 @@ M, #Y" - "#X" < "#T, \
 
 #define V(a, r) ((a) * (r + WHEEL_SEPARATION / 2)), \
                 ((a) * (r - WHEEL_SEPARATION / 2))
+#define rad2deg(r) (r * 180 / M_PI)
 
 static void setup() {
     movement_init();
@@ -39,9 +40,17 @@ START_TEST(test_harnass_overrides) {
 }
 END_TEST
 
+enum Side {
+    RL = -1,
+    RR = 1
+};
+
 typedef struct {
-    float initial_r;
-    Pose exp;
+    double initial_r;
+    double x;
+    double y;
+    double rotation;
+    Side left;
     char name[16];
 } MoveTest;
 
@@ -49,55 +58,71 @@ typedef struct {
 #define CIR  CIRCUMFERENCE
 static const int move_test_count = 20;
 static const MoveTest move_test[move_test_count] = {
-//      θ₁          ΔX    ΔY     θ₂     Test Name
-    {    0,          0, -CIR,     0,   "North"        },
-    {    0,          0,  CIR,     0,   "Bk North"     },
-    {   PI,          0,  CIR,    PI,   "South"        },
-    {   PI,          0, -CIR,    PI,   "Bk South"     },
-    {   PI/2,      CIR,    0,    PI/2, "East"         },
-    {   PI/2,     -CIR,    0,    PI/2, "Bk East"      },
-    {  -PI/2,     -CIR,    0,   -PI/2, "West"         },
-    {  -PI/2,      CIR,    0,   -PI/2, "Bk West"      },
-    {    0,     13.398,  -50,    PI/6, "NE"           },
-    {    0,     13.398,   50,   -PI/6, "Bk NE"        },
-    {    0,    -13.398,  -50,   -PI/6, "NW"           },
-    {    0,    -13.398,   50,    PI/6, "Bk NW"        },
-    { 3*PI/4,    1.303,    1,  5*PI/6, "SE"           },
-    {    0,    -13.398,  -50,   -PI/6, "SW"           },
-    {    0,    -13.398,  -50,   -PI/6, "Right only"   },
-    {    0,    -13.398,  -50,   -PI/6, "Left only"    },
-    {    0,    -13.398,  -50,   -PI/6, "Rotate Right" },
-    {    0,    -13.398,  -50,   -PI/6, "Rotate Left"  },
+//                    Non 0 is rotation
+//      θ₁      ΔX    ΔY     θ₂ AXIS Test Name
+    {    0,      0, -CIR,     0, RR,  "North"        },
+    {    0,      0,  CIR,     0, RR,  "Bk North"     },
+    {   PI,      0,  CIR,     0, RR,  "South"        },
+    {   PI,      0, -CIR,     0, RR,  "Bk South"     },
+    {   PI/2,  CIR,    0,     0, RR,  "East"         },
+    {   PI/2, -CIR,    0,     0, RR,  "Bk East"      },
+    {  -PI/2, -CIR,    0,     0, RR,  "West"         },
+    {  -PI/2,  CIR,    0,     0, RR,  "Bk West"      },
+    {    0,     25,  -70,     0, RR,  "NE"           },
+    {    0,     25,   70,     0, RR,  "Bk NE"        },
+    {    0,    -25,  -70,     0, RL,  "NW"           },
+    {    0,    -25,   70,     0, RL,  "Bk NW"        },
+    { 3*PI/4,    2,    1,     0, RL,  "SE"           },
+    { 3*PI/4,   -2,   -1,     0, RR,  "Bk SE"        },
+    {-5*PI/6,   20,   50,     0, RL,  "SW"           },
+    {-5*PI/6,   20,  -50,     0, RL,  "Bk SW"        },
+    {    0,    -50,  -50,     0, RR,  "Right only"   },
+    {    0,     50,  -50,     0, RL,  "Left only"    },
+    {    0,      0,    0,  PI/3, RR,  "Rotate Right" },
+    {    0,      0,    0, -PI/3, RL,  "Rotate Left"  },
 };
 
 #include <stdio.h>
 START_TEST(test_move_table) {
     MoveTest mt = move_test[_i];
-    Pose exp = mt.exp;
     pose.x = pose.y = 0;
     pose.r = mt.initial_r;
-    if (exp.x == 0) {
-        double r = mt.initial_r ? exp.y : -exp.y;
+    double exp_r = mt.initial_r;
+    if (mt.rotation != 0) {
+        double theta = mt.rotation - mt.initial_r;
+        exp_r = mt.rotation;
+        leftOdometer.write((WHEEL_SEPARATION/2) * theta / TICK_DISTANCE);
+        rightOdometer.write((-WHEEL_SEPARATION/2) * theta / TICK_DISTANCE);
+    }
+    else if (mt.x == 0) {
+        double r = mt.initial_r ? mt.y : -mt.y;
         leftOdometer.write(r / TICK_DISTANCE);
         rightOdometer.write(r / TICK_DISTANCE);
     }
-    else if (exp.y == 0) {
-        double r = mt.initial_r > 0 ? exp.x : -exp.x;
+    else if (mt.y == 0) {
+        double r = mt.initial_r > 0 ? mt.x : -mt.x;
         leftOdometer.write(r / TICK_DISTANCE);
         rightOdometer.write(r / TICK_DISTANCE);
     }
     else {
-        double theta = exp.r - mt.initial_r;
-        double angle = (M_PI - theta) / 2;
-        double m = sqrt(mt.exp.x * mt.exp.x + mt.exp.y * mt.exp.y);
+        double m = mt.left * sqrt(mt.x * mt.x + mt.y * mt.y);
+        double angle = -atan(mt.y / mt.x);
+        double theta = angle > 0 ? M_PI - 2 * angle : -M_PI - 2 * angle;
+        exp_r = pose.r + theta;
         double r = m * sin(angle) / sin(theta);
         leftOdometer.write((r + 50) * theta / TICK_DISTANCE);
         rightOdometer.write((r - 50) * theta / TICK_DISTANCE);
+        printf("--- %s\n", mt.name);
+        printf("X: %.1f Y: %.1f ω: %.0f° ", mt.x, mt.y, rad2deg(exp_r));
+        printf("r: %.3f m: %.3f ", r, m);
+        printf("θ: %.0f° α: %.0f° ", rad2deg(theta), rad2deg(angle));
+        printf("L: %ld ",  (long)((r + 50) * theta / TICK_DISTANCE));
+        printf("R: %ld\n", (long)((r - 50) * theta / TICK_DISTANCE));
     }
     read_odometry();
-    ck_assert_float(exp.x, pose.x, .5, mt.name);
-    ck_assert_float(exp.y, pose.y, .5, mt.name);
-    ck_assert_float(exp.r, pose.r, .005, mt.name);
+    ck_assert_float(mt.x, pose.x, .5, mt.name);
+    ck_assert_float(mt.y, pose.y, .5, mt.name);
+    ck_assert_float(exp_r, pose.r, .005, mt.name);
 }
 END_TEST
 
@@ -110,7 +135,7 @@ Suite *localization_suite(void) {
     tcase_add_unchecked_fixture(tc_core, setup, NULL);
 
     tcase_add_test(tc_core, test_harnass_overrides);
-    tcase_add_loop_test(tc_core, test_move_table, 0, move_test_count);
+    tcase_add_loop_test(tc_core, test_move_table, 12, move_test_count);
     suite_add_tcase(s, tc_core);
 
     return s;
