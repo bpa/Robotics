@@ -1,9 +1,12 @@
 #include <check.h>
+#include <cmath>
 #include "Mouse.h"
 #include "hardware.h"
 #include "movement.h"
 
-void read_odometry();
+void read_odometry(bool);
+const char RED[]   = "\e[30;41m";
+const char GREEN[] = "\e[37;42m";
 
 #define ck_assert_float(X, Y, T, M) \
 do { \
@@ -56,73 +59,74 @@ typedef struct {
 
 #define PI   M_PI
 #define CIR  CIRCUMFERENCE
-static const int move_test_count = 20;
-static const MoveTest move_test[move_test_count] = {
-//                    Non 0 is rotation
-//      θ₁      ΔX    ΔY     θ₂ AXIS Test Name
-    {    0,      0, -CIR,     0, RR,  "North"        },
-    {    0,      0,  CIR,     0, RR,  "Bk North"     },
-    {   PI,      0,  CIR,     0, RR,  "South"        },
-    {   PI,      0, -CIR,     0, RR,  "Bk South"     },
-    {   PI/2,  CIR,    0,     0, RR,  "East"         },
-    {   PI/2, -CIR,    0,     0, RR,  "Bk East"      },
-    {  -PI/2, -CIR,    0,     0, RR,  "West"         },
-    {  -PI/2,  CIR,    0,     0, RR,  "Bk West"      },
-    {    0,     25,  -70,     0, RR,  "NE"           },
-    {    0,     25,   70,     0, RR,  "Bk NE"        },
-    {    0,    -25,  -70,     0, RL,  "NW"           },
-    {    0,    -25,   70,     0, RL,  "Bk NW"        },
-    { 3*PI/4,    2,    1,     0, RL,  "SE"           },
-    { 3*PI/4,   -2,   -1,     0, RR,  "Bk SE"        },
-    {-5*PI/6,   20,   50,     0, RL,  "SW"           },
-    {-5*PI/6,   20,  -50,     0, RL,  "Bk SW"        },
-    {    0,    -50,  -50,     0, RR,  "Right only"   },
-    {    0,     50,  -50,     0, RL,  "Left only"    },
-    {    0,      0,    0,  PI/3, RR,  "Rotate Right" },
-    {    0,      0,    0, -PI/3, RL,  "Rotate Left"  },
-};
+
+// 12 starting directions * 5 direction changes * 3 distances
+static const int move_test_count = 12 * 5 * 3;
+
+double diff(double act, double exp) {
+    return fabs(act) - fabs(exp);
+}
+
+double rdiff(double act, double exp) {
+    if (fabs(act) > M_PI)
+        return fabs(act) - fabs(exp);
+    double r_actual = act < -0.1 ? act + 2 * M_PI : act;
+    double r_wanted = exp < -0.1 ? exp + 2 * M_PI : exp;
+    return fabs(r_actual) - fabs(r_wanted);
+}
 
 #include <stdio.h>
 START_TEST(test_move_table) {
-    MoveTest mt = move_test[_i];
+    double exp_x, exp_y;
+    int dist = _i % 5;
+    int init = _i / 5;
+    int dir = init % 5;
+    init /= 5;
+    double initial_r = M_PI * init / 6;
+
     pose.x = pose.y = 0;
-    pose.r = mt.initial_r;
-    double exp_r = mt.initial_r;
-    if (mt.rotation != 0) {
-        double theta = mt.rotation - mt.initial_r;
-        exp_r = mt.rotation;
-        leftOdometer.write((WHEEL_SEPARATION/2) * theta / TICK_DISTANCE);
-        rightOdometer.write((-WHEEL_SEPARATION/2) * theta / TICK_DISTANCE);
+    pose.r = initial_r;
+    double theta = M_PI / 3 - dir * M_PI / 6;
+    double m = (dist - 1) * 50;
+    double r = sin(theta / 2) * m / sin(theta) * copysign(1, theta);
+    double R = (r - WHEEL_SEPARATION / 2) * theta;
+    double L = (r + WHEEL_SEPARATION / 2) * theta;
+
+    double exp_r = initial_r + theta / 2;
+    if (fabs(exp_r) > M_PI) {
+        exp_r -= exp_r < 0 ? -2*M_PI : 2*M_PI;
     }
-    else if (mt.x == 0) {
-        double r = mt.initial_r ? mt.y : -mt.y;
-        leftOdometer.write(r / TICK_DISTANCE);
-        rightOdometer.write(r / TICK_DISTANCE);
+
+    exp_x = sin(exp_r) * m;
+    exp_y = cos(exp_r) * m;
+
+    if (theta == 0) {
+        R = L = m;
     }
-    else if (mt.y == 0) {
-        double r = mt.initial_r > 0 ? mt.x : -mt.x;
-        leftOdometer.write(r / TICK_DISTANCE);
-        rightOdometer.write(r / TICK_DISTANCE);
+
+    leftOdometer.write(L / TICK_DISTANCE);
+    rightOdometer.write(R / TICK_DISTANCE);
+
+    read_odometry(false);
+
+    if (diff(pose.x, exp_x) > .5 || diff(pose.y, exp_y) > .5 || rdiff(pose.r, exp_r) > .5) {
+        printf("→α: %3.0f° ", rad2deg(initial_r));
+        printf("θ: %3.0f° r: %6.2f m: %3.0f ", rad2deg(theta), r, m);
+        printf("(%7.2f, %7.2f, %4.0f°) ", exp_x, exp_y, rad2deg(exp_r));
+        printf("L: %s%5.0f\e[0m", L > 0 ? GREEN : RED, L);
+        printf("R: %s%5.0f\e[0m\n", R > 0 ? GREEN : RED, R);
+        pose.x = pose.y = 0;
+        pose.r = initial_r;
+        leftOdometer.write(L / TICK_DISTANCE);
+        rightOdometer.write(R / TICK_DISTANCE);
+
+        printf("Xα: %3.0f° ", rad2deg(initial_r));
+        read_odometry(true);
+
+        ck_assert_float(exp_x, pose.x, .5, "");
+        ck_assert_float(exp_y, pose.y, .5, "");
+        ck_assert_float(exp_r, pose.r, .5, "");
     }
-    else {
-        double m = mt.left * sqrt(mt.x * mt.x + mt.y * mt.y);
-        double angle = -atan(mt.y / mt.x);
-        double theta = angle > 0 ? M_PI - 2 * angle : -M_PI - 2 * angle;
-        exp_r = pose.r + theta;
-        double r = m * sin(angle) / sin(theta);
-        leftOdometer.write((r + 50) * theta / TICK_DISTANCE);
-        rightOdometer.write((r - 50) * theta / TICK_DISTANCE);
-        printf("--- %s\n", mt.name);
-        printf("X: %.1f Y: %.1f ω: %.0f° ", mt.x, mt.y, rad2deg(exp_r));
-        printf("r: %.3f m: %.3f ", r, m);
-        printf("θ: %.0f° α: %.0f° ", rad2deg(theta), rad2deg(angle));
-        printf("L: %ld ",  (long)((r + 50) * theta / TICK_DISTANCE));
-        printf("R: %ld\n", (long)((r - 50) * theta / TICK_DISTANCE));
-    }
-    read_odometry();
-    ck_assert_float(mt.x, pose.x, .5, mt.name);
-    ck_assert_float(mt.y, pose.y, .5, mt.name);
-    ck_assert_float(exp_r, pose.r, .005, mt.name);
 }
 END_TEST
 
@@ -135,7 +139,7 @@ Suite *localization_suite(void) {
     tcase_add_unchecked_fixture(tc_core, setup, NULL);
 
     tcase_add_test(tc_core, test_harnass_overrides);
-    tcase_add_loop_test(tc_core, test_move_table, 12, move_test_count);
+    tcase_add_loop_test(tc_core, test_move_table, 0, move_test_count);
     suite_add_tcase(s, tc_core);
 
     return s;

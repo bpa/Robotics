@@ -6,6 +6,7 @@
   #include <Arduino.h>
 #else
   #include <cmath>
+  #include <stdio.h>
   #define abs std::abs
 #endif
 
@@ -57,40 +58,54 @@ void movement_init() {
 void ignore() {}
 void (*look_around)() = ignore;
 
-#include <stdio.h>
 #define rad2deg(r) (r * 180 / M_PI)
+#ifdef ARDUINO
 void read_odometry() {
-    double m, angle;
+#else
+void read_odometry(bool print) {
+#endif
+    double m, dL, dR, theta, radius;
     long l = leftOdometer.read();
     long r = rightOdometer.read();
     if (l == r) {
         m = l * TICK_DISTANCE;
-        angle = pose.r;
+        radius = theta = 0;
     }
     else {
-        double dL = l * TICK_DISTANCE;
-        double dR = r * TICK_DISTANCE;
-        double a2 = (dL - dR) / 2 / WHEEL_SEPARATION + pose.r;
-        double radius = WHEEL_SEPARATION * (dL + dR) / (dL - dR) / 2;
-        double theta = (dL - dR) / WHEEL_SEPARATION;
-        double theta_abs = abs(theta);
-        m = radius * sin(theta_abs) / sin((M_PI - theta_abs)/2);
-        angle = pose.r + theta / 2;
-    pose.x += m * sin(angle);
-    pose.y -= m * cos(angle);
-        pose.r += theta;
-        printf("X: %.1f Y: %.1f ω: %.0f° ", pose.x, pose.y, rad2deg(pose.r));
-        printf("r: %.3f m: %.3f ", radius, m);
-        printf("θ: %.0f° α: %.0f° ", rad2deg(theta), rad2deg(angle));
-        printf("dL: %3.1f dR: %3.1f\n", dL, dR);
+        dL = l * TICK_DISTANCE;
+        dR = r * TICK_DISTANCE;
+        theta = (dL - dR) / WHEEL_SEPARATION;
+        radius = (dL + dR) / 2 / theta;
+        m = radius * sin(theta) / sin(M_PI - abs(theta/2));
+
+    }
+
+    pose.r += theta / 2;
+    if (pose.r > M_PI)
+        pose.r -= 2 * M_PI;
+    else if (pose.r < -M_PI)
+        pose.r += 2 * M_PI;
+
+    pose.x += m * sin(pose.r);
+    pose.y += m * cos(pose.r);
+
+#ifndef ARDUINO
+    if (print) {
+        printf("θ: %3.0f° ", rad2deg(theta));
+        printf("r: %6.2f m: %3.0f ", radius, m);
+        printf("(%7.2f, %7.2f, %4.0f°) ", pose.x, pose.y, rad2deg(pose.r));
+        printf("L: %5.0f R: %5.0f\n", dL, dR);
         return;
     }
-    pose.x += m * sin(angle);
-    pose.y -= m * cos(angle);
+#endif
 }
 
 void update_position() {
-    read_odometry();
+    read_odometry(
+#ifndef ARDUINO
+            false
+#endif
+    );
 }
 
 void move_forward(Direction d) {
